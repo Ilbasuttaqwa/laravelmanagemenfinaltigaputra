@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiga Putra Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .login-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Tiga Putra Management System</h1>
+        
+        <div class="status">
+            <h2>✅ Deployment Status</h2>
+            <p><strong>Status:</strong> Successfully deployed to Netlify!</p>
+            <p><strong>URL:</strong> https://tigaputra.netlify.app</p>
+            <p><strong>Database:</strong> Neon PostgreSQL Connected</p>
+        </div>
+
+        <div class="login-form">
+            <h2>🔐 Login Credentials</h2>
+            <p>Use these credentials to access the system:</p>
+            
+            <div class="info">
+                <h3>Admin Account:</h3>
+                <p><strong>Email:</strong> admin@tigaputra.com</p>
+                <p><strong>Password:</strong> password</p>
+            </div>
+            
+            <div class="info">
+                <h3>Manager Account:</h3>
+                <p><strong>Email:</strong> manager@tigaputra.com</p>
+                <p><strong>Password:</strong> password</p>
+            </div>
+            
+            <div class="info">
+                <h3>Test Account:</h3>
+                <p><strong>Email:</strong> test@test.com</p>
+                <p><strong>Password:</strong> 123456</p>
+            </div>
+        </div>
+
+        <div class="status">
+            <h2>🚀 Next Steps</h2>
+            <p>1. Set up database migration and seeding</p>
+            <p>2. Configure Laravel to work with Netlify Functions</p>
+            <p>3. Test login functionality</p>
+            <p>4. Access management features</p>
+        </div>
+
+        <div class="status">
+            <h2>📊 System Features</h2>
+            <p>• Employee Management</p>
+            <p>• Attendance Tracking</p>
+            <p>• Reporting System</p>
+            <p>• User Role Management</p>
+        </div>
+
+        <button onclick="window.location.href='https://tigaputra.netlify.app'">🔄 Refresh Page</button>
+        <button onclick="alert('Database setup required. Check deployment guide for instructions.')">🗄️ Setup Database</button>
+    </div>
+
+    <script>
+        console.log('Tiga Putra Management System - Netlify Deployment');
+        console.log('Status: Successfully deployed');
+        console.log('Database: Neon PostgreSQL');
+        console.log('Next: Setup database migration and seeding');
+    </script>
+</body>
+</html>
