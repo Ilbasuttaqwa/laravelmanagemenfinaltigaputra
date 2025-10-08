@@ -1,14 +1,18 @@
 [build]
-  command = "composer install --no-dev --optimize-autoloader && npm install && npm run build"
+  command = "npm install && npm run build"
   publish = "public"
 
 [build.environment]
-  PHP_VERSION = "8.2"
   NODE_VERSION = "18"
 
 [[redirects]]
-  from = "/*"
+  from = "/api/*"
   to = "/.netlify/functions/laravel"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
 
 [[headers]]
