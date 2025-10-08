@@ -9,7 +9,7 @@ APP_URL=https://tigaputra.netlify.app
 # Database Configuration (Neon PostgreSQL)
 # Gunakan NETLIFY_DATABASE_URL yang sudah tersedia di Netlify
 DB_CONNECTION=pgsql
-DB_URL=${NETLIFY_DATABASE_URL}
+DATABASE_URL=${NETLIFY_DATABASE_URL}
 
 # Cache & Session
 CACHE_DRIVER=file
