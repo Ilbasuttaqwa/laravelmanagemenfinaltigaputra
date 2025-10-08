@@ -6,6 +6,7 @@
       "use": "vercel-php@0.6.0"
     }
   ],
+  "buildCommand": "composer install --no-dev --optimize-autoloader && npm install && npm run build && php artisan migrate --force && php artisan db:seed --force && php artisan config:cache && php artisan route:cache && php artisan view:cache",
   "routes": [
     {
       "src": "/build/(.*)",
@@ -26,6 +27,7 @@
       "APP_KEY": "base64:0TjCf2l05M8JK71JqyWys8Y/4NlALzCS3hQxwIIitHs=",
     "DB_CONNECTION": "sqlite",
     "DB_DATABASE": "/tmp/database.sqlite",
+    "APP_URL": "https://your-app.vercel.app",
     "CACHE_DRIVER": "file",
     "SESSION_DRIVER": "file",
     "QUEUE_CONNECTION": "sync"
