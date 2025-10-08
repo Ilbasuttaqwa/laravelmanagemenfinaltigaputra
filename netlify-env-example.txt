@@ -1,0 +1,35 @@
+# Environment Variables untuk Netlify Dashboard
+# Copy variables ini ke Netlify Dashboard → Site Settings → Environment Variables
+
+# Database Neon
+DATABASE_URL=postgresql://username:password@host:port/database
+
+# Laravel Configuration
+APP_NAME="Laravel Management System"
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:YOUR_APP_KEY_HERE
+APP_URL=https://tigaputra.netlify.app
+
+# Database Configuration
+DB_CONNECTION=pgsql
+
+# Logging
+LOG_LEVEL=error
+
+# Session Configuration
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+# Cache Configuration
+CACHE_DRIVER=file
+
+# Mail Configuration (optional)
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your-email@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"

@@ -6,14 +6,17 @@
   publish = "public"
 
   # Build command for Laravel with Neon database
-  command = "composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache && php artisan view:cache && npm install && npm run build && php artisan migrate --force"
+  command = "composer install --no-dev --optimize-autoloader --ignore-platform-reqs && npm install && php artisan config:cache && php artisan route:cache && php artisan view:cache"
 
 [build.environment]
   # PHP version
   PHP_VERSION = "8.2"
   
-  # Node version
-  NODE_VERSION = "18"
+  # Node version - using LTS version for stability
+  NODE_VERSION = "20"
+  
+  # NPM version
+  NPM_VERSION = "10"
 
 # Function configuration for serverless PHP
 [functions]

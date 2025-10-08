@@ -17,6 +17,10 @@ composer install --no-dev --optimize-autoloader
 
 # Install Node dependencies
 echo "📦 Installing Node dependencies..."
+echo "🔍 Node version: $(node --version)"
+echo "🔍 NPM version: $(npm --version)"
+
+# Install dependencies (npm ci requires package-lock.json)
 npm install
 
 # Generate application key if not exists
