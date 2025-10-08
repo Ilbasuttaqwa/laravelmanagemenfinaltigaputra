@@ -2,6 +2,9 @@ node_modules
 .git
 .env
 .env.example
+.env.local
+.env.production
+.env.testing
 storage/logs
 storage/framework/cache
 storage/framework/sessions
@@ -22,3 +25,5 @@ railway*.md
 netlify*.toml
 netlify*.txt
 netlify*.md
+dist
+build
