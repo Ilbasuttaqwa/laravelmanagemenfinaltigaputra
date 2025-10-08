@@ -1,8 +1,15 @@
 #!/bin/bash
 
-# Laravel Management System - Deployment Script
+# Laravel Management System - Deployment Script for Netlify with Neon Database
 
-echo "🚀 Starting deployment process..."
+echo "🚀 Starting deployment process for Netlify..."
+
+# Check if environment variables are set
+if [ -z "$DATABASE_URL" ]; then
+    echo "❌ DATABASE_URL environment variable is not set!"
+    echo "Please set your Neon database connection string in Netlify environment variables."
+    exit 1
+fi
 
 # Install dependencies
 echo "📦 Installing PHP dependencies..."
@@ -13,8 +20,10 @@ echo "📦 Installing Node dependencies..."
 npm install
 
 # Generate application key if not exists
-echo "🔑 Generating application key..."
-php artisan key:generate
+if [ -z "$APP_KEY" ]; then
+    echo "🔑 Generating application key..."
+    php artisan key:generate
+fi
 
 # Cache configuration
 echo "⚡ Caching configuration..."
@@ -32,13 +41,23 @@ php artisan view:cache
 echo "🎨 Building assets..."
 npm run build
 
-# Run migrations (if database is configured)
-echo "🗄️ Running database migrations..."
-php artisan migrate --force
-
-# Seed database (if needed)
-echo "🌱 Seeding database..."
-php artisan db:seed --force
+# Test database connection
+echo "🔗 Testing database connection..."
+if php artisan migrate:status > /dev/null 2>&1; then
+    echo "✅ Database connection successful!"
+    
+    # Run migrations
+    echo "🗄️ Running database migrations..."
+    php artisan migrate --force
+    
+    # Seed database (only if tables are empty)
+    echo "🌱 Seeding database..."
+    php artisan db:seed --force
+else
+    echo "❌ Database connection failed!"
+    echo "Please check your DATABASE_URL in Netlify environment variables."
+    exit 1
+fi
 
 echo "✅ Deployment completed successfully!"
-echo "🌐 Application is ready for production!"
+echo "🌐 Application is ready for production on Netlify!"
