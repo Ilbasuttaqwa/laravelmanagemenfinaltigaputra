@@ -1,26 +1,25 @@
 #!/bin/bash
 
-# Laravel Management System - Vercel Deployment Script
+# Laravel Management System - Railway Deployment Script
 
-echo "🚀 Starting Vercel deployment process..."
+echo "🚂 Starting Railway deployment process..."
 
-# Check if Vercel CLI is installed
-if ! command -v vercel &> /dev/null; then
-    echo "❌ Vercel CLI is not installed!"
-    echo "Please install it with: npm i -g vercel"
+# Check if Railway CLI is installed
+if ! command -v railway &> /dev/null; then
+    echo "❌ Railway CLI is not installed!"
+    echo "Please install it with: npm install -g @railway/cli"
     exit 1
 fi
 
-# Check if environment variables are set
-if [ -z "$DATABASE_URL" ]; then
-    echo "⚠️  DATABASE_URL environment variable is not set!"
-    echo "Please set your Neon database connection string in Vercel environment variables."
-    echo "Continuing with deployment..."
+# Check if logged in to Railway
+if ! railway whoami &> /dev/null; then
+    echo "🔑 Please login to Railway first:"
+    railway login
 fi
 
 # Install dependencies
 echo "📦 Installing PHP dependencies..."
-composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+composer install --no-dev --optimize-autoloader
 
 # Install Node dependencies
 echo "📦 Installing Node dependencies..."
@@ -66,16 +65,17 @@ if [ ! -z "$DATABASE_URL" ]; then
         php artisan db:seed --force
     else
         echo "❌ Database connection failed!"
-        echo "Please check your DATABASE_URL in Vercel environment variables."
+        echo "Please check your DATABASE_URL in Railway environment variables."
         echo "Continuing with deployment..."
     fi
 fi
 
 echo "✅ Build completed successfully!"
-echo "🌐 Ready for Vercel deployment!"
+echo "🚂 Ready for Railway deployment!"
 
-# Deploy to Vercel
-echo "🚀 Deploying to Vercel..."
-vercel --prod
+# Deploy to Railway
+echo "🚂 Deploying to Railway..."
+railway up
 
 echo "🎉 Deployment completed!"
+echo "🌐 Your app should be available at: https://tigaputra.railway.app"

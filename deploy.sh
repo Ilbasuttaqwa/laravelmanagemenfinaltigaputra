@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Laravel Management System - Deployment Script for Netlify with Neon Database
+# Laravel Management System - Deployment Script for Railway with MySQL Database
 
-echo "🚀 Starting deployment process for Netlify..."
+echo "🚂 Starting deployment process for Railway..."
 
 # Check if environment variables are set
 if [ -z "$DATABASE_URL" ]; then
-    echo "❌ DATABASE_URL environment variable is not set!"
-    echo "Please set your Neon database connection string in Netlify environment variables."
-    exit 1
+    echo "⚠️  DATABASE_URL environment variable is not set!"
+    echo "Railway will auto-generate MySQL database connection."
+    echo "Continuing with deployment..."
 fi
 
 # Install dependencies
@@ -59,9 +59,9 @@ if php artisan migrate:status > /dev/null 2>&1; then
     php artisan db:seed --force
 else
     echo "❌ Database connection failed!"
-    echo "Please check your DATABASE_URL in Netlify environment variables."
-    exit 1
+    echo "Please check your DATABASE_URL in Railway environment variables."
+    echo "Continuing with deployment..."
 fi
 
 echo "✅ Deployment completed successfully!"
-echo "🌐 Application is ready for production on Netlify!"
+echo "🚂 Application is ready for production on Railway!"
