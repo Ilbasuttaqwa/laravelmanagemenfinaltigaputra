@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "vercel.php",
+      "use": "@vercel/php"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/build/(.*)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/vercel.php"
+    }
+  ],
+  "functions": {
+    "vercel.php": {
+      "runtime": "@vercel/php@3.0.0"
+    }
+  },
+  "outputDirectory": "public"
+}

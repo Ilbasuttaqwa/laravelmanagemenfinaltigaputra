@@ -1,54 +1,24 @@
-# Vercel ignore file for Laravel project
-
-# Development files
-.env
-.env.local
-.env.development
-.env.testing
-.env.production
-
-# Storage and logs
-storage/logs/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
-storage/app/public/*
-!storage/app/public/.gitignore
-
-# Test files
-tests/
-phpunit.xml
-.phpunit.result.cache
-
-# Documentation
-*.md
-!README.md
-
-# Git
+node_modules
 .git
+.env
+.env.example
+storage/logs
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+bootstrap/cache
+tests
+.phpunit.result.cache
+phpunit.xml
+.editorconfig
+.gitattributes
 .gitignore
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Node modules (will be installed during build)
-node_modules/
-
-# Composer vendor (will be installed during build)
-vendor/
-
-# Build artifacts
-public/hot
-public/storage
-public/build/manifest.json
-
-# Temporary files
-*.tmp
-*.log
+README.md
+deploy*.sh
+*_SETUP_GUIDE.md
+railway*.json
+railway*.txt
+railway*.md
+netlify*.toml
+netlify*.txt
+netlify*.md
