@@ -1,47 +1,27 @@
 [build]
-  # Base directory
-  base = "."
-
-  # Publish directory
+  command = "composer install --no-dev --optimize-autoloader && npm install && npm run build && php artisan migrate --force && php artisan db:seed --force && php artisan config:cache && php artisan route:cache && php artisan view:cache"
   publish = "public"
 
-  # Build command for Laravel with Neon database
-  command = "composer install --no-dev --optimize-autoloader && npm install && npm run build && php artisan config:cache && php artisan route:cache && php artisan view:cache"
-
 [build.environment]
-  # PHP version
   PHP_VERSION = "8.2"
-  
-  # Node version
-  NODE_VERSION = "20"
-
-# Function configuration for serverless PHP
-[functions]
-  directory = "netlify/functions"
-
-# Redirects for Laravel routing
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/laravel/:splat"
-  status = 200
+  NODE_VERSION = "18"
 
 [[redirects]]
   from = "/*"
   to = "/index.php"
   status = 200
 
-# Headers for security
 [[headers]]
-  for = "/*"
+  for = "/build/*"
   [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+    Cache-Control = "public, max-age=31536000"
 
-# Environment variables (akan diisi di Netlify dashboard)
-[context.production.environment]
-  APP_ENV = "production"
-  APP_DEBUG = "false"
-  LOG_LEVEL = "error"
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
