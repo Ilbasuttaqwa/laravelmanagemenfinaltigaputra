@@ -29,9 +29,16 @@ echo "🔍 NPM version: $(npm --version)"
 npm install
 
 # Generate application key if not exists
-if [ -z "$APP_KEY" ]; then
+if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "base64:YOUR_APP_KEY_WILL_BE_GENERATED_AUTOMATICALLY" ]; then
     echo "🔑 Generating application key..."
-    php artisan key:generate
+    APP_KEY=$(php artisan key:generate --show)
+    echo "Generated APP_KEY: $APP_KEY"
+    
+    # Set APP_KEY in Railway if Railway CLI is available
+    if command -v railway &> /dev/null && railway whoami &> /dev/null; then
+        echo "🔧 Setting APP_KEY in Railway..."
+        railway variables set APP_KEY="$APP_KEY"
+    fi
 fi
 
 # Cache configuration

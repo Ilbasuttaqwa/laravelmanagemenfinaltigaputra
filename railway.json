@@ -23,8 +23,15 @@
         "DB_DATABASE": "${{MySQL.MYSQLDATABASE}}",
         "DB_USERNAME": "${{MySQL.MYSQLUSER}}",
         "DB_PASSWORD": "${{MySQL.MYSQLPASSWORD}}",
+        "APP_NAME": "Laravel Management System",
         "APP_ENV": "production",
-        "APP_DEBUG": "false"
+        "APP_DEBUG": "false",
+        "APP_URL": "https://zealous-friendship-production.up.railway.app",
+        "APP_KEY": "base64:YOUR_APP_KEY_WILL_BE_GENERATED_AUTOMATICALLY",
+        "PORT": "8080",
+        "SESSION_DRIVER": "file",
+        "CACHE_DRIVER": "file",
+        "LOG_LEVEL": "error"
       }
     }
   }
