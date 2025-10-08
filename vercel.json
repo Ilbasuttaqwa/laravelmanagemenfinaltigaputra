@@ -1,16 +1,38 @@
 {
   "version": 2,
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "outputDirectory": "public",
+  "builds": [
+    {
+      "src": "vercel.php",
+      "use": "vercel-php@0.6.0"
+    }
+  ],
   "routes": [
     {
       "src": "/build/(.*)",
       "dest": "/public/build/$1"
     },
     {
+      "src": "/storage/(.*)",
+      "dest": "/storage/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/vercel.php"
     }
-  ]
+  ],
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "APP_KEY": "base64:your-app-key-here",
+    "DB_CONNECTION": "sqlite",
+    "DB_DATABASE": "/tmp/database.sqlite",
+    "CACHE_DRIVER": "file",
+    "SESSION_DRIVER": "file",
+    "QUEUE_CONNECTION": "sync"
+  },
+  "functions": {
+    "vercel.php": {
+      "runtime": "php8.2"
+    }
+  }
 }

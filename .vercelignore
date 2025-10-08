@@ -1,7 +1,6 @@
 node_modules
 .git
 .env
-.env.example
 .env.local
 .env.production
 .env.testing
@@ -27,3 +26,4 @@ netlify*.txt
 netlify*.md
 dist
 build
+.env.example

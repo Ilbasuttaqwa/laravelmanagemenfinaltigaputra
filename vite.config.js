@@ -11,5 +11,15 @@ export default defineConfig({
     build: {
         outDir: 'public/build',
         emptyOutDir: true,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
+    },
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
     },
 });
