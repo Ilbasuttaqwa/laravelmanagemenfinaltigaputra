@@ -53,22 +53,43 @@ npm run build
 # Test database connection (if MySQL variables are set)
 if [ ! -z "$MYSQLHOST" ] && [ ! -z "$MYSQLUSER" ] && [ ! -z "$MYSQLPASSWORD" ]; then
     echo "🔗 Testing database connection..."
-    if php artisan migrate:status > /dev/null 2>&1; then
-        echo "✅ Database connection successful!"
-        
-        # Run migrations
-        echo "🗄️ Running database migrations..."
-        php artisan migrate --force
-        
-        # Seed database (only if tables are empty)
-        echo "🌱 Seeding database..."
-        php artisan db:seed --force
-    else
-        echo "❌ Database connection failed!"
-        echo "Please check your MySQL environment variables in Railway:"
-        echo "- MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE"
+    
+    # Wait for MySQL to be ready
+    echo "⏳ Waiting for MySQL to be ready..."
+    sleep 10
+    
+    # Test connection with retry
+    for i in {1..5}; do
+        if php artisan migrate:status > /dev/null 2>&1; then
+            echo "✅ Database connection successful!"
+            
+            # Run migrations
+            echo "🗄️ Running database migrations..."
+            php artisan migrate --force
+            
+            # Seed database (only if tables are empty)
+            echo "🌱 Seeding database..."
+            php artisan db:seed --force
+            break
+        else
+            echo "⏳ Attempt $i/5: Database not ready yet, waiting..."
+            sleep 5
+        fi
+    done
+    
+    if [ $i -eq 5 ]; then
+        echo "❌ Database connection failed after 5 attempts!"
+        echo "MySQL service might be crashed. Please check Railway dashboard:"
+        echo "1. Go to MySQL service → Logs"
+        echo "2. Check for error messages"
+        echo "3. Restart MySQL service if needed"
+        echo "4. Ensure MySQL environment variables are set correctly"
         echo "Continuing with deployment..."
     fi
+else
+    echo "⚠️  MySQL environment variables not set!"
+    echo "Please add MySQL service to your Railway project."
+    echo "Continuing with deployment..."
 fi
 
 echo "✅ Build completed successfully!"
