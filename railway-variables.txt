@@ -1,0 +1,38 @@
+# Railway Environment Variables
+# Copy these variables to Railway Dashboard → Variables
+
+# MySQL Database Variables (Railway will auto-generate these)
+MYSQLHOST=containers-us-west-xxx.railway.app
+MYSQLPORT=3306
+MYSQLUSER=root
+MYSQLPASSWORD=your-mysql-password
+MYSQLDATABASE=railway
+MYSQL_URL=mysql://root:password@containers-us-west-xxx.railway.app:3306/railway
+
+# Laravel Database Configuration
+DB_CONNECTION=mysql
+DB_HOST=containers-us-west-xxx.railway.app
+DB_PORT=3306
+DB_DATABASE=railway
+DB_USERNAME=root
+DB_PASSWORD=your-mysql-password
+
+# Laravel Application Configuration
+APP_NAME="Laravel Management System"
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:YOUR_APP_KEY_HERE
+APP_URL=https://tigaputra.railway.app
+
+# Logging
+LOG_LEVEL=error
+
+# Session Configuration
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+# Cache Configuration
+CACHE_DRIVER=file
+
+# Port (Railway will set this automatically)
+PORT=8000

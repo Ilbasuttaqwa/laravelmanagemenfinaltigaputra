@@ -50,8 +50,8 @@ php artisan view:cache
 echo "🎨 Building assets..."
 npm run build
 
-# Test database connection (if DATABASE_URL is set)
-if [ ! -z "$DATABASE_URL" ]; then
+# Test database connection (if MySQL variables are set)
+if [ ! -z "$MYSQLHOST" ] && [ ! -z "$MYSQLUSER" ] && [ ! -z "$MYSQLPASSWORD" ]; then
     echo "🔗 Testing database connection..."
     if php artisan migrate:status > /dev/null 2>&1; then
         echo "✅ Database connection successful!"
@@ -65,7 +65,8 @@ if [ ! -z "$DATABASE_URL" ]; then
         php artisan db:seed --force
     else
         echo "❌ Database connection failed!"
-        echo "Please check your DATABASE_URL in Railway environment variables."
+        echo "Please check your MySQL environment variables in Railway:"
+        echo "- MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE"
         echo "Continuing with deployment..."
     fi
 fi
