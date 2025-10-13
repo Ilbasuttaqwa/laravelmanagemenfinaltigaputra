@@ -432,6 +432,20 @@
                                         Master Lokasi
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}"
+                                       href="{{ route('admin.employees.index') }}">
+                                        <i class="bi bi-people"></i>
+                                        Master Karyawan
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('admin.manage') ? 'active' : '' }}"
+                                       href="{{ route('admin.manage') }}">
+                                        <i class="bi bi-gear"></i>
+                                        Manage
+                                    </a>
+                                </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('admin.monthly-attendance-reports.*') ? 'active' : '' }}"
                                    href="{{ route('admin.monthly-attendance-reports.index') }}">

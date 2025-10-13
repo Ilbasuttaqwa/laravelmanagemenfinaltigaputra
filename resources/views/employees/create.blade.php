@@ -50,6 +50,25 @@
                         </div>
                     </div>
 
+                    @if(auth()->user()->isManager())
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
+                            <select class="form-select @error('role') is-invalid @enderror" id="role" name="role" required>
+                                <option value="">Pilih Role</option>
+                                <option value="karyawan" {{ old('role') == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
+                                <option value="mandor" {{ old('role') == 'mandor' ? 'selected' : '' }}>Mandor</option>
+                            </select>
+                            @error('role')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    @else
+                    <!-- Hidden field for admin users - always set to karyawan -->
+                    <input type="hidden" name="role" value="karyawan">
+                    @endif
+
                     <div class="d-flex justify-content-end gap-2">
                         <a href="{{ route(auth()->user()->isAdmin() ? 'admin.employees.index' : 'manager.employees.index') }}" 
                            class="btn btn-secondary">

@@ -88,6 +88,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
+                            <th>Role</th>
                             <th>Gaji</th>
                             <th>Aksi</th>
                         </tr>
@@ -97,6 +98,13 @@
                             <tr>
                                 <td>{{ $employees->firstItem() + $index }}</td>
                                 <td>{{ $employee->nama }}</td>
+                                <td>
+                                    @if($employee->role === 'mandor')
+                                        <span class="badge bg-warning">Mandor</span>
+                                    @else
+                                        <span class="badge bg-primary">Karyawan</span>
+                                    @endif
+                                </td>
                                 <td>Rp {{ number_format($employee->gaji, 0, ',', '.') }}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">

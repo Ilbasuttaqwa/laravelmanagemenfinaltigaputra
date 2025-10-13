@@ -48,12 +48,26 @@
                         <p class="form-control-plaintext">{{ $employee->nama }}</p>
                     </div>
                     <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Role</label>
+                        <p class="form-control-plaintext">
+                            @if($employee->role === 'mandor')
+                                <span class="badge bg-warning fs-6">Mandor</span>
+                            @else
+                                <span class="badge bg-primary fs-6">Karyawan</span>
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Gaji</label>
                         <p class="form-control-plaintext">
                             <span class="h5 text-success">
                                 Rp {{ number_format($employee->gaji, 0, ',', '.') }}
                             </span>
                         </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Tanggal Dibuat</label>
+                        <p class="form-control-plaintext">{{ $employee->created_at->format('d/m/Y H:i') }}</p>
                     </div>
                 </div>
             </div>
@@ -76,26 +90,32 @@
                         <span class="text-white h4 fw-bold">{{ substr($employee->nama, 0, 1) }}</span>
                     </div>
                     <h5 class="mt-3 mb-1">{{ $employee->nama }}</h5>
-                    <p class="text-muted mb-0">{{ $employee->jabatan }}</p>
+                    <p class="text-muted mb-0">
+                        @if($employee->role === 'mandor')
+                            <span class="badge bg-warning">Mandor</span>
+                        @else
+                            <span class="badge bg-primary">Karyawan</span>
+                        @endif
+                    </p>
                 </div>
 
                 <div class="list-group list-group-flush">
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="bi bi-building text-primary"></i> Departemen</span>
-                        <span class="badge bg-primary">{{ $employee->departemen }}</span>
+                        <span><i class="bi bi-currency-dollar text-success"></i> Gaji</span>
+                        <span class="badge bg-success">Rp {{ number_format($employee->gaji, 0, ',', '.') }}</span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="bi bi-calendar text-info"></i> Lama Kerja</span>
-                        <span class="badge bg-info">{{ $employee->tanggal_masuk->diffForHumans(null, true) }}</span>
+                        <span><i class="bi bi-calendar text-info"></i> Dibuat</span>
+                        <span class="badge bg-info">{{ $employee->created_at->format('d/m/Y') }}</span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="bi bi-person text-success"></i> Usia</span>
-                        <span class="badge bg-success">{{ $employee->tanggal_lahir->age }} tahun</span>
+                        <span><i class="bi bi-clock text-warning"></i> Diperbarui</span>
+                        <span class="badge bg-warning">{{ $employee->updated_at->format('d/m/Y') }}</span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="bi bi-check-circle text-{{ $employee->status == 'aktif' ? 'success' : 'secondary' }}"></i> Status</span>
-                        <span class="badge bg-{{ $employee->status == 'aktif' ? 'success' : 'secondary' }}">
-                            {{ $employee->status == 'aktif' ? 'Aktif' : 'Tidak Aktif' }}
+                        <span><i class="bi bi-person text-primary"></i> Role</span>
+                        <span class="badge bg-{{ $employee->role === 'mandor' ? 'warning' : 'primary' }}">
+                            {{ $employee->role === 'mandor' ? 'Mandor' : 'Karyawan' }}
                         </span>
                     </div>
                 </div>
@@ -117,15 +137,12 @@
                         <i class="bi bi-pencil"></i>
                         Edit Data
                     </a>
-                    <a href="mailto:{{ $employee->email }}" class="btn btn-info">
-                        <i class="bi bi-envelope"></i>
-                        Kirim Email
+                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.employees.index' : 'manager.employees.index') }}" 
+                       class="btn btn-info">
+                        <i class="bi bi-list"></i>
+                        Daftar Karyawan
                     </a>
-                    <a href="tel:{{ $employee->telepon }}" class="btn btn-success">
-                        <i class="bi bi-telephone"></i>
-                        Hubungi
-                    </a>
-                    @if(auth()->user()->isAdmin())
+                    @if(auth()->user()->isManager())
                         <button type="button" class="btn btn-danger" 
                                 onclick="confirmDelete({{ $employee->id }}, '{{ $employee->nama }}')">
                             <i class="bi bi-trash"></i>

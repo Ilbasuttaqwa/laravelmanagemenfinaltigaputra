@@ -41,7 +41,20 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji' => 'required|numeric|min:0',
+            'role' => 'nullable|string|in:karyawan,mandor',
         ]);
+
+        // Admin cannot create mandor employees
+        if (auth()->user()->isAdmin() && isset($validated['role']) && $validated['role'] === 'mandor') {
+            return redirect()->back()
+                            ->with('error', 'Admin tidak dapat membuat karyawan dengan role mandor.')
+                            ->withInput();
+        }
+
+        // Set default role to karyawan if not specified
+        if (!isset($validated['role'])) {
+            $validated['role'] = 'karyawan';
+        }
 
         Employee::create($validated);
 

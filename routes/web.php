@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MandorController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\PembibitanController;
 use App\Http\Controllers\KandangController;
@@ -40,6 +41,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::resource('gudangs', GudangController::class);
     Route::resource('mandors', MandorController::class);
+    Route::resource('employees', EmployeeController::class);
     Route::resource('absensis', AbsensiController::class);
     Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
     Route::post('absensis/update-existing', [AbsensiController::class, 'updateExisting'])->name('absensis.update-existing');
@@ -70,6 +72,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('gudangs', GudangController::class)->except(['destroy']);
     Route::resource('mandors', MandorController::class)->except(['destroy']);
+    Route::resource('employees', EmployeeController::class)->except(['destroy']);
     Route::resource('absensis', AbsensiController::class)->except(['destroy']);
     Route::resource('pembibitans', PembibitanController::class)->except(['destroy']);
     Route::resource('kandangs', KandangController::class)->except(['destroy']);
@@ -88,4 +91,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');
     Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
+    
+    // Manage Page for Admin
+    Route::get('manage', function () {
+        $employees = \App\Models\Employee::orderBy('nama')->paginate(10);
+        return view('admin.manage', compact('employees'));
+    })->name('manage');
 });
