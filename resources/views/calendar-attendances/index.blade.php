@@ -57,69 +57,128 @@
                         </div>
                     </form>
 
-                    <!-- Calendar Table -->
-                    @if($attendances->count() > 0)
-                        <div class="table-responsive calendar-attendance-container">
-                            <table class="table table-bordered table-striped calendar-attendance-table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th rowspan="2" class="text-center align-middle">No</th>
-                                        <th rowspan="2" class="text-center align-middle">Nama Karyawan</th>
-                                        <th rowspan="2" class="text-center align-middle">Tipe</th>
-                                        <th colspan="{{ Carbon\Carbon::create($tahun, $bulan)->daysInMonth }}" class="text-center">
-                                            {{ $availableMonths[$bulan] }} {{ $tahun }}
-                                        </th>
-                                        <th rowspan="2" class="text-center align-middle">Aksi</th>
-                                    </tr>
-                                    <tr>
-                                        @for($day = 1; $day <= Carbon\Carbon::create($tahun, $bulan)->daysInMonth; $day++)
-                                            <th class="text-center">{{ $day }}</th>
-                                        @endfor
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($attendances as $index => $attendance)
+                    <!-- Real-time Calendar -->
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <h4 class="text-center mb-3">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                {{ $availableMonths[$bulan] }} {{ $tahun }}
+                            </h4>
+                        </div>
+                        
+                        @if($attendances->count() > 0)
+                            <div class="table-responsive calendar-attendance-container">
+                                <table class="table table-bordered table-striped calendar-attendance-table">
+                                    <thead class="thead-dark">
                                         <tr>
-                                            <td class="text-center">{{ $index + 1 }}</td>
-                                            <td>
-                                                <strong>{{ $attendance->nama_karyawan }}</strong>
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="badge badge-{{ $attendance->tipe_karyawan == 'mandor' ? 'success' : 'primary' }}">
-                                                    {{ ucfirst($attendance->tipe_karyawan) }}
-                                                </span>
-                                            </td>
+                                            <th rowspan="2" class="text-center align-middle employee-column">No</th>
+                                            <th rowspan="2" class="text-center align-middle employee-column">Nama Karyawan</th>
+                                            <th rowspan="2" class="text-center align-middle employee-column">Tipe</th>
+                                            <th colspan="{{ Carbon\Carbon::create($tahun, $bulan)->daysInMonth }}" class="text-center calendar-header">
+                                                {{ $availableMonths[$bulan] }} {{ $tahun }}
+                                            </th>
+                                            <th rowspan="2" class="text-center align-middle employee-column">Total</th>
+                                        </tr>
+                                        <tr>
                                             @for($day = 1; $day <= Carbon\Carbon::create($tahun, $bulan)->daysInMonth; $day++)
                                                 @php
-                                                    $status = $attendance->attendance_data[$day] ?? 'absen';
+                                                    $date = Carbon\Carbon::create($tahun, $bulan, $day);
+                                                    $dayName = $date->format('D'); // Mon, Tue, Wed, etc.
+                                                    $dayNumber = $day;
+                                                    $isToday = $date->isToday();
+                                                    $isWeekend = $date->isWeekend();
                                                 @endphp
-                                                <td class="text-center">
-                                                    <select class="form-control form-control-sm attendance-select" 
-                                                            data-attendance-id="{{ $attendance->id }}" 
-                                                            data-day="{{ $day }}"
-                                                            data-employee-type="{{ $attendance->tipe_karyawan }}"
-                                                            data-employee-id="{{ $attendance->employee_id }}"
-                                                            style="min-width: 80px;">
-                                                        <option value="absen" {{ $status == 'absen' ? 'selected' : '' }}>Absen</option>
-                                                        <option value="setengah_hari" {{ $status == 'setengah_hari' ? 'selected' : '' }}>Setengah Hari</option>
-                                                        <option value="full" {{ $status == 'full' ? 'selected' : '' }}>Full Day</option>
-                                                    </select>
-                                                </td>
+                                                <th class="text-center calendar-day-header {{ $isToday ? 'today' : '' }} {{ $isWeekend ? 'weekend' : '' }}">
+                                                    <div class="day-number">{{ $dayNumber }}</div>
+                                                    <div class="day-name">{{ $dayName }}</div>
+                                                </th>
                                             @endfor
-                                            <td class="text-center">
-                                                <span class="badge badge-info">Realtime</span>
-                                            </td>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($attendances as $index => $attendance)
+                                            @php
+                                                $totalFull = 0;
+                                                $totalHalf = 0;
+                                            @endphp
+                                            <tr>
+                                                <td class="text-center employee-column">{{ $index + 1 }}</td>
+                                                <td class="employee-column">
+                                                    <strong>{{ $attendance->nama_karyawan }}</strong>
+                                                </td>
+                                                <td class="text-center employee-column">
+                                                    <span class="badge badge-{{ $attendance->tipe_karyawan == 'mandor' ? 'success' : 'primary' }}">
+                                                        {{ ucfirst($attendance->tipe_karyawan) }}
+                                                    </span>
+                                                </td>
+                                                @for($day = 1; $day <= Carbon\Carbon::create($tahun, $bulan)->daysInMonth; $day++)
+                                                    @php
+                                                        $status = $attendance->attendance_data[$day] ?? 'absen';
+                                                        $date = Carbon\Carbon::create($tahun, $bulan, $day);
+                                                        $isToday = $date->isToday();
+                                                        $isWeekend = $date->isWeekend();
+                                                        $isPast = $date->isPast();
+                                                        
+                                                        if ($status == 'full') $totalFull++;
+                                                        if ($status == 'setengah_hari') $totalHalf++;
+                                                    @endphp
+                                                    <td class="text-center calendar-day-cell {{ $isToday ? 'today' : '' }} {{ $isWeekend ? 'weekend' : '' }} {{ $isPast ? 'past' : '' }}">
+                                                        <select class="form-control form-control-sm attendance-select" 
+                                                                data-attendance-id="{{ $attendance->id }}" 
+                                                                data-day="{{ $day }}"
+                                                                data-employee-type="{{ $attendance->tipe_karyawan }}"
+                                                                data-employee-id="{{ $attendance->employee_id }}"
+                                                                style="min-width: 60px; font-size: 11px;">
+                                                            <option value="absen" {{ $status == 'absen' ? 'selected' : '' }}>A</option>
+                                                            <option value="setengah_hari" {{ $status == 'setengah_hari' ? 'selected' : '' }}>S</option>
+                                                            <option value="full" {{ $status == 'full' ? 'selected' : '' }}>F</option>
+                                                        </select>
+                                                    </td>
+                                                @endfor
+                                                <td class="text-center employee-column">
+                                                    <div class="attendance-summary">
+                                                        <small class="text-success">F: {{ $totalFull }}</small><br>
+                                                        <small class="text-warning">S: {{ $totalHalf }}</small>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-info-circle"></i>
+                                Tidak ada data karyawan untuk ditampilkan. Silakan tambah karyawan terlebih dahulu.
+                            </div>
+                        @endif
+                        
+                        <!-- Legend -->
+                        <div class="calendar-legend">
+                            <strong>Keterangan:</strong>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #28a745;"></span>
+                                <span>Hari Ini</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #6c757d;"></span>
+                                <span>Weekend</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #e9ecef;"></span>
+                                <span>Hari Lalu</span>
+                            </div>
+                            <div class="legend-item">
+                                <span><strong>F:</strong> Full Day</span>
+                            </div>
+                            <div class="legend-item">
+                                <span><strong>S:</strong> Setengah Hari</span>
+                            </div>
+                            <div class="legend-item">
+                                <span><strong>A:</strong> Absen</span>
+                            </div>
                         </div>
-                    @else
-                        <div class="alert alert-info text-center">
-                            <i class="fas fa-info-circle"></i>
-                            Tidak ada data absensi untuk periode yang dipilih.
-                        </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,6 +245,182 @@
 </div>
 @endsection
 
+@push('styles')
+<style>
+.calendar-container {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.calendar-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.calendar-attendance-table {
+    margin: 0;
+    font-size: 12px;
+}
+
+.calendar-attendance-table thead th {
+    background: #343a40;
+    color: white;
+    border: 1px solid #dee2e6;
+    padding: 8px 4px;
+    font-weight: 600;
+}
+
+.employee-column {
+    background: #f8f9fa;
+    font-weight: 600;
+    min-width: 120px;
+    position: sticky;
+    left: 0;
+    z-index: 10;
+}
+
+.calendar-day-header {
+    background: #495057;
+    color: white;
+    padding: 8px 4px;
+    min-width: 60px;
+    position: relative;
+}
+
+.calendar-day-header.today {
+    background: #28a745 !important;
+    color: white;
+}
+
+.calendar-day-header.weekend {
+    background: #6c757d;
+}
+
+.day-number {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.day-name {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.calendar-day-cell {
+    padding: 4px;
+    border: 1px solid #dee2e6;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.calendar-day-cell.today {
+    background: #d4edda;
+    border-color: #28a745;
+}
+
+.calendar-day-cell.weekend {
+    background: #f8f9fa;
+}
+
+.calendar-day-cell.past {
+    background: #e9ecef;
+    opacity: 0.7;
+}
+
+.attendance-select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 11px;
+    text-align: center;
+}
+
+.attendance-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.attendance-summary {
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.calendar-attendance-container {
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* Custom scrollbar */
+.calendar-attendance-container::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.calendar-attendance-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.calendar-attendance-container::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+.calendar-attendance-container::-webkit-scrollbar-thumb:hover {
+    background: #5a6fd8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .calendar-attendance-table {
+        font-size: 10px;
+    }
+    
+    .employee-column {
+        min-width: 80px;
+    }
+    
+    .calendar-day-header {
+        min-width: 40px;
+        padding: 4px 2px;
+    }
+    
+    .attendance-select {
+        min-width: 40px;
+        font-size: 9px;
+    }
+}
+
+/* Legend */
+.calendar-legend {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.calendar-legend .legend-item {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.calendar-legend .legend-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+</style>
+@endpush
+
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -229,18 +464,23 @@ $(document).ready(function() {
         
         // Create date string
         var dateString = currentYear + '-' + String(currentMonth).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+        
+        // Show loading state
+        selectElement.prop('disabled', true);
+        selectElement.css('opacity', '0.6');
 
         $.ajax({
             url: '/manager/absensis',
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
-                karyawan_id: employeeType + '_' + employeeId,
+                employee_id: employeeId,
                 tanggal: dateString,
                 status: status
             },
             success: function(response) {
                 showNotification('Status absensi berhasil diperbarui', 'success');
+                updateAttendanceSummary();
             },
             error: function(xhr) {
                 if (xhr.status === 422) {
@@ -250,23 +490,54 @@ $(document).ready(function() {
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            karyawan_id: employeeType + '_' + employeeId,
+                            employee_id: employeeId,
                             tanggal: dateString,
                             status: status
                         },
                         success: function(response) {
                             showNotification('Status absensi berhasil diperbarui', 'success');
+                            updateAttendanceSummary();
                         },
                         error: function() {
                             showNotification('Terjadi kesalahan saat menyimpan data', 'error');
+                            selectElement.val(selectElement.data('original-value')); // Revert
                         }
                     });
                 } else {
                     showNotification('Terjadi kesalahan saat menyimpan data', 'error');
+                    selectElement.val(selectElement.data('original-value')); // Revert
                 }
+            },
+            complete: function() {
+                // Re-enable select
+                selectElement.prop('disabled', false);
+                selectElement.css('opacity', '1');
             }
         });
     });
+    
+    // Store original values for revert functionality
+    $('.attendance-select').each(function() {
+        $(this).data('original-value', $(this).val());
+    });
+    
+    // Update attendance summary
+    function updateAttendanceSummary() {
+        $('tbody tr').each(function() {
+            var row = $(this);
+            var fullCount = 0;
+            var halfCount = 0;
+            
+            row.find('.attendance-select').each(function() {
+                var status = $(this).val();
+                if (status === 'full') fullCount++;
+                if (status === 'setengah_hari') halfCount++;
+            });
+            
+            var summary = row.find('.attendance-summary');
+            summary.html('<small class="text-success">F: ' + fullCount + '</small><br><small class="text-warning">S: ' + halfCount + '</small>');
+        });
+    }
 
     function showNotification(message, type) {
         var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
