@@ -17,57 +17,45 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Nama Pembibitan</label>
+                <label class="form-label fw-bold">Judul Pembibitan</label>
                 <p class="form-control-plaintext">
                     <i class="bi bi-seedling me-2"></i>
-                    {{ $pembibitan->nama_pembibitan }}
+                    {{ $pembibitan->judul }}
                 </p>
             </div>
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Status</label>
+                <label class="form-label fw-bold">Tanggal Mulai</label>
                 <p class="form-control-plaintext">
-                    <span class="badge {{ $pembibitan->status_badge }} fs-6">
-                        {{ $pembibitan->status_label }}
-                    </span>
+                    <i class="bi bi-calendar me-2"></i>
+                    {{ $pembibitan->tanggal_mulai->format('d/m/Y') }}
                 </p>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Kapasitas</label>
+                <label class="form-label fw-bold">Lokasi</label>
                 <p class="form-control-plaintext">
-                    @if($pembibitan->kapasitas)
-                        <i class="bi bi-collection me-2"></i>
-                        {{ number_format($pembibitan->kapasitas) }}
+                    @if($pembibitan->lokasi)
+                        <i class="bi bi-geo-alt me-2"></i>
+                        {{ $pembibitan->lokasi->nama_lokasi }}
                     @else
                         <span class="text-muted">-</span>
                     @endif
                 </p>
             </div>
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Luas Lahan</label>
+                <label class="form-label fw-bold">Kandang</label>
                 <p class="form-control-plaintext">
-                    @if($pembibitan->luas_lahan)
-                        <i class="bi bi-rulers me-2"></i>
-                        {{ number_format($pembibitan->luas_lahan, 2) }} m²
+                    @if($pembibitan->kandang)
+                        <i class="bi bi-house me-2"></i>
+                        {{ $pembibitan->kandang->nama_kandang }}
                     @else
                         <span class="text-muted">-</span>
                     @endif
                 </p>
             </div>
         </div>
-
-        @if($pembibitan->deskripsi)
-        <div class="mb-3">
-            <label class="form-label fw-bold">Deskripsi</label>
-            <div class="card bg-light">
-                <div class="card-body">
-                    <p class="mb-0">{{ $pembibitan->deskripsi }}</p>
-                </div>
-            </div>
-        </div>
-        @endif
 
         <hr>
 

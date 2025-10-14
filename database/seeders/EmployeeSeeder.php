@@ -17,22 +17,27 @@ class EmployeeSeeder extends Seeder
             [
                 'nama' => 'John Doe',
                 'gaji' => 8000000,
+                'role' => 'karyawan',
             ],
             [
                 'nama' => 'Jane Smith',
                 'gaji' => 10000000,
+                'role' => 'karyawan',
             ],
             [
                 'nama' => 'Bob Johnson',
                 'gaji' => 7000000,
+                'role' => 'karyawan',
             ],
             [
                 'nama' => 'Alice Brown',
                 'gaji' => 6500000,
+                'role' => 'karyawan',
             ],
             [
                 'nama' => 'Charlie Wilson',
                 'gaji' => 12000000,
+                'role' => 'karyawan',
             ],
         ];
 

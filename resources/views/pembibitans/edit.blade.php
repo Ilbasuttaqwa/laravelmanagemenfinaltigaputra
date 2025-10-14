@@ -21,27 +21,19 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="nama_pembibitan" class="form-label">Nama Pembibitan <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control @error('nama_pembibitan') is-invalid @enderror"
-                           id="nama_pembibitan" name="nama_pembibitan" value="{{ old('nama_pembibitan', $pembibitan->nama_pembibitan) }}" required>
-                    @error('nama_pembibitan')
+                    <label for="judul" class="form-label">Judul Pembibitan <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('judul') is-invalid @enderror"
+                           id="judul" name="judul" value="{{ old('judul', $pembibitan->judul) }}" required>
+                    @error('judul')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                    <select class="form-control @error('status') is-invalid @enderror"
-                            id="status" name="status" required>
-                        <option value="">Pilih Status</option>
-                        <option value="aktif" {{ old('status', $pembibitan->status) == 'aktif' ? 'selected' : '' }}>
-                            Aktif
-                        </option>
-                        <option value="non_aktif" {{ old('status', $pembibitan->status) == 'non_aktif' ? 'selected' : '' }}>
-                            Non Aktif
-                        </option>
-                    </select>
-                    @error('status')
+                    <label for="tanggal_mulai" class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control @error('tanggal_mulai') is-invalid @enderror"
+                           id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai', $pembibitan->tanggal_mulai) }}" required>
+                    @error('tanggal_mulai')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -49,31 +41,36 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="kapasitas" class="form-label">Kapasitas</label>
-                    <input type="number" class="form-control @error('kapasitas') is-invalid @enderror"
-                           id="kapasitas" name="kapasitas" value="{{ old('kapasitas', $pembibitan->kapasitas) }}" min="1">
-                    @error('kapasitas')
+                    <label for="lokasi_id" class="form-label">Lokasi</label>
+                    <select class="form-control @error('lokasi_id') is-invalid @enderror"
+                            id="lokasi_id" name="lokasi_id">
+                        <option value="">Pilih Lokasi (Opsional)</option>
+                        @foreach($lokasis as $lokasi)
+                            <option value="{{ $lokasi->id }}" {{ old('lokasi_id', $pembibitan->lokasi_id) == $lokasi->id ? 'selected' : '' }}>
+                                {{ $lokasi->nama_lokasi }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('lokasi_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="luas_lahan" class="form-label">Luas Lahan (m²)</label>
-                    <input type="number" class="form-control @error('luas_lahan') is-invalid @enderror"
-                           id="luas_lahan" name="luas_lahan" value="{{ old('luas_lahan', $pembibitan->luas_lahan) }}" min="0" step="0.01">
-                    @error('luas_lahan')
+                    <label for="kandang_id" class="form-label">Kandang</label>
+                    <select class="form-control @error('kandang_id') is-invalid @enderror"
+                            id="kandang_id" name="kandang_id">
+                        <option value="">Pilih Kandang (Opsional)</option>
+                        @foreach($kandangs as $kandang)
+                            <option value="{{ $kandang->id }}" {{ old('kandang_id', $pembibitan->kandang_id) == $kandang->id ? 'selected' : '' }}>
+                                {{ $kandang->nama_kandang }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('kandang_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="deskripsi" class="form-label">Deskripsi</label>
-                <textarea class="form-control @error('deskripsi') is-invalid @enderror"
-                          id="deskripsi" name="deskripsi" rows="3">{{ old('deskripsi', $pembibitan->deskripsi) }}</textarea>
-                @error('deskripsi')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
             </div>
 
             <div class="d-flex justify-content-end gap-2">
