@@ -193,8 +193,7 @@
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">Tambah Data Absensi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                        <span>&times;</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">
@@ -418,6 +417,46 @@
     margin-right: 5px;
     vertical-align: middle;
 }
+
+/* Modal Close Button Fix */
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: 0.5;
+    padding: 0.25rem 0.25rem;
+    margin: -0.25rem -0.25rem -0.25rem auto;
+}
+
+.btn-close:hover {
+    color: #000;
+    text-decoration: none;
+    opacity: 0.75;
+}
+
+.btn-close:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    opacity: 1;
+}
+
+.btn-close:disabled,
+.btn-close.disabled {
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.25;
+}
+
+.btn-close::before {
+    content: "×";
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1;
+}
 </style>
 @endpush
 
@@ -543,8 +582,8 @@ $(document).ready(function() {
         var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
         var notification = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
                           message +
-                          '<button type="button" class="close" data-dismiss="alert">' +
-                          '<span>&times;</span>' +
+                          '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">' +
+                          '' +
                           '</button>' +
                           '</div>';
         
