@@ -15,9 +15,20 @@ class CalendarAttendanceController extends Controller
      */
     public function index(Request $request)
     {
+        // Validate and get parameters
         $tahun = $request->get('tahun', Carbon::now()->year);
         $bulan = $request->get('bulan', Carbon::now()->month);
         $tipe = $request->get('tipe', 'all');
+        
+        // Validate year range
+        if ($tahun < 2020 || $tahun > 2030) {
+            $tahun = Carbon::now()->year;
+        }
+        
+        // Validate month range
+        if ($bulan < 1 || $bulan > 12) {
+            $bulan = Carbon::now()->month;
+        }
 
         // Get employees based on user role
         $query = Employee::query();

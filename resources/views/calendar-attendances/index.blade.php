@@ -18,17 +18,19 @@
 
                 <div class="card-body">
                     <!-- Filter Form -->
-                    <form method="GET" action="{{ route('manager.calendar-attendances.index') }}" class="mb-4">
+                    <form method="GET" action="{{ route(auth()->user()->isAdmin() ? 'admin.calendar-attendances.index' : 'manager.calendar-attendances.index') }}" class="mb-4">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="tahun">Tahun:</label>
-                                <select name="tahun" id="tahun" class="form-control">
-                                    @foreach($availableYears as $year)
-                                        <option value="{{ $year }}" {{ $tahun == $year ? 'selected' : '' }}>
-                                            {{ $year }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <input type="number" 
+                                       name="tahun" 
+                                       id="tahun" 
+                                       class="form-control" 
+                                       value="{{ $tahun }}" 
+                                       min="2020" 
+                                       max="2030"
+                                       placeholder="Masukkan tahun">
+                                <small class="text-muted">Range: 2020-2030</small>
                             </div>
                             <div class="col-md-3">
                                 <label for="bulan">Bulan:</label>
@@ -64,6 +66,13 @@
                                 <i class="fas fa-calendar-alt me-2"></i>
                                 {{ $availableMonths[$bulan] }} {{ $tahun }}
                             </h4>
+                            <div class="text-center">
+                                <div class="real-time-info">
+                                    <i class="fas fa-clock me-1"></i>
+                                    <span id="current-time">Loading...</span>
+                                    <small class="ms-2">(Waktu Jakarta)</small>
+                                </div>
+                            </div>
                         </div>
                         
                         @if($attendances->count() > 0)
@@ -213,13 +222,16 @@
                     </div>
                     <div class="form-group">
                         <label for="tahun">Tahun:</label>
-                        <select name="tahun" id="tahun" class="form-control" required>
-                            @for($year = date('Y') - 1; $year <= date('Y') + 1; $year++)
-                                <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endfor
-                        </select>
+                        <input type="number" 
+                               name="tahun" 
+                               id="modal_tahun" 
+                               class="form-control" 
+                               value="{{ date('Y') }}" 
+                               min="2020" 
+                               max="2030"
+                               placeholder="Masukkan tahun"
+                               required>
+                        <small class="text-muted">Range: 2020-2030</small>
                     </div>
                     <div class="form-group">
                         <label for="bulan">Bulan:</label>
@@ -258,6 +270,29 @@
     color: white;
     padding: 20px;
     text-align: center;
+}
+
+.real-time-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.real-time-info i {
+    color: #ffd700;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
 .calendar-attendance-table {
@@ -465,6 +500,41 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 $(document).ready(function() {
+    // Real-time clock for Jakarta timezone
+    function updateJakartaTime() {
+        const now = new Date();
+        const jakartaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+        
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'Asia/Jakarta'
+        };
+        
+        const timeString = jakartaTime.toLocaleDateString('id-ID', options);
+        $('#current-time').text(timeString);
+    }
+    
+    // Update time every second
+    updateJakartaTime();
+    setInterval(updateJakartaTime, 1000);
+    
+    // Auto-fill current year and month
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    
+    // Set default values if not set
+    if (!$('#tahun').val()) {
+        $('#tahun').val(currentYear);
+    }
+    if (!$('#bulan').val()) {
+        $('#bulan').val(currentMonth);
+    }
     // Handle karyawan dropdown change
     $('#karyawan_tipe').change(function() {
         var tipe = $(this).val();
