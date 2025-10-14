@@ -116,12 +116,6 @@
                                            class="btn btn-warning btn-sm" title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        @if(auth()->user()->isManager())
-                                            <button type="button" class="btn btn-danger btn-sm" 
-                                                    onclick="confirmDelete({{ $employee->id }}, '{{ $employee->nama }}')" title="Hapus">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -176,18 +170,3 @@
 @endif
 @endsection
 
-@push('scripts')
-<script>
-    function confirmDelete(id, name) {
-        document.getElementById('employeeName').textContent = name;
-        @if(auth()->user()->isManager())
-            document.getElementById('deleteForm').action = '{{ route("manager.employees.destroy", ":id") }}'.replace(':id', id);
-        @else
-            document.getElementById('deleteForm').action = '{{ route("admin.employees.destroy", ":id") }}'.replace(':id', id);
-        @endif
-        
-        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        modal.show();
-    }
-</script>
-@endpush

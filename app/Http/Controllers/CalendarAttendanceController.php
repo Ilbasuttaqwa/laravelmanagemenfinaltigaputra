@@ -50,7 +50,7 @@ class CalendarAttendanceController extends Controller
         ]);
 
         return view('calendar-attendances.index', compact(
-            'attendances', 'gudangs', 'mandors', 'tahun', 'bulan', 'tipe', 
+            'attendances', 'employees', 'tahun', 'bulan', 'tipe', 
             'availableYears', 'availableMonths'
         ));
     }
@@ -60,12 +60,11 @@ class CalendarAttendanceController extends Controller
      */
     public function create()
     {
-        $gudangs = Gudang::all();
-        $mandors = Mandor::all();
+        $employees = Employee::all();
         $tahun = Carbon::now()->year;
         $bulan = Carbon::now()->month;
 
-        return view('calendar-attendances.create', compact('gudangs', 'mandors', 'tahun', 'bulan'));
+        return view('calendar-attendances.create', compact('employees', 'tahun', 'bulan'));
     }
 
     /**

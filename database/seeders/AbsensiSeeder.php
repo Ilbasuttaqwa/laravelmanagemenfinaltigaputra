@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Absensi;
-use App\Models\Gudang;
-use App\Models\Mandor;
+use App\Models\Employee;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
@@ -16,12 +15,11 @@ class AbsensiSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get all master data for seeding
-        $gudangs = Gudang::all();
-        $mandors = Mandor::all();
+        // Get all employees for seeding
+        $employees = Employee::all();
 
-        if ($gudangs->isEmpty() || $mandors->isEmpty()) {
-            return; // Skip if no master data
+        if ($employees->isEmpty()) {
+            return; // Skip if no employees
         }
 
         // Generate attendance data for the last 30 days
@@ -35,21 +33,11 @@ class AbsensiSeeder extends Seeder
                 continue;
             }
 
-            // Generate attendance for gudang employees
-            foreach ($gudangs as $gudang) {
+            // Generate attendance for all employees
+            foreach ($employees as $employee) {
                 $status = $this->getRandomStatus();
                 Absensi::create([
-                    'gudang_id' => $gudang->id,
-                    'tanggal' => $tanggal,
-                    'status' => $status,
-                ]);
-            }
-
-            // Generate attendance for mandor employees
-            foreach ($mandors as $mandor) {
-                $status = $this->getRandomStatus();
-                Absensi::create([
-                    'mandor_id' => $mandor->id,
+                    'employee_id' => $employee->id,
                     'tanggal' => $tanggal,
                     'status' => $status,
                 ]);

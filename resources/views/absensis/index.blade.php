@@ -512,8 +512,8 @@ body {
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge bg-{{ $absensi->employee->role == 'mandor' ? 'success' : 'primary' }} px-3 py-2">
-                                        <i class="bi bi-{{ $absensi->employee->role == 'mandor' ? 'person-badge' : 'building' }} me-1"></i>
+                                    <span class="badge bg-{{ $absensi->employee && $absensi->employee->role == 'mandor' ? 'success' : 'primary' }} px-3 py-2">
+                                        <i class="bi bi-{{ $absensi->employee && $absensi->employee->role == 'mandor' ? 'person-badge' : 'building' }} me-1"></i>
                                         {{ ucfirst($absensi->employee->role ?? 'karyawan') }}
                                     </span>
                                 </td>
