@@ -342,6 +342,7 @@
 /* Custom Scrollbar */
 .table-responsive::-webkit-scrollbar {
     height: 8px;
+    width: 8px;
 }
 
 .table-responsive::-webkit-scrollbar-track {
@@ -356,6 +357,17 @@
 
 .table-responsive::-webkit-scrollbar-thumb:hover {
     background: #1d4ed8;
+}
+
+/* Enhanced Table Scroll */
+.table-responsive {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.table-responsive::-webkit-scrollbar-corner {
+    background: #f1f5f9;
 }
 
 /* Force Text Visibility */
@@ -452,7 +464,7 @@ body {
     </div>
     <div class="card-body">
         @if($absensis->count() > 0)
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>

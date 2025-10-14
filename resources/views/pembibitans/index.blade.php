@@ -48,7 +48,7 @@
     </div>
     <div class="card-body">
         @if($pembibitans->count() > 0)
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
