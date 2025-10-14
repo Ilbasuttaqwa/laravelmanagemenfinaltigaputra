@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SalaryReport;
-use App\Models\Gudang;
-use App\Models\Mandor;
+use App\Models\Employee;
 use App\Models\Lokasi;
 use App\Models\Kandang;
 use App\Models\Pembibitan;
@@ -80,7 +79,7 @@ class SalaryReportController extends Controller
         // Generate salary reports for all employees
         $this->generateSalaryReports($tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
 
-        return redirect()->route('manager.salary-reports.index', [
+        return redirect()->route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index', [
             'tahun' => $tahun,
             'bulan' => $bulan,
             'lokasi_id' => $lokasiId,
@@ -129,20 +128,12 @@ class SalaryReportController extends Controller
         // Clear existing reports for this period
         SalaryReport::periode($tahun, $bulan)->delete();
 
-        // Get all gudang employees
-        $gudangs = Gudang::all();
+        // Get all employees
+        $employees = Employee::all();
 
-        // Get all mandor employees  
-        $mandors = Mandor::all();
-
-        // Generate reports for gudang employees
-        foreach ($gudangs as $gudang) {
-            $this->createSalaryReport($gudang, 'gudang', $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
-        }
-
-        // Generate reports for mandor employees
-        foreach ($mandors as $mandor) {
-            $this->createSalaryReport($mandor, 'mandor', $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
+        // Generate reports for all employees
+        foreach ($employees as $employee) {
+            $this->createSalaryReport($employee, $employee->role, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
         }
     }
 
@@ -152,13 +143,8 @@ class SalaryReportController extends Controller
         $startDate = $tanggalMulai ?? Carbon::create($tahun, $bulan, 1);
         $endDate = $tanggalSelesai ?? Carbon::create($tahun, $bulan)->endOfMonth();
 
-        $attendanceQuery = Absensi::where(function($query) use ($employee, $tipe) {
-            if ($tipe === 'gudang') {
-                $query->where('gudang_id', $employee->id);
-            } else {
-                $query->where('mandor_id', $employee->id);
-            }
-        })->whereBetween('tanggal', [$startDate, $endDate]);
+        $attendanceQuery = Absensi::where('employee_id', $employee->id)
+            ->whereBetween('tanggal', [$startDate, $endDate]);
 
         $attendances = $attendanceQuery->get();
         $jmlHariKerja = $attendances->where('status', 'full')->count() + 
@@ -174,8 +160,7 @@ class SalaryReportController extends Controller
         $pembibitan = null;
 
         SalaryReport::create([
-            'gudang_id' => $tipe === 'gudang' ? $employee->id : null,
-            'mandor_id' => $tipe === 'mandor' ? $employee->id : null,
+            'employee_id' => $employee->id,
             'lokasi_id' => $lokasi?->id,
             'kandang_id' => $kandang?->id,
             'pembibitan_id' => $pembibitan?->id,

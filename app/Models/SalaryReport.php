@@ -11,8 +11,7 @@ class SalaryReport extends Model
     use HasFactory;
 
     protected $fillable = [
-        'gudang_id',
-        'mandor_id',
+        'employee_id',
         'lokasi_id',
         'kandang_id',
         'pembibitan_id',
@@ -35,14 +34,9 @@ class SalaryReport extends Model
     ];
 
     // Relationships
-    public function gudang()
+    public function employee()
     {
-        return $this->belongsTo(Gudang::class);
-    }
-
-    public function mandor()
-    {
-        return $this->belongsTo(Mandor::class);
+        return $this->belongsTo(Employee::class);
     }
 
     public function lokasi()
@@ -78,7 +72,7 @@ class SalaryReport extends Model
 
     public function getTipeKaryawanBadgeAttribute()
     {
-        $badgeClass = $this->tipe_karyawan == 'gudang' ? 'primary' : 'success';
+        $badgeClass = $this->tipe_karyawan == 'mandor' ? 'success' : 'primary';
         return "<span class='badge badge-{$badgeClass}'>{$this->tipe_karyawan_label}</span>";
     }
 
