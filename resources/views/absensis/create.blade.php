@@ -24,9 +24,9 @@
                     <select class="form-control @error('employee_id') is-invalid @enderror"
                             id="employee_id" name="employee_id" required>
                         <option value="">Pilih Karyawan</option>
-                        @foreach($employees as $employee)
+                        @foreach($allEmployees as $employee)
                             <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
-                                {{ $employee->nama }} ({{ ucfirst($employee->role) }})
+                                {{ $employee->nama }} ({{ ucfirst(str_replace('_', ' ', $employee->role)) }})
                             </option>
                         @endforeach
                     </select>

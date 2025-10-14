@@ -37,6 +37,7 @@ class AbsensiController extends Controller
 
     public function create()
     {
+        // Get employees from employees table
         $query = Employee::orderBy('nama');
         
         // Admin can only see karyawan (not mandor)
@@ -46,29 +47,115 @@ class AbsensiController extends Controller
         
         $employees = $query->get();
         
-        return view('absensis.create', compact('employees'));
+        // Get gudang employees (karyawan gudang)
+        $gudangEmployees = collect();
+        if (auth()->user()->isManager()) {
+            $gudangEmployees = \App\Models\Gudang::orderBy('nama')->get()->map(function($gudang) {
+                return (object) [
+                    'id' => 'gudang_' . $gudang->id,
+                    'nama' => $gudang->nama,
+                    'role' => 'karyawan_gudang',
+                    'gaji' => $gudang->gaji,
+                    'source' => 'gudang'
+                ];
+            });
+        }
+        
+        // Get mandor employees
+        $mandorEmployees = collect();
+        if (auth()->user()->isManager()) {
+            $mandorEmployees = \App\Models\Mandor::orderBy('nama')->get()->map(function($mandor) {
+                return (object) [
+                    'id' => 'mandor_' . $mandor->id,
+                    'nama' => $mandor->nama,
+                    'role' => 'mandor',
+                    'gaji' => $mandor->gaji,
+                    'source' => 'mandor'
+                ];
+            });
+        }
+        
+        // Combine all employees
+        $allEmployees = $employees->map(function($employee) {
+            return (object) [
+                'id' => 'employee_' . $employee->id,
+                'nama' => $employee->nama,
+                'role' => $employee->role,
+                'gaji' => $employee->gaji,
+                'source' => 'employee'
+            ];
+        })->concat($gudangEmployees)->concat($mandorEmployees)->sortBy('nama');
+        
+        return view('absensis.create', compact('allEmployees'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => 'required|string',
             'tanggal' => 'required|date',
             'status' => 'required|in:full,setengah_hari',
         ]);
 
-        // Admin cannot create absensi for mandor employees
-        if (auth()->user()->isAdmin()) {
-            $employee = Employee::find($validated['employee_id']);
-            if ($employee && $employee->role === 'mandor') {
-                return redirect()->back()
-                    ->with('error', 'Admin tidak dapat membuat absensi untuk karyawan mandor.')
-                    ->withInput();
+        // Parse employee_id to determine source and actual ID
+        $employeeId = $validated['employee_id'];
+        $actualEmployeeId = null;
+        $employeeRole = null;
+        $employeeName = null;
+
+        if (str_starts_with($employeeId, 'employee_')) {
+            // From employees table
+            $actualEmployeeId = str_replace('employee_', '', $employeeId);
+            $employee = Employee::find($actualEmployeeId);
+            if ($employee) {
+                $employeeRole = $employee->role;
+                $employeeName = $employee->nama;
+            }
+        } elseif (str_starts_with($employeeId, 'gudang_')) {
+            // From gudangs table - create temporary employee record
+            $gudangId = str_replace('gudang_', '', $employeeId);
+            $gudang = \App\Models\Gudang::find($gudangId);
+            if ($gudang) {
+                // Create or find employee record for gudang
+                $employee = Employee::firstOrCreate(
+                    ['nama' => $gudang->nama, 'role' => 'karyawan_gudang'],
+                    ['gaji' => $gudang->gaji]
+                );
+                $actualEmployeeId = $employee->id;
+                $employeeRole = 'karyawan_gudang';
+                $employeeName = $gudang->nama;
+            }
+        } elseif (str_starts_with($employeeId, 'mandor_')) {
+            // From mandors table - create temporary employee record
+            $mandorId = str_replace('mandor_', '', $employeeId);
+            $mandor = \App\Models\Mandor::find($mandorId);
+            if ($mandor) {
+                // Create or find employee record for mandor
+                $employee = Employee::firstOrCreate(
+                    ['nama' => $mandor->nama, 'role' => 'mandor'],
+                    ['gaji' => $mandor->gaji]
+                );
+                $actualEmployeeId = $employee->id;
+                $employeeRole = 'mandor';
+                $employeeName = $mandor->nama;
             }
         }
 
+        if (!$actualEmployeeId) {
+            return redirect()->back()
+                ->with('error', 'Karyawan tidak ditemukan.')
+                ->withInput();
+        }
+
+        // Admin cannot create absensi for mandor employees
+        if (auth()->user()->isAdmin() && $employeeRole === 'mandor') {
+            return redirect()->back()
+                ->with('error', 'Admin tidak dapat membuat absensi untuk karyawan mandor.')
+                ->withInput();
+        }
+
         $data = [
-            'employee_id' => $validated['employee_id'],
+            'employee_id' => $actualEmployeeId,
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
         ];
@@ -101,6 +188,7 @@ class AbsensiController extends Controller
             abort(403, 'Admin tidak dapat mengedit data absensi karyawan mandor.');
         }
         
+        // Get employees from employees table
         $query = Employee::orderBy('nama');
         
         // Admin can only see karyawan (not mandor)
@@ -110,19 +198,115 @@ class AbsensiController extends Controller
         
         $employees = $query->get();
         
-        return view('absensis.edit', compact('absensi', 'employees'));
+        // Get gudang employees (karyawan gudang)
+        $gudangEmployees = collect();
+        if (auth()->user()->isManager()) {
+            $gudangEmployees = \App\Models\Gudang::orderBy('nama')->get()->map(function($gudang) {
+                return (object) [
+                    'id' => 'gudang_' . $gudang->id,
+                    'nama' => $gudang->nama,
+                    'role' => 'karyawan_gudang',
+                    'gaji' => $gudang->gaji,
+                    'source' => 'gudang'
+                ];
+            });
+        }
+        
+        // Get mandor employees
+        $mandorEmployees = collect();
+        if (auth()->user()->isManager()) {
+            $mandorEmployees = \App\Models\Mandor::orderBy('nama')->get()->map(function($mandor) {
+                return (object) [
+                    'id' => 'mandor_' . $mandor->id,
+                    'nama' => $mandor->nama,
+                    'role' => 'mandor',
+                    'gaji' => $mandor->gaji,
+                    'source' => 'mandor'
+                ];
+            });
+        }
+        
+        // Combine all employees
+        $allEmployees = $employees->map(function($employee) {
+            return (object) [
+                'id' => 'employee_' . $employee->id,
+                'nama' => $employee->nama,
+                'role' => $employee->role,
+                'gaji' => $employee->gaji,
+                'source' => 'employee'
+            ];
+        })->concat($gudangEmployees)->concat($mandorEmployees)->sortBy('nama');
+        
+        return view('absensis.edit', compact('absensi', 'allEmployees'));
     }
 
     public function update(Request $request, Absensi $absensi)
     {
         $validated = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => 'required|string',
             'tanggal' => 'required|date',
             'status' => 'required|in:full,setengah_hari',
         ]);
 
+        // Parse employee_id to determine source and actual ID
+        $employeeId = $validated['employee_id'];
+        $actualEmployeeId = null;
+        $employeeRole = null;
+        $employeeName = null;
+
+        if (str_starts_with($employeeId, 'employee_')) {
+            // From employees table
+            $actualEmployeeId = str_replace('employee_', '', $employeeId);
+            $employee = Employee::find($actualEmployeeId);
+            if ($employee) {
+                $employeeRole = $employee->role;
+                $employeeName = $employee->nama;
+            }
+        } elseif (str_starts_with($employeeId, 'gudang_')) {
+            // From gudangs table - create temporary employee record
+            $gudangId = str_replace('gudang_', '', $employeeId);
+            $gudang = \App\Models\Gudang::find($gudangId);
+            if ($gudang) {
+                // Create or find employee record for gudang
+                $employee = Employee::firstOrCreate(
+                    ['nama' => $gudang->nama, 'role' => 'karyawan_gudang'],
+                    ['gaji' => $gudang->gaji]
+                );
+                $actualEmployeeId = $employee->id;
+                $employeeRole = 'karyawan_gudang';
+                $employeeName = $gudang->nama;
+            }
+        } elseif (str_starts_with($employeeId, 'mandor_')) {
+            // From mandors table - create temporary employee record
+            $mandorId = str_replace('mandor_', '', $employeeId);
+            $mandor = \App\Models\Mandor::find($mandorId);
+            if ($mandor) {
+                // Create or find employee record for mandor
+                $employee = Employee::firstOrCreate(
+                    ['nama' => $mandor->nama, 'role' => 'mandor'],
+                    ['gaji' => $mandor->gaji]
+                );
+                $actualEmployeeId = $employee->id;
+                $employeeRole = 'mandor';
+                $employeeName = $mandor->nama;
+            }
+        }
+
+        if (!$actualEmployeeId) {
+            return redirect()->back()
+                ->with('error', 'Karyawan tidak ditemukan.')
+                ->withInput();
+        }
+
+        // Admin cannot update absensi for mandor employees
+        if (auth()->user()->isAdmin() && $employeeRole === 'mandor') {
+            return redirect()->back()
+                ->with('error', 'Admin tidak dapat mengubah data absensi karyawan mandor.')
+                ->withInput();
+        }
+
         $data = [
-            'employee_id' => $validated['employee_id'],
+            'employee_id' => $actualEmployeeId,
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
         ];
