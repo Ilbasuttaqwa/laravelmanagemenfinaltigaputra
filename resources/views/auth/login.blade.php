@@ -58,8 +58,10 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card login-card">
                     <div class="login-header text-center py-4">
+                        <div class="mb-3">
+                            <img src="{{ asset('logo.jpg') }}" alt="Tiga Putra Management" class="img-fluid" style="max-width: 100px; height: auto;">
+                        </div>
                         <h3 class="mb-0">
-                            <i class="bi bi-building"></i>
                             Tiga Putra Management
                         </h3>
                         <p class="mb-0 mt-2">Silakan login untuk melanjutkan</p>

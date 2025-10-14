@@ -382,8 +382,10 @@
             <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
                 <div class="position-sticky pt-3">
                     <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <img src="{{ ('logo.jpg') }}" alt="Tiga Putra Management" class="img-fluid" style="max-width: 80px; height: auto;">
+                        </div>
                         <h4 class="text-white">
-                            <i class="bi bi-building"></i>
                             Tiga Putra Management
                         </h4>
                     </div>
