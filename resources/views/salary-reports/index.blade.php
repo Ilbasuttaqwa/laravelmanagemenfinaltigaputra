@@ -24,17 +24,17 @@
                     </button>
                 </div>
                 <div>
-                    <a href="{{ route('manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'biaya_gaji'])) }}" 
+                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'biaya_gaji'])) }}" 
                        class="btn btn-success" target="_blank">
                         <i class="bi bi-file-earmark-excel"></i>
                         Export Biaya Gaji
                     </a>
-                    <a href="{{ route('manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'rinci'])) }}" 
+                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'rinci'])) }}" 
                        class="btn btn-info" target="_blank">
                         <i class="bi bi-file-earmark-text"></i>
                         Export Rinci
                     </a>
-                    <a href="{{ route('manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'singkat'])) }}" 
+                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'singkat'])) }}" 
                        class="btn btn-warning" target="_blank">
                         <i class="bi bi-file-earmark"></i>
                         Export Singkat
@@ -45,7 +45,7 @@
             <!-- Filter Form -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('manager.salary-reports.index') }}" class="row g-3">
+                    <form method="GET" action="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index') }}" class="row g-3">
                         <div class="col-md-2">
                             <label for="tahun" class="form-label">Tahun</label>
                             <select name="tahun" id="tahun" class="form-select">
@@ -118,7 +118,7 @@
                                 <i class="bi bi-search"></i>
                                 Filter
                             </button>
-                            <a href="{{ route('manager.salary-reports.index') }}" class="btn btn-secondary">
+                            <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index') }}" class="btn btn-secondary">
                                 <i class="bi bi-arrow-clockwise"></i>
                                 Reset
                             </a>
@@ -172,7 +172,7 @@
                                             <td class="text-end">{{ $report->total_gaji_formatted }}</td>
                                             <td class="text-center">{{ $report->periode }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('manager.salary-reports.show', $report) }}" 
+                                                <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.show' : 'manager.salary-reports.show', $report) }}" 
                                                    class="btn btn-sm btn-info" title="Detail">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
@@ -206,7 +206,7 @@
 <div class="modal fade" id="generateReportModal" tabindex="-1" aria-labelledby="generateReportModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ route('manager.salary-reports.generate') }}">
+            <form method="POST" action="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.generate' : 'manager.salary-reports.generate') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="generateReportModalLabel">Generate Laporan Gaji</h5>

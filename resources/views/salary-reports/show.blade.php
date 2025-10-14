@@ -17,7 +17,7 @@
 
             <!-- Back Button -->
             <div class="mb-4">
-                <a href="{{ route('manager.salary-reports.index') }}" class="btn btn-secondary">
+                <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i>
                     Kembali ke Daftar Laporan
                 </a>

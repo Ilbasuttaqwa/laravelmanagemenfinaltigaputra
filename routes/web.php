@@ -101,6 +101,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Salary Reports (Read Only)
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');
     Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
+    Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
     
     // Manage Page for Admin
