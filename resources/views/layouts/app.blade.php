@@ -383,7 +383,7 @@
                 <div class="position-sticky pt-3">
                     <div class="text-center mb-4">
                         <div class="mb-3">
-                            <img src="{{ ('logo.jpg') }}" alt="Tiga Putra Management" class="img-fluid" style="max-width: 80px; height: auto;">
+                            <img src="{{ asset('resources/logo.jpg') }}" alt="Tiga Putra Management" class="img-fluid" style="max-width: 80px; height: auto;">
                         </div>
                         <h4 class="text-white">
                             Tiga Putra Management

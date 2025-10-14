@@ -59,7 +59,7 @@
                 <div class="card login-card">
                     <div class="login-header text-center py-4">
                         <div class="mb-3">
-                            <img src="{{ asset('logo.jpg') }}" alt="Tiga Putra Management" class="img-fluid" style="max-width: 100px; height: auto;">
+                            <img src="{{ asset('resources/logo.jpg') }}" alt="Tiga Putra Management" class="img-fluid" style="max-width: 100px; height: auto;">
                         </div>
                         <h3 class="mb-0">
                             Tiga Putra Management
