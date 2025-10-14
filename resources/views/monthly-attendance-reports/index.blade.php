@@ -9,6 +9,11 @@
                     <h3 class="card-title">
                         <i class="fas fa-chart-bar"></i> Laporan Absensi Bulanan
                     </h3>
+                    <div class="real-time-info">
+                        <i class="fas fa-clock me-1"></i>
+                        <span id="current-time">Loading...</span>
+                        <small class="ms-2">(Waktu Jakarta)</small>
+                    </div>
                     <div class="card-tools">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#generateModal">
                             <i class="fas fa-plus"></i> Generate Laporan
@@ -25,13 +30,15 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="tahun">Tahun:</label>
-                                <select name="tahun" id="tahun" class="form-control">
-                                    @foreach($availableYears as $year)
-                                        <option value="{{ $year }}" {{ $tahun == $year ? 'selected' : '' }}>
-                                            {{ $year }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <input type="number" 
+                                       name="tahun" 
+                                       id="tahun" 
+                                       class="form-control" 
+                                       value="{{ $tahun }}" 
+                                       min="2020" 
+                                       max="2030"
+                                       placeholder="Masukkan tahun">
+                                <small class="text-muted">Range: 2020-2030</small>
                             </div>
                             <div class="col-md-3">
                                 <label for="bulan">Bulan:</label>
@@ -154,13 +161,16 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="generate_tahun">Tahun:</label>
-                        <select name="tahun" id="generate_tahun" class="form-control" required>
-                            @for($year = date('Y') - 1; $year <= date('Y') + 1; $year++)
-                                <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endfor
-                        </select>
+                        <input type="number" 
+                               name="tahun" 
+                               id="generate_tahun" 
+                               class="form-control" 
+                               value="{{ date('Y') }}" 
+                               min="2020" 
+                               max="2030"
+                               placeholder="Masukkan tahun"
+                               required>
+                        <small class="text-muted">Range: 2020-2030</small>
                     </div>
                     <div class="form-group">
                         <label for="generate_bulan">Bulan:</label>
@@ -184,6 +194,61 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+.real-time-info {
+    background: rgba(0, 123, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
+.real-time-info i {
+    color: #007bff;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+</style>
+@endpush
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Real-time clock for Jakarta timezone
+    function updateJakartaTime() {
+        const now = new Date();
+        const jakartaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+        
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'Asia/Jakarta'
+        };
+        
+        const timeString = jakartaTime.toLocaleDateString('id-ID', options);
+        $('#current-time').text(timeString);
+    }
+    
+    // Update time every second
+    updateJakartaTime();
+    setInterval(updateJakartaTime, 1000);
+});
+</script>
+@endpush
 
 @push('styles')
 <style>
