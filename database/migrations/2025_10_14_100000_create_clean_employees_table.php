@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->decimal('gaji', 15, 2);
+            $table->enum('role', ['karyawan', 'mandor'])->default('karyawan');
             $table->timestamps();
         });
     }

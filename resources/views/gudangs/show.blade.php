@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Gudang')
+@section('title', 'Detail Karyawan Gudang')
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-eye"></i> Detail Gudang</h1>
+    <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-eye"></i> Detail Karyawan Gudang</h1>
     <a href="{{ route(auth()->user()->isManager() ? 'manager.gudangs.index' : 'admin.gudangs.index') }}" class="btn btn-secondary">
         <i class="bi bi-arrow-left"></i> Kembali
     </a>
@@ -12,17 +12,21 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h5 class="card-title mb-0">Informasi Gudang</h5>
+        <h5 class="card-title mb-0">Informasi Karyawan Gudang</h5>
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Nama Gudang</label>
-                <p class="form-control-plaintext">{{ $gudang->nama }}</p>
+                <label class="form-label fw-bold">Nama Karyawan Gudang</label>
+                <p class="form-control-plaintext">
+                    <i class="bi bi-person me-2"></i>
+                    {{ $gudang->nama }}
+                </p>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Gaji</label>
                 <p class="form-control-plaintext">
+                    <i class="bi bi-currency-dollar me-2"></i>
                     <span class="h5 text-success">
                         Rp {{ number_format($gudang->gaji, 0, ',', '.') }}
                     </span>

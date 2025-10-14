@@ -13,27 +13,25 @@ return new class extends Migration
     {
         Schema::create('salary_reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('gudang_id')->nullable();
-            $table->unsignedBigInteger('mandor_id')->nullable();
+            $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('lokasi_id')->nullable();
             $table->unsignedBigInteger('kandang_id')->nullable();
             $table->unsignedBigInteger('pembibitan_id')->nullable();
             $table->string('nama_karyawan');
-            $table->string('tipe_karyawan'); // 'gudang' or 'mandor'
+            $table->enum('tipe_karyawan', ['karyawan', 'mandor']);
             $table->decimal('gaji_pokok', 15, 2);
-            $table->integer('jml_hari_kerja'); // jumlah hari kerja (jml mask)
+            $table->decimal('jml_hari_kerja', 5, 2);
             $table->decimal('total_gaji', 15, 2);
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->integer('tahun');
             $table->integer('bulan');
             $table->timestamps();
-
-            $table->foreign('gudang_id')->references('id')->on('gudangs')->onDelete('cascade');
-            $table->foreign('mandor_id')->references('id')->on('mandors')->onDelete('cascade');
-            $table->foreign('lokasi_id')->references('id')->on('lokasis')->onDelete('cascade');
-            $table->foreign('kandang_id')->references('id')->on('kandangs')->onDelete('cascade');
-            $table->foreign('pembibitan_id')->references('id')->on('pembibitans')->onDelete('cascade');
+            
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('lokasi_id')->references('id')->on('lokasis')->onDelete('set null');
+            $table->foreign('kandang_id')->references('id')->on('kandangs')->onDelete('set null');
+            $table->foreign('pembibitan_id')->references('id')->on('pembibitans')->onDelete('set null');
         });
     }
 

@@ -74,18 +74,18 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     
     // Salary Reports
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');
-    Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
-    Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
+    Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
+    Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
 });
 
 // Admin Routes (Akses Terbatas - Tidak bisa input/edit mandor dan karyawan mandor)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // Admin hanya bisa lihat master gudang (read-only)
     Route::get('gudangs', [GudangController::class, 'index'])->name('gudangs.index');
-    Route::get('gudangs/{gudang}', [GudangController::class, 'show'])->name('gudangs.show');
     Route::get('gudangs/create', [GudangController::class, 'create'])->name('gudangs.create');
     Route::post('gudangs', [GudangController::class, 'store'])->name('gudangs.store');
+    Route::get('gudangs/{gudang}', [GudangController::class, 'show'])->name('gudangs.show');
     Route::get('gudangs/{gudang}/edit', [GudangController::class, 'edit'])->name('gudangs.edit');
     Route::put('gudangs/{gudang}', [GudangController::class, 'update'])->name('gudangs.update');
     // Admin tidak bisa hapus gudang
@@ -95,9 +95,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     // Admin hanya bisa lihat karyawan dengan role 'karyawan' (bukan mandor)
     Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
-    Route::get('employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
     Route::get('employees/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::post('employees', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
     Route::get('employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
     // Admin tidak bisa hapus karyawan
@@ -127,9 +127,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     // Salary Reports (Read Only)
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');
-    Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
-    Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
+    Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
+    Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
     
     // Manage Page for Admin
     Route::get('manage', function () {

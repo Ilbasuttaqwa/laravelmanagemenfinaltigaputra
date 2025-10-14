@@ -5,9 +5,9 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-warehouse"></i> Master Gudang</h1>
-    <a href="{{ route(auth()->user()->isManager() ? 'manager.gudangs.create' : 'admin.gudangs.create') }}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> Tambah Gudang
-    </a>
+        <a href="{{ route(auth()->user()->isManager() ? 'manager.gudangs.create' : 'admin.gudangs.create') }}" class="btn btn-primary">
+            <i class="bi bi-person-plus"></i> Tambah Karyawan Gudang
+        </a>
 </div>
 
 <!-- Search Form -->
@@ -16,9 +16,9 @@
         <form method="GET" action="{{ route(auth()->user()->isManager() ? 'manager.gudangs.index' : 'admin.gudangs.index') }}">
             <div class="row g-3">
                 <div class="col-md-8">
-                    <label for="search" class="form-label">Cari Gudang</label>
+                    <label for="search" class="form-label">Cari Karyawan Gudang</label>
                     <input type="text" class="form-control" id="search" name="search"
-                           value="{{ request('search') }}" placeholder="Masukkan nama gudang">
+                           value="{{ request('search') }}" placeholder="Masukkan nama karyawan gudang">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">&nbsp;</label>
@@ -45,7 +45,7 @@
                     <thead class="table-dark">
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
+                            <th>Nama Karyawan Gudang</th>
                             <th>Gaji</th>
                             <th>Aksi</th>
                         </tr>
@@ -55,7 +55,11 @@
                             <tr>
                                 <td>{{ $gudangs->firstItem() + $index }}</td>
                                 <td>{{ $gudang->nama }}</td>
-                                <td>Rp {{ number_format($gudang->gaji, 0, ',', '.') }}</td>
+                                <td>
+                                    <span class="text-success fw-bold">
+                                        Rp {{ number_format($gudang->gaji, 0, ',', '.') }}
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
                                         <a href="{{ route(auth()->user()->isManager() ? 'manager.gudangs.show' : 'admin.gudangs.show', $gudang) }}"
@@ -102,7 +106,7 @@
                         <h4 class="mb-0">{{ \App\Models\Gudang::count() }}</h4>
                     </div>
                     <div class="align-self-center">
-                        <i class="bi bi-warehouse-fill fa-2x"></i>
+                        <i class="bi bi-person-fill fa-2x"></i>
                     </div>
                 </div>
             </div>

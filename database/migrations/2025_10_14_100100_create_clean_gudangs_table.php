@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('absensis', function (Blueprint $table) {
+        Schema::create('gudangs', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal');
-            $table->enum('keterangan', ['masuk_full', 'masuk_setengah_hari']);
-            $table->time('jam_masuk')->nullable();
-            $table->time('jam_keluar')->nullable();
-            $table->text('catatan')->nullable();
+            $table->string('nama_gudang');
+            $table->unsignedBigInteger('lokasi_id')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
+            
+            $table->foreign('lokasi_id')->references('id')->on('lokasis')->onDelete('set null');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('absensis');
+        Schema::dropIfExists('gudangs');
     }
 };

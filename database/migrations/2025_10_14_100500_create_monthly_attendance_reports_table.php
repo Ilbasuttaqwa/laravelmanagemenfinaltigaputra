@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('monthly_attendance_reports', function (Blueprint $table) {
             $table->id();
             $table->string('nama_karyawan'); // Nama dari relasi karyawan gudang atau mandor
-            $table->enum('tipe_karyawan', ['gudang', 'mandor']); // Jenis karyawan
+            $table->enum('tipe_karyawan', ['karyawan', 'mandor']); // Jenis karyawan
             $table->unsignedBigInteger('karyawan_id'); // ID dari tabel gudang atau mandor
             $table->year('tahun');
             $table->integer('bulan'); // 1-12

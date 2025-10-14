@@ -36,7 +36,7 @@ class GudangController extends Controller
         Gudang::create($validated);
 
         return redirect()->route(auth()->user()->isManager() ? 'manager.gudangs.index' : 'admin.gudangs.index')
-                        ->with('success', 'Data gudang berhasil ditambahkan.');
+                        ->with('success', 'Data karyawan gudang berhasil ditambahkan.');
     }
 
     public function show(Gudang $gudang)
@@ -59,7 +59,7 @@ class GudangController extends Controller
         $gudang->update($validated);
 
         return redirect()->route(auth()->user()->isManager() ? 'manager.gudangs.index' : 'admin.gudangs.index')
-                        ->with('success', 'Data gudang berhasil diperbarui.');
+                        ->with('success', 'Data karyawan gudang berhasil diperbarui.');
     }
 
     public function destroy(Gudang $gudang)
@@ -67,6 +67,6 @@ class GudangController extends Controller
         $gudang->delete();
 
         return redirect()->route(auth()->user()->isManager() ? 'manager.gudangs.index' : 'admin.gudangs.index')
-                        ->with('success', 'Data gudang berhasil dihapus.');
+                        ->with('success', 'Data karyawan gudang berhasil dihapus.');
     }
 }

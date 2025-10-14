@@ -92,7 +92,17 @@
                                             @for($day = 1; $day <= Carbon\Carbon::create($tahun, $bulan)->daysInMonth; $day++)
                                                 @php
                                                     $date = Carbon\Carbon::create($tahun, $bulan, $day);
-                                                    $dayName = $date->format('D'); // Mon, Tue, Wed, etc.
+                                                    // Convert to Indonesian day names
+                                                    $dayNames = [
+                                                        'Mon' => 'Senin',
+                                                        'Tue' => 'Selasa', 
+                                                        'Wed' => 'Rabu',
+                                                        'Thu' => 'Kamis',
+                                                        'Fri' => 'Jumat',
+                                                        'Sat' => 'Sabtu',
+                                                        'Sun' => 'Minggu'
+                                                    ];
+                                                    $dayName = $dayNames[$date->format('D')] ?? $date->format('D');
                                                     $dayNumber = $day;
                                                     $isToday = $date->isToday();
                                                     $isWeekend = $date->isWeekend();
