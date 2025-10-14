@@ -44,7 +44,7 @@
                                 <label for="tipe">Tipe Karyawan:</label>
                                 <select name="tipe" id="tipe" class="form-control">
                                     <option value="all" {{ $tipe == 'all' ? 'selected' : '' }}>Semua</option>
-                                    <option value="gudang" {{ $tipe == 'gudang' ? 'selected' : '' }}>Gudang</option>
+                                    <option value="karyawan" {{ $tipe == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
                                     <option value="mandor" {{ $tipe == 'mandor' ? 'selected' : '' }}>Mandor</option>
                                 </select>
                             </div>
@@ -85,7 +85,7 @@
                                                 <strong>{{ $attendance->nama_karyawan }}</strong>
                                             </td>
                                             <td class="text-center">
-                                                <span class="badge badge-{{ $attendance->tipe_karyawan == 'gudang' ? 'primary' : 'success' }}">
+                                                <span class="badge badge-{{ $attendance->tipe_karyawan == 'mandor' ? 'success' : 'primary' }}">
                                                     {{ ucfirst($attendance->tipe_karyawan) }}
                                                 </span>
                                             </td>
@@ -98,7 +98,7 @@
                                                             data-attendance-id="{{ $attendance->id }}" 
                                                             data-day="{{ $day }}"
                                                             data-employee-type="{{ $attendance->tipe_karyawan }}"
-                                                            data-employee-id="{{ $attendance->tipe_karyawan == 'gudang' ? $attendance->gudang_id : $attendance->mandor_id }}"
+                                                            data-employee-id="{{ $attendance->employee_id }}"
                                                             style="min-width: 80px;">
                                                         <option value="absen" {{ $status == 'absen' ? 'selected' : '' }}>Absen</option>
                                                         <option value="setengah_hari" {{ $status == 'setengah_hari' ? 'selected' : '' }}>Setengah Hari</option>
@@ -143,7 +143,7 @@
                         <label for="karyawan_tipe">Tipe Karyawan:</label>
                         <select name="karyawan_tipe" id="karyawan_tipe" class="form-control" required>
                             <option value="">Pilih Tipe Karyawan</option>
-                            <option value="gudang">Gudang</option>
+                            <option value="karyawan">Karyawan</option>
                             <option value="mandor">Mandor</option>
                         </select>
                     </div>
@@ -198,9 +198,9 @@ $(document).ready(function() {
         
         karyawanSelect.empty().append('<option value="">Pilih Karyawan</option>');
         
-        if (tipe === 'gudang') {
-            // Gudang options will be populated via AJAX
-            $.get('/manager/calendar-attendances/get-employees', {tipe: 'gudang'}, function(data) {
+        if (tipe === 'karyawan') {
+            // Karyawan options will be populated via AJAX
+            $.get('/manager/calendar-attendances/get-employees', {tipe: 'karyawan'}, function(data) {
                 karyawanSelect.empty().append('<option value="">Pilih Karyawan</option>');
                 $.each(data, function(index, employee) {
                     karyawanSelect.append('<option value="' + employee.id + '">' + employee.nama + '</option>');

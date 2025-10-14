@@ -29,6 +29,17 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Dashboard/Home route
+Route::get('/home', function () {
+    $user = auth()->user();
+    if ($user->isManager()) {
+        return redirect()->route('manager.absensis.index');
+    } elseif ($user->isAdmin()) {
+        return redirect()->route('admin.manage');
+    }
+    return redirect()->route('login');
+})->middleware('auth')->name('home');
+
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

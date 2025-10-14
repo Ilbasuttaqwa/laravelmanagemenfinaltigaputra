@@ -19,40 +19,18 @@
             @csrf
 
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="karyawan_tipe" class="form-label">Tipe Karyawan <span class="text-danger">*</span></label>
-                    <select class="form-control @error('karyawan_tipe') is-invalid @enderror"
-                            id="karyawan_tipe" name="karyawan_tipe" required>
-                        <option value="">Pilih Tipe Karyawan</option>
-                        <option value="gudang" {{ old('karyawan_tipe') == 'gudang' ? 'selected' : '' }}>
-                            Gudang
-                        </option>
-                        <option value="mandor" {{ old('karyawan_tipe') == 'mandor' ? 'selected' : '' }}>
-                            Mandor
-                        </option>
-                    </select>
-                    @error('karyawan_tipe')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="karyawan_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
-                    <select class="form-control @error('karyawan_id') is-invalid @enderror"
-                            id="karyawan_id" name="karyawan_id" required>
+                <div class="col-md-12 mb-3">
+                    <label for="employee_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
+                    <select class="form-control @error('employee_id') is-invalid @enderror"
+                            id="employee_id" name="employee_id" required>
                         <option value="">Pilih Karyawan</option>
-                        @foreach(\App\Models\Gudang::all() as $gudang)
-                            <option value="gudang_{{ $gudang->id }}" {{ old('karyawan_id') == 'gudang_' . $gudang->id ? 'selected' : '' }}>
-                                [Gudang] {{ $gudang->nama }}
-                            </option>
-                        @endforeach
-                        @foreach(\App\Models\Mandor::all() as $mandor)
-                            <option value="mandor_{{ $mandor->id }}" {{ old('karyawan_id') == 'mandor_' . $mandor->id ? 'selected' : '' }}>
-                                [Mandor] {{ $mandor->nama }}
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                                {{ $employee->nama }} ({{ ucfirst($employee->role) }})
                             </option>
                         @endforeach
                     </select>
-                    @error('karyawan_id')
+                    @error('employee_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -99,32 +77,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    // Filter karyawan based on tipe selection
-    $('#karyawan_tipe').change(function() {
-        var tipe = $(this).val();
-        var karyawanSelect = $('#karyawan_id');
-        var options = karyawanSelect.find('option');
-        
-        // Hide all options first
-        options.hide();
-        options.first().show(); // Show "Pilih Karyawan"
-        
-        if (tipe === 'gudang') {
-            options.filter('[value^="gudang_"]').show();
-        } else if (tipe === 'mandor') {
-            options.filter('[value^="mandor_"]').show();
-        } else {
-            options.show(); // Show all if no tipe selected
-        }
-        
-        // Reset selection
-        karyawanSelect.val('');
-    });
-});
-</script>
-@endpush

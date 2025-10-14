@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
+use App\Models\Employee;
 use App\Models\Gudang;
 use App\Models\Mandor;
 use Illuminate\Http\Request;
@@ -11,17 +12,14 @@ class AbsensiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Absensi::with(['gudang', 'mandor']);
+        $query = Absensi::with(['employee']);
         
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('status', 'like', "%{$search}%")
-                  ->orWhereHas('gudang', function($gudangQuery) use ($search) {
-                      $gudangQuery->where('nama', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('mandor', function($mandorQuery) use ($search) {
-                      $mandorQuery->where('nama', 'like', "%{$search}%");
+                  ->orWhereHas('employee', function($employeeQuery) use ($search) {
+                      $employeeQuery->where('nama', 'like', "%{$search}%");
                   });
             });
         }
@@ -33,37 +31,24 @@ class AbsensiController extends Controller
 
     public function create()
     {
-        $gudangs = Gudang::orderBy('nama')->get();
-        $mandors = Mandor::orderBy('nama')->get();
+        $employees = Employee::orderBy('nama')->get();
         
-        return view('absensis.create', compact('gudangs', 'mandors'));
+        return view('absensis.create', compact('employees'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'karyawan_id' => 'required|string',
+            'employee_id' => 'required|exists:employees,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:full,setengah_hari',
         ]);
 
-        // Parse karyawan_id format: "gudang_1" or "mandor_1"
-        $karyawanParts = explode('_', $validated['karyawan_id']);
-        $karyawanTipe = $karyawanParts[0];
-        $karyawanId = $karyawanParts[1];
-
         $data = [
+            'employee_id' => $validated['employee_id'],
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
-            'gudang_id' => null,
-            'mandor_id' => null,
         ];
-
-        if ($karyawanTipe === 'gudang') {
-            $data['gudang_id'] = $karyawanId;
-        } else {
-            $data['mandor_id'] = $karyawanId;
-        }
 
         $absensi = Absensi::create($data);
 
@@ -76,42 +61,30 @@ class AbsensiController extends Controller
 
     public function show(Absensi $absensi)
     {
-        $absensi->load(['gudang', 'mandor']);
+        $absensi->load(['employee']);
         return view('absensis.show', compact('absensi'));
     }
 
     public function edit(Absensi $absensi)
     {
-        $gudangs = Gudang::orderBy('nama')->get();
-        $mandors = Mandor::orderBy('nama')->get();
+        $employees = Employee::orderBy('nama')->get();
         
-        return view('absensis.edit', compact('absensi', 'gudangs', 'mandors'));
+        return view('absensis.edit', compact('absensi', 'employees'));
     }
 
     public function update(Request $request, Absensi $absensi)
     {
         $validated = $request->validate([
-            'karyawan_tipe' => 'required|in:gudang,mandor',
-            'karyawan_id' => 'required|integer',
+            'employee_id' => 'required|exists:employees,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:full,setengah_hari',
         ]);
 
-        $karyawanTipe = $validated['karyawan_tipe'];
-        $karyawanId = $validated['karyawan_id'];
-
         $data = [
+            'employee_id' => $validated['employee_id'],
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
-            'gudang_id' => null,
-            'mandor_id' => null,
         ];
-
-        if ($karyawanTipe === 'gudang') {
-            $data['gudang_id'] = $karyawanId;
-        } else {
-            $data['mandor_id'] = $karyawanId;
-        }
 
         $absensi->update($data);
 
@@ -135,24 +108,15 @@ class AbsensiController extends Controller
         $tahun = $absensi->tanggal->year;
         $bulan = $absensi->tanggal->month;
         
-        // Determine employee type and ID
-        $karyawanId = null;
-        $tipeKaryawan = null;
-        $namaKaryawan = null;
-        
-        if ($absensi->gudang_id) {
-            $karyawanId = $absensi->gudang_id;
-            $tipeKaryawan = 'gudang';
-            $namaKaryawan = $absensi->gudang->nama;
-        } elseif ($absensi->mandor_id) {
-            $karyawanId = $absensi->mandor_id;
-            $tipeKaryawan = 'mandor';
-            $namaKaryawan = $absensi->mandor->nama;
-        }
-        
-        if (!$karyawanId || !$tipeKaryawan) {
+        // Get employee information
+        $employee = $absensi->employee;
+        if (!$employee) {
             return;
         }
+        
+        $karyawanId = $employee->id;
+        $tipeKaryawan = $employee->role ?? 'employee';
+        $namaKaryawan = $employee->nama;
         
         // Find or create monthly report
         $report = \App\Models\MonthlyAttendanceReport::where('karyawan_id', $karyawanId)
@@ -199,7 +163,7 @@ class AbsensiController extends Controller
     private function recalculateMonthlyAttendance($report, $tahun, $bulan, $tipeKaryawan, $karyawanId)
     {
         // Get all attendance records for the month
-        $absensis = Absensi::where($tipeKaryawan . '_id', $karyawanId)
+        $absensis = Absensi::where('employee_id', $karyawanId)
             ->whereYear('tanggal', $tahun)
             ->whereMonth('tanggal', $bulan)
             ->get();
@@ -229,26 +193,15 @@ class AbsensiController extends Controller
     public function updateExisting(Request $request)
     {
         $validated = $request->validate([
-            'karyawan_id' => 'required|string',
+            'employee_id' => 'required|exists:employees,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:full,setengah_hari,absen',
         ]);
 
-        // Parse karyawan_id format: "gudang_1" or "mandor_1"
-        $karyawanParts = explode('_', $validated['karyawan_id']);
-        $karyawanTipe = $karyawanParts[0];
-        $karyawanId = $karyawanParts[1];
-
         // Find existing record
-        $query = Absensi::where('tanggal', $validated['tanggal']);
-        
-        if ($karyawanTipe === 'gudang') {
-            $query->where('gudang_id', $karyawanId);
-        } else {
-            $query->where('mandor_id', $karyawanId);
-        }
-
-        $absensi = $query->first();
+        $absensi = Absensi::where('employee_id', $validated['employee_id'])
+            ->where('tanggal', $validated['tanggal'])
+            ->first();
 
         if ($absensi) {
             // Update existing record
@@ -261,17 +214,10 @@ class AbsensiController extends Controller
         } else {
             // Create new record if not exists
             $data = [
+                'employee_id' => $validated['employee_id'],
                 'tanggal' => $validated['tanggal'],
                 'status' => $validated['status'],
-                'gudang_id' => null,
-                'mandor_id' => null,
             ];
-
-            if ($karyawanTipe === 'gudang') {
-                $data['gudang_id'] = $karyawanId;
-            } else {
-                $data['mandor_id'] = $karyawanId;
-            }
 
             $absensi = Absensi::create($data);
             $this->updateMonthlyReport($absensi);
@@ -281,20 +227,11 @@ class AbsensiController extends Controller
     }
 
     /**
-     * Get employees by type for AJAX dropdown
+     * Get employees for AJAX dropdown
      */
     public function getEmployees(Request $request)
     {
-        $tipe = $request->get('tipe');
-
-        if ($tipe === 'gudang') {
-            $employees = Gudang::select('id', 'nama')->get();
-        } elseif ($tipe === 'mandor') {
-            $employees = Mandor::select('id', 'nama')->get();
-        } else {
-            $employees = collect();
-        }
-
+        $employees = Employee::select('id', 'nama', 'role')->get();
         return response()->json($employees);
     }
 }

@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CalendarAttendance;
-use App\Models\Gudang;
-use App\Models\Mandor;
+use App\Models\Employee;
 use App\Models\Absensi;
 use Carbon\Carbon;
 
@@ -21,44 +20,23 @@ class CalendarAttendanceController extends Controller
         $tipe = $request->get('tipe', 'all');
 
         // Get all employees (realtime from master data)
-        $gudangs = Gudang::all();
-        $mandors = Mandor::all();
+        $employees = Employee::all();
 
         // Create virtual attendance records for all employees
         $attendances = collect();
 
-        // Add gudang employees
-        if ($tipe === 'all' || $tipe === 'gudang') {
-            foreach ($gudangs as $gudang) {
+        // Add all employees
+        foreach ($employees as $employee) {
+            if ($tipe === 'all' || $tipe === $employee->role) {
                 $attendances->push((object) [
-                    'id' => 'gudang_' . $gudang->id,
-                    'gudang_id' => $gudang->id,
-                    'mandor_id' => null,
-                    'nama_karyawan' => $gudang->nama,
-                    'tipe_karyawan' => 'gudang',
-                    'gudang' => $gudang,
-                    'mandor' => null,
+                    'id' => 'employee_' . $employee->id,
+                    'employee_id' => $employee->id,
+                    'nama_karyawan' => $employee->nama,
+                    'tipe_karyawan' => $employee->role,
+                    'employee' => $employee,
                     'tahun' => $tahun,
                     'bulan' => $bulan,
-                    'attendance_data' => $this->getAttendanceDataForEmployee($gudang->id, 'gudang', $tahun, $bulan)
-                ]);
-            }
-        }
-
-        // Add mandor employees
-        if ($tipe === 'all' || $tipe === 'mandor') {
-            foreach ($mandors as $mandor) {
-                $attendances->push((object) [
-                    'id' => 'mandor_' . $mandor->id,
-                    'gudang_id' => null,
-                    'mandor_id' => $mandor->id,
-                    'nama_karyawan' => $mandor->nama,
-                    'tipe_karyawan' => 'mandor',
-                    'gudang' => null,
-                    'mandor' => $mandor,
-                    'tahun' => $tahun,
-                    'bulan' => $bulan,
-                    'attendance_data' => $this->getAttendanceDataForEmployee($mandor->id, 'mandor', $tahun, $bulan)
+                    'attendance_data' => $this->getAttendanceDataForEmployee($employee->id, $employee->role, $tahun, $bulan)
                 ]);
             }
         }
@@ -246,13 +224,8 @@ class CalendarAttendanceController extends Controller
         $startDate = Carbon::create($tahun, $bulan, 1);
         $endDate = $startDate->copy()->endOfMonth();
         
-        $query = Absensi::whereBetween('tanggal', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')]);
-        
-        if ($tipe === 'gudang') {
-            $query->where('gudang_id', $employeeId);
-        } else {
-            $query->where('mandor_id', $employeeId);
-        }
+        $query = Absensi::whereBetween('tanggal', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                        ->where('employee_id', $employeeId);
         
         $absensis = $query->get();
         
@@ -273,12 +246,10 @@ class CalendarAttendanceController extends Controller
     {
         $tipe = $request->get('tipe');
         
-        if ($tipe === 'gudang') {
-            $employees = Gudang::select('id', 'nama')->get();
-        } elseif ($tipe === 'mandor') {
-            $employees = Mandor::select('id', 'nama')->get();
+        if ($tipe === 'all') {
+            $employees = Employee::select('id', 'nama', 'role')->get();
         } else {
-            $employees = collect();
+            $employees = Employee::where('role', $tipe)->select('id', 'nama', 'role')->get();
         }
 
         return response()->json($employees);

@@ -505,16 +505,16 @@ body {
                                             <i class="bi bi-person-fill text-primary"></i>
                                         </div>
                                         <div>
-                                            <strong class="text-dark">{{ $absensi->nama_karyawan }}</strong>
+                                            <strong class="text-dark">{{ $absensi->employee->nama ?? 'Karyawan Tidak Ditemukan' }}</strong>
                                             <br>
-                                            <small class="text-muted">ID: {{ $absensi->karyawan_id }}</small>
+                                            <small class="text-muted">ID: {{ $absensi->employee_id }}</small>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge bg-{{ $absensi->tipe_karyawan == 'gudang' ? 'primary' : 'success' }} px-3 py-2">
-                                        <i class="bi bi-{{ $absensi->tipe_karyawan == 'gudang' ? 'building' : 'person-badge' }} me-1"></i>
-                                        {{ ucfirst($absensi->tipe_karyawan) }}
+                                    <span class="badge bg-{{ $absensi->employee->role == 'mandor' ? 'success' : 'primary' }} px-3 py-2">
+                                        <i class="bi bi-{{ $absensi->employee->role == 'mandor' ? 'person-badge' : 'building' }} me-1"></i>
+                                        {{ ucfirst($absensi->employee->role ?? 'karyawan') }}
                                     </span>
                                 </td>
                                 <td class="text-center">
@@ -541,7 +541,7 @@ body {
                                         </a>
                                         @if(auth()->user()->isManager())
                                         <button type="button" class="btn btn-outline-danger btn-sm"
-                                                onclick="confirmDelete({{ $absensi->id }}, '{{ $absensi->nama_karyawan }}')" title="Hapus Data">
+                                                onclick="confirmDelete({{ $absensi->id }}, '{{ $absensi->employee->nama ?? 'Karyawan Tidak Ditemukan' }}')" title="Hapus Data">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                         @endif

@@ -26,4 +26,12 @@ class Employee extends Model
     {
         return $this->belongsToMany(Kandang::class, 'kandang_employee');
     }
+
+    /**
+     * Get the absensis for the employee.
+     */
+    public function absensis()
+    {
+        return $this->hasMany(Absensi::class);
+    }
 }

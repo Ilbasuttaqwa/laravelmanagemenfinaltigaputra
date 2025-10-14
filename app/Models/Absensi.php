@@ -10,8 +10,7 @@ class Absensi extends Model
     use HasFactory;
 
     protected $fillable = [
-        'gudang_id',
-        'mandor_id',
+        'employee_id',
         'tanggal',
         'status',
     ];
@@ -21,14 +20,20 @@ class Absensi extends Model
     ];
 
     // Relations
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    // Relasi untuk backward compatibility dengan controller lama
     public function gudang()
     {
-        return $this->belongsTo(Gudang::class);
+        return $this->belongsTo(Gudang::class, 'gudang_id');
     }
 
     public function mandor()
     {
-        return $this->belongsTo(Mandor::class);
+        return $this->belongsTo(Mandor::class, 'mandor_id');
     }
 
     // Accessor untuk status yang lebih readable
@@ -54,35 +59,19 @@ class Absensi extends Model
     // Accessor untuk mendapatkan nama karyawan
     public function getNamaKaryawanAttribute()
     {
-        if ($this->gudang_id) {
-            return $this->gudang->nama ?? 'Karyawan Gudang Tidak Ditemukan';
-        }
-        
-        if ($this->mandor_id) {
-            return $this->mandor->nama ?? 'Karyawan Mandor Tidak Ditemukan';
-        }
-        
-        return 'Karyawan Tidak Ditemukan';
+        return $this->employee->nama ?? 'Karyawan Tidak Ditemukan';
     }
 
     // Accessor untuk mendapatkan tipe karyawan
     public function getTipeKaryawanAttribute()
     {
-        if ($this->gudang_id) {
-            return 'gudang';
-        }
-        
-        if ($this->mandor_id) {
-            return 'mandor';
-        }
-        
-        return null;
+        return $this->employee->role ?? null;
     }
 
     // Accessor untuk mendapatkan ID karyawan
     public function getKaryawanIdAttribute()
     {
-        return $this->gudang_id ?? $this->mandor_id;
+        return $this->employee_id;
     }
 
     // Scope untuk filter berdasarkan tanggal
@@ -97,16 +86,10 @@ class Absensi extends Model
         return $query->where('status', $status);
     }
 
-    // Scope untuk filter berdasarkan karyawan gudang
-    public function scopeGudang($query, $gudangId)
+    // Scope untuk filter berdasarkan karyawan
+    public function scopeEmployee($query, $employeeId)
     {
-        return $query->where('gudang_id', $gudangId);
-    }
-
-    // Scope untuk filter berdasarkan karyawan mandor
-    public function scopeMandor($query, $mandorId)
-    {
-        return $query->where('mandor_id', $mandorId);
+        return $query->where('employee_id', $employeeId);
     }
 
     // Scope untuk filter berdasarkan periode (bulan dan tahun)

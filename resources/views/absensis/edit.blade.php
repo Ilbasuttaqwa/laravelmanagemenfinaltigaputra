@@ -20,43 +20,18 @@
             @method('PUT')
 
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="karyawan_tipe" class="form-label">Tipe Karyawan <span class="text-danger">*</span></label>
-                    <select class="form-control @error('karyawan_tipe') is-invalid @enderror"
-                            id="karyawan_tipe" name="karyawan_tipe" required>
-                        <option value="">Pilih Tipe Karyawan</option>
-                        <option value="gudang" {{ old('karyawan_tipe', $absensi->tipe_karyawan) == 'gudang' ? 'selected' : '' }}>
-                            Gudang
-                        </option>
-                        <option value="mandor" {{ old('karyawan_tipe', $absensi->tipe_karyawan) == 'mandor' ? 'selected' : '' }}>
-                            Mandor
-                        </option>
-                    </select>
-                    @error('karyawan_tipe')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="karyawan_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
-                    <select class="form-control @error('karyawan_id') is-invalid @enderror"
-                            id="karyawan_id" name="karyawan_id" required>
+                <div class="col-md-12 mb-3">
+                    <label for="employee_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
+                    <select class="form-control @error('employee_id') is-invalid @enderror"
+                            id="employee_id" name="employee_id" required>
                         <option value="">Pilih Karyawan</option>
-                        @if($absensi->tipe_karyawan == 'gudang')
-                            @foreach($gudangs as $gudang)
-                                <option value="{{ $gudang->id }}" {{ old('karyawan_id', $absensi->gudang_id) == $gudang->id ? 'selected' : '' }}>
-                                    {{ $gudang->nama }}
-                                </option>
-                            @endforeach
-                        @elseif($absensi->tipe_karyawan == 'mandor')
-                            @foreach($mandors as $mandor)
-                                <option value="{{ $mandor->id }}" {{ old('karyawan_id', $absensi->mandor_id) == $mandor->id ? 'selected' : '' }}>
-                                    {{ $mandor->nama }}
-                                </option>
-                            @endforeach
-                        @endif
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}" {{ old('employee_id', $absensi->employee_id) == $employee->id ? 'selected' : '' }}>
+                                {{ $employee->nama }} ({{ ucfirst($employee->role) }})
+                            </option>
+                        @endforeach
                     </select>
-                    @error('karyawan_id')
+                    @error('employee_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -103,40 +78,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    // Handle karyawan dropdown change
-    $('#karyawan_tipe').change(function() {
-        var tipe = $(this).val();
-        var karyawanSelect = $('#karyawan_id');
-        
-        karyawanSelect.empty().append('<option value="">Pilih Karyawan</option>');
-        
-        if (tipe === 'gudang') {
-            // Gudang options will be populated via AJAX
-            $.get('/manager/absensis/get-employees', {tipe: 'gudang'}, function(data) {
-                karyawanSelect.empty().append('<option value="">Pilih Karyawan</option>');
-                $.each(data, function(index, employee) {
-                    karyawanSelect.append('<option value="' + employee.id + '">' + employee.nama + '</option>');
-                });
-                // Set selected value after populating
-                karyawanSelect.val('{{ $absensi->karyawan_id }}');
-            });
-        } else if (tipe === 'mandor') {
-            // Mandor options will be populated via AJAX
-            $.get('/manager/absensis/get-employees', {tipe: 'mandor'}, function(data) {
-                karyawanSelect.empty().append('<option value="">Pilih Karyawan</option>');
-                $.each(data, function(index, employee) {
-                    karyawanSelect.append('<option value="' + employee.id + '">' + employee.nama + '</option>');
-                });
-                // Set selected value after populating
-                karyawanSelect.val('{{ $absensi->karyawan_id }}');
-            });
-        }
-    });
-});
-</script>
-@endpush

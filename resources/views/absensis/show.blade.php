@@ -20,100 +20,38 @@
                 <label class="form-label fw-bold">Nama Karyawan</label>
                 <p class="form-control-plaintext">
                     <i class="bi bi-person me-2"></i>
-                    {{ $absensi->nama }}
+                    {{ $absensi->employee->nama ?? 'Karyawan Tidak Ditemukan' }}
                 </p>
             </div>
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Gaji</label>
+                <label class="form-label fw-bold">Role</label>
                 <p class="form-control-plaintext">
-                    <i class="bi bi-currency-dollar me-2"></i>
-                    {{ $absensi->gaji_formatted }}
+                    <i class="bi bi-person-badge me-2"></i>
+                    {{ ucfirst($absensi->employee->role ?? 'karyawan') }}
                 </p>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Keterangan</label>
+                <label class="form-label fw-bold">Tanggal</label>
                 <p class="form-control-plaintext">
-                    <span class="badge {{ $absensi->keterangan_badge }} fs-6">
-                        {{ $absensi->keterangan_label }}
-                    </span>
+                    <i class="bi bi-calendar me-2"></i>
+                    {{ $absensi->tanggal->format('d F Y') }}
                 </p>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Status Kehadiran</label>
                 <p class="form-control-plaintext">
-                    @if($absensi->keterangan == 'masuk_full')
-                        <span class="text-success"><i class="bi bi-check-circle me-2"></i>Full Day (True)</span>
+                    @if($absensi->status == 'full')
+                        <span class="text-success"><i class="bi bi-check-circle me-2"></i>Full Day</span>
                     @else
-                        <span class="text-warning"><i class="bi bi-clock me-2"></i>Half Day (False)</span>
+                        <span class="text-warning"><i class="bi bi-clock me-2"></i>Half Day</span>
                     @endif
                 </p>
             </div>
         </div>
 
-        <hr>
-
-        <h6 class="fw-bold mb-3"><i class="bi bi-building me-2"></i>Informasi Master Data</h6>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Gudang</label>
-                <p class="form-control-plaintext">
-                    @if($absensi->gudang)
-                        <i class="bi bi-warehouse me-2"></i>{{ $absensi->gudang->nama }}
-                    @else
-                        <span class="text-muted">-</span>
-                    @endif
-                </p>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Mandor</label>
-                <p class="form-control-plaintext">
-                    @if($absensi->mandor)
-                        <i class="bi bi-person-badge me-2"></i>{{ $absensi->mandor->nama }}
-                    @else
-                        <span class="text-muted">-</span>
-                    @endif
-                </p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Kandang</label>
-                <p class="form-control-plaintext">
-                    @if($absensi->kandang)
-                        <i class="bi bi-house me-2"></i>{{ $absensi->kandang->nama_kandang }}
-                    @else
-                        <span class="text-muted">-</span>
-                    @endif
-                </p>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Lokasi</label>
-                <p class="form-control-plaintext">
-                    @if($absensi->lokasi)
-                        <i class="bi bi-geo-alt me-2"></i>{{ $absensi->lokasi->nama_lokasi }}
-                    @else
-                        <span class="text-muted">-</span>
-                    @endif
-                </p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Pembibitan</label>
-                <p class="form-control-plaintext">
-                    @if($absensi->pembibitan)
-                        <i class="bi bi-seedling me-2"></i>{{ $absensi->pembibitan->judul }}
-                    @else
-                        <span class="text-muted">-</span>
-                    @endif
-                </p>
-            </div>
-        </div>
 
         <hr>
 
