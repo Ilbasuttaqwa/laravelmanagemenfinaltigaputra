@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Absensi;
 use App\Models\Gudang;
-use App\Models\Mandor;
 use App\Models\MonthlyAttendanceReport;
 use Carbon\Carbon;
 

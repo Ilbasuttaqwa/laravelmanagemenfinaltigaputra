@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\MonthlyAttendanceReport;
 use App\Models\Absensi;
 use App\Models\Gudang;
-use App\Models\Mandor;
 use Carbon\Carbon;
 
 class MonthlyAttendanceReportController extends Controller

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Absensi;
 use App\Models\Employee;
 use App\Models\Gudang;
-use App\Models\Mandor;
 use Illuminate\Http\Request;
 
 class AbsensiController extends Controller

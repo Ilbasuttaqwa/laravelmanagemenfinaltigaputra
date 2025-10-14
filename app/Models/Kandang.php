@@ -27,4 +27,12 @@ class Kandang extends Model
         return $this->belongsTo(Lokasi::class, 'lokasi_id');
     }
 
+    /**
+     * Get the employees for the kandang.
+     */
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'kandang_employee');
+    }
+
 }

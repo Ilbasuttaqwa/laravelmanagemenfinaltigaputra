@@ -25,17 +25,6 @@ class Absensi extends Model
         return $this->belongsTo(Employee::class);
     }
 
-    // Relasi untuk backward compatibility dengan controller lama
-    public function gudang()
-    {
-        return $this->belongsTo(Gudang::class, 'gudang_id');
-    }
-
-    public function mandor()
-    {
-        return $this->belongsTo(Mandor::class, 'mandor_id');
-    }
-
     // Accessor untuk status yang lebih readable
     public function getStatusLabelAttribute()
     {
