@@ -126,21 +126,6 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 mb-3">
-        <div class="card bg-success text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Total Gaji</h6>
-                        <h4 class="mb-0">Rp {{ number_format(\App\Models\Employee::sum('gaji'), 0, ',', '.') }}</h4>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-currency-dollar fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
