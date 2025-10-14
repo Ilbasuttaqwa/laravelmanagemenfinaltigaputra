@@ -63,10 +63,66 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="kandang_id" class="form-label">Kandang</label>
+                            <select class="form-select @error('kandang_id') is-invalid @enderror" id="kandang_id" name="kandang_id">
+                                <option value="">Pilih Kandang</option>
+                                @foreach($kandangs as $kandang)
+                                    <option value="{{ $kandang->id }}" {{ old('kandang_id') == $kandang->id ? 'selected' : '' }}>
+                                        {{ $kandang->nama_kandang }} 
+                                        @if($kandang->lokasi)
+                                            ({{ $kandang->lokasi->nama_lokasi }})
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('kandang_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="lokasi_kerja" class="form-label">Lokasi Kerja</label>
+                            <input type="text" class="form-control @error('lokasi_kerja') is-invalid @enderror" 
+                                   id="lokasi_kerja" name="lokasi_kerja" value="{{ old('lokasi_kerja') }}" 
+                                   placeholder="Contoh: Kandang A, Srengat">
+                            @error('lokasi_kerja')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                     @else
                     <!-- Hidden field for admin users - always set to karyawan -->
                     <input type="hidden" name="role" value="karyawan">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="kandang_id" class="form-label">Kandang</label>
+                            <select class="form-select @error('kandang_id') is-invalid @enderror" id="kandang_id" name="kandang_id">
+                                <option value="">Pilih Kandang</option>
+                                @foreach($kandangs as $kandang)
+                                    <option value="{{ $kandang->id }}" {{ old('kandang_id') == $kandang->id ? 'selected' : '' }}>
+                                        {{ $kandang->nama_kandang }} 
+                                        @if($kandang->lokasi)
+                                            ({{ $kandang->lokasi->nama_lokasi }})
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('kandang_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lokasi_kerja" class="form-label">Lokasi Kerja</label>
+                            <input type="text" class="form-control @error('lokasi_kerja') is-invalid @enderror" 
+                                   id="lokasi_kerja" name="lokasi_kerja" value="{{ old('lokasi_kerja') }}" 
+                                   placeholder="Contoh: Kandang A, Srengat">
+                            @error('lokasi_kerja')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                     @endif
 
                     <div class="d-flex justify-content-end gap-2">

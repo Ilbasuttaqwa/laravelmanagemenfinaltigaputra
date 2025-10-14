@@ -13,6 +13,8 @@ class Employee extends Model
         'nama',
         'gaji',
         'role',
+        'kandang_id',
+        'lokasi_kerja',
     ];
 
     protected $casts = [
@@ -20,7 +22,15 @@ class Employee extends Model
     ];
 
     /**
-     * Get the kandangs for the employee.
+     * Get the kandang that the employee belongs to.
+     */
+    public function kandang()
+    {
+        return $this->belongsTo(Kandang::class);
+    }
+
+    /**
+     * Get the kandangs for the employee (many-to-many for additional assignments).
      */
     public function kandangs()
     {

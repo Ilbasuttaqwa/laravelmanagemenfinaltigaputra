@@ -17,15 +17,29 @@
     </div>
 </div>
 
-<!-- Search Form -->
+<!-- Search & Filter Form -->
 <div class="card mb-4">
     <div class="card-body">
         <form method="GET" action="{{ route(auth()->user()->isAdmin() ? 'admin.employees.index' : 'manager.employees.index') }}">
             <div class="row g-3">
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <label for="search" class="form-label">Cari Karyawan</label>
                     <input type="text" class="form-control" id="search" name="search" 
                            value="{{ request('search') }}" placeholder="Masukkan nama karyawan">
+                </div>
+                <div class="col-md-4">
+                    <label for="kandang_id" class="form-label">Filter Kandang</label>
+                    <select class="form-control" id="kandang_id" name="kandang_id">
+                        <option value="">Semua Kandang</option>
+                        @foreach($kandangs as $kandang)
+                            <option value="{{ $kandang->id }}" {{ request('kandang_id') == $kandang->id ? 'selected' : '' }}>
+                                {{ $kandang->nama_kandang }} 
+                                @if($kandang->lokasi)
+                                    ({{ $kandang->lokasi->nama_lokasi }})
+                                @endif
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">&nbsp;</label>

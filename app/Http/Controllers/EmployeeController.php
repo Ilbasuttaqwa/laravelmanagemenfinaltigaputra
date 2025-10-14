@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Kandang;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -12,11 +13,16 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Employee::query();
+        $query = Employee::with(['kandang', 'kandang.lokasi']);
 
         // Admin can only see karyawan (not mandor)
         if (auth()->user()->isAdmin()) {
             $query->where('role', 'karyawan');
+        }
+
+        // Filter by kandang if provided
+        if ($request->filled('kandang_id')) {
+            $query->where('kandang_id', $request->kandang_id);
         }
 
         // Search by nama if provided
@@ -25,9 +31,12 @@ class EmployeeController extends Controller
             $query->where('nama', 'like', "%{$search}%");
         }
 
-        $employees = $query->orderBy('nama')->paginate(10);
+        $employees = $query->orderBy('kandang_id')->orderBy('nama')->paginate(10);
         
-        return view('employees.index', compact('employees'));
+        // Get kandangs for filter dropdown
+        $kandangs = Kandang::with('lokasi')->orderBy('nama_kandang')->get();
+        
+        return view('employees.index', compact('employees', 'kandangs'));
     }
 
     /**
@@ -35,7 +44,8 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return view('employees.create');
+        $kandangs = Kandang::with('lokasi')->orderBy('nama_kandang')->get();
+        return view('employees.create', compact('kandangs'));
     }
 
     /**
@@ -47,6 +57,8 @@ class EmployeeController extends Controller
             'nama' => 'required|string|max:255',
             'gaji' => 'required|numeric|min:0',
             'role' => 'nullable|string|in:karyawan,mandor',
+            'kandang_id' => 'nullable|exists:kandangs,id',
+            'lokasi_kerja' => 'nullable|string|max:255',
         ]);
 
         // Admin cannot create mandor employees

@@ -28,11 +28,27 @@ class Kandang extends Model
     }
 
     /**
-     * Get the employees for the kandang.
+     * Get the primary employees for the kandang (one-to-many).
+     */
+    public function primaryEmployees()
+    {
+        return $this->hasMany(Employee::class);
+    }
+
+    /**
+     * Get the employees for the kandang (many-to-many for additional assignments).
      */
     public function employees()
     {
         return $this->belongsToMany(Employee::class, 'kandang_employee');
+    }
+
+    /**
+     * Get all employees (primary + additional) for the kandang.
+     */
+    public function allEmployees()
+    {
+        return $this->primaryEmployees()->get()->merge($this->employees()->get());
     }
 
 }
