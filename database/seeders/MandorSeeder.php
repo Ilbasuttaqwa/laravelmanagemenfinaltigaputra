@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Mandor;
+use App\Models\Employee;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,15 +14,15 @@ class MandorSeeder extends Seeder
     public function run(): void
     {
         $mandors = [
-            ['nama' => 'Mandor A', 'gaji' => 9000000],
-            ['nama' => 'Mandor B', 'gaji' => 11000000],
-            ['nama' => 'Mandor C', 'gaji' => 8000000],
-            ['nama' => 'Mandor D', 'gaji' => 7500000],
-            ['nama' => 'Mandor E', 'gaji' => 13000000],
+            ['nama' => 'Mandor A', 'gaji' => 9000000, 'role' => 'mandor'],
+            ['nama' => 'Mandor B', 'gaji' => 11000000, 'role' => 'mandor'],
+            ['nama' => 'Mandor C', 'gaji' => 8000000, 'role' => 'mandor'],
+            ['nama' => 'Mandor D', 'gaji' => 7500000, 'role' => 'mandor'],
+            ['nama' => 'Mandor E', 'gaji' => 13000000, 'role' => 'mandor'],
         ];
 
         foreach ($mandors as $mandor) {
-            Mandor::create($mandor);
+            Employee::create($mandor);
         }
     }
 }
