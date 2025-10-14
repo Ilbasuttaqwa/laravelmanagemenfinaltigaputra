@@ -19,21 +19,21 @@
             @csrf
 
             <div class="row">
-                <div class="col-md-12 mb-3">
-                    <label for="employee_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
-                    <select class="form-control @error('employee_id') is-invalid @enderror"
-                            id="employee_id" name="employee_id" required>
-                        <option value="">Pilih Karyawan</option>
-                        @foreach($allEmployees as $employee)
-                            <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
-                                {{ $employee->nama }} ({{ ucfirst(str_replace('_', ' ', $employee->role)) }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('employee_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+        <div class="col-md-12 mb-3">
+            <label for="unified_employee_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
+            <select class="form-control @error('unified_employee_id') is-invalid @enderror"
+                    id="unified_employee_id" name="unified_employee_id" required>
+                <option value="">Pilih Karyawan</option>
+                @foreach($unifiedEmployees as $employee)
+                    <option value="{{ $employee->id }}" {{ old('unified_employee_id') == $employee->id ? 'selected' : '' }}>
+                        {{ $employee->nama }} ({{ $employee->role_label }})
+                    </option>
+                @endforeach
+            </select>
+            @error('unified_employee_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
             </div>
 
             <div class="row">

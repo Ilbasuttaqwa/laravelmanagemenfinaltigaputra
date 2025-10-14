@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Absensi;
 use App\Models\Employee;
 use App\Models\Gudang;
+use App\Models\UnifiedEmployee;
+use App\Services\MasterSyncService;
 use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
@@ -37,131 +39,49 @@ class AbsensiController extends Controller
 
     public function create()
     {
-        // Get all employees from different sources
-        $allEmployees = collect();
+        // Sync all master data first
+        MasterSyncService::syncAll();
         
-        // Get employees from employees table
-        $query = Employee::orderBy('nama');
+        // Get unified employees based on user role
+        $query = UnifiedEmployee::orderBy('nama');
+        
         if (auth()->user()->isAdmin()) {
-            $query->where('role', 'karyawan');
-        }
-        $employees = $query->get();
-        
-        foreach ($employees as $employee) {
-            $allEmployees->push((object) [
-                'id' => 'employee_' . $employee->id,
-                'nama' => $employee->nama,
-                'role' => $employee->role,
-                'gaji' => $employee->gaji,
-                'source' => 'employee',
-                'source_id' => $employee->id
-            ]);
+            // Admin can only see non-mandor employees
+            $query->where('role', '!=', 'mandor');
         }
         
-        // Get gudang employees (karyawan gudang) - only for manager
-        if (auth()->user()->isManager()) {
-            $gudangs = \App\Models\Gudang::orderBy('nama')->get();
-            foreach ($gudangs as $gudang) {
-                $allEmployees->push((object) [
-                    'id' => 'gudang_' . $gudang->id,
-                    'nama' => $gudang->nama,
-                    'role' => 'karyawan_gudang',
-                    'gaji' => $gudang->gaji,
-                    'source' => 'gudang',
-                    'source_id' => $gudang->id
-                ]);
-            }
-        }
+        $unifiedEmployees = $query->get();
         
-        // Get mandor employees - only for manager
-        if (auth()->user()->isManager()) {
-            $mandors = \App\Models\Mandor::orderBy('nama')->get();
-            foreach ($mandors as $mandor) {
-                $allEmployees->push((object) [
-                    'id' => 'mandor_' . $mandor->id,
-                    'nama' => $mandor->nama,
-                    'role' => 'mandor',
-                    'gaji' => $mandor->gaji,
-                    'source' => 'mandor',
-                    'source_id' => $mandor->id
-                ]);
-            }
-        }
-        
-        // Sort by name
-        $allEmployees = $allEmployees->sortBy('nama');
-        
-        return view('absensis.create', compact('allEmployees'));
+        return view('absensis.create', compact('unifiedEmployees'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'employee_id' => 'required|string',
+            'unified_employee_id' => 'required|exists:unified_employees,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:full,setengah_hari',
         ]);
 
-        // Parse employee_id to determine source and actual ID
-        $employeeId = $validated['employee_id'];
-        $sourceType = null;
-        $sourceId = null;
-        $employeeName = null;
-        $employeeRole = null;
-        $employeeGaji = null;
-        $actualEmployeeId = null;
-
-        if (str_starts_with($employeeId, 'employee_')) {
-            // From employees table
-            $actualEmployeeId = str_replace('employee_', '', $employeeId);
-            $employee = Employee::find($actualEmployeeId);
-            if ($employee) {
-                $sourceType = 'employee';
-                $sourceId = $employee->id;
-                $employeeName = $employee->nama;
-                $employeeRole = $employee->role;
-                $employeeGaji = $employee->gaji;
-            }
-        } elseif (str_starts_with($employeeId, 'gudang_')) {
-            // From gudangs table
-            $gudangId = str_replace('gudang_', '', $employeeId);
-            $gudang = \App\Models\Gudang::find($gudangId);
-            if ($gudang) {
-                $sourceType = 'gudang';
-                $sourceId = $gudang->id;
-                $employeeName = $gudang->nama;
-                $employeeRole = 'karyawan_gudang';
-                $employeeGaji = $gudang->gaji;
-            }
-        } elseif (str_starts_with($employeeId, 'mandor_')) {
-            // From mandors table
-            $mandorId = str_replace('mandor_', '', $employeeId);
-            $mandor = \App\Models\Mandor::find($mandorId);
-            if ($mandor) {
-                $sourceType = 'mandor';
-                $sourceId = $mandor->id;
-                $employeeName = $mandor->nama;
-                $employeeRole = 'mandor';
-                $employeeGaji = $mandor->gaji;
-            }
-        }
-
-        if (!$sourceType || !$sourceId) {
+        // Get unified employee
+        $unifiedEmployee = UnifiedEmployee::find($validated['unified_employee_id']);
+        
+        if (!$unifiedEmployee) {
             return redirect()->back()
                 ->with('error', 'Karyawan tidak ditemukan.')
                 ->withInput();
         }
 
         // Admin cannot create absensi for mandor employees
-        if (auth()->user()->isAdmin() && $employeeRole === 'mandor') {
+        if (auth()->user()->isAdmin() && $unifiedEmployee->role === 'mandor') {
             return redirect()->back()
                 ->with('error', 'Admin tidak dapat membuat absensi untuk karyawan mandor.')
                 ->withInput();
         }
 
         // Check for duplicate attendance on the same date
-        $existingAbsensi = Absensi::where('source_type', $sourceType)
-            ->where('source_id', $sourceId)
+        $existingAbsensi = Absensi::where('source_type', $unifiedEmployee->source_type)
+            ->where('source_id', $unifiedEmployee->source_id)
             ->whereDate('tanggal', $validated['tanggal'])
             ->first();
 
@@ -172,12 +92,12 @@ class AbsensiController extends Controller
         }
 
         $data = [
-            'employee_id' => $actualEmployeeId,
-            'source_type' => $sourceType,
-            'source_id' => $sourceId,
-            'nama_karyawan' => $employeeName,
-            'role_karyawan' => $employeeRole,
-            'gaji_karyawan' => $employeeGaji,
+            'employee_id' => null, // No longer needed
+            'source_type' => $unifiedEmployee->source_type,
+            'source_id' => $unifiedEmployee->source_id,
+            'nama_karyawan' => $unifiedEmployee->nama,
+            'role_karyawan' => $unifiedEmployee->role,
+            'gaji_karyawan' => $unifiedEmployee->gaji,
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
         ];
