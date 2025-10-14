@@ -10,40 +10,6 @@
     </a>
 </div>
 
-<!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-md-6 mb-3">
-        <div class="card bg-primary text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Total Pembibitan</h6>
-                        <h4 class="mb-0">{{ \App\Models\Pembibitan::count() }}</h4>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-seedling fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 mb-3">
-        <div class="card bg-success text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Pembibitan Berjalan</h6>
-                        <h4 class="mb-0">{{ \App\Models\Pembibitan::where('tanggal_mulai', '<=', now())->count() }}</h4>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-calendar-check-fill fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Search Form -->
 <div class="card mb-4">
     <div class="card-body">
@@ -150,6 +116,40 @@
                 Tidak ada data pembibitan yang ditemukan.
             </div>
         @endif
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mt-4">
+    <div class="col-md-6 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Total Pembibitan</h6>
+                        <h4 class="mb-0">{{ \App\Models\Pembibitan::count() }}</h4>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-seedling fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Pembibitan Berjalan</h6>
+                        <h4 class="mb-0">{{ \App\Models\Pembibitan::where('tanggal_mulai', '<=', now())->count() }}</h4>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-calendar-check-fill fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

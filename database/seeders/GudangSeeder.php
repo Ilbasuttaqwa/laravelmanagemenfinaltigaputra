@@ -13,16 +13,6 @@ class GudangSeeder extends Seeder
      */
     public function run(): void
     {
-        $gudangs = [
-            ['nama' => 'Gudang A', 'gaji' => 8000000],
-            ['nama' => 'Gudang B', 'gaji' => 10000000],
-            ['nama' => 'Gudang C', 'gaji' => 7000000],
-            ['nama' => 'Gudang D', 'gaji' => 6500000],
-            ['nama' => 'Gudang E', 'gaji' => 12000000],
-        ];
-
-        foreach ($gudangs as $gudang) {
-            Gudang::create($gudang);
-        }
+        // Data gudang dikosongkan - akan diinput manual oleh user
     }
 }

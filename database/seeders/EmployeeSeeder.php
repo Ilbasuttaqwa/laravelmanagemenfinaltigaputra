@@ -13,36 +13,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run(): void
     {
-        $employees = [
-            [
-                'nama' => 'John Doe',
-                'gaji' => 8000000,
-                'role' => 'karyawan',
-            ],
-            [
-                'nama' => 'Jane Smith',
-                'gaji' => 10000000,
-                'role' => 'karyawan',
-            ],
-            [
-                'nama' => 'Bob Johnson',
-                'gaji' => 7000000,
-                'role' => 'karyawan',
-            ],
-            [
-                'nama' => 'Alice Brown',
-                'gaji' => 6500000,
-                'role' => 'karyawan',
-            ],
-            [
-                'nama' => 'Charlie Wilson',
-                'gaji' => 12000000,
-                'role' => 'karyawan',
-            ],
-        ];
-
-        foreach ($employees as $employee) {
-            Employee::create($employee);
-        }
+        // Data karyawan dikosongkan - akan diinput manual oleh user
+        // Hanya user admin dan manager yang tetap ada untuk login
     }
 }

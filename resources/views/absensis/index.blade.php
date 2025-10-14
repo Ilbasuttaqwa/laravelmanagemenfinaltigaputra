@@ -418,37 +418,6 @@ body {
     </div>
 </div>
 
-<!-- Enhanced Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-md-4 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon primary">
-                <i class="bi bi-calendar-check"></i>
-            </div>
-            <h6 class="text-muted mb-1">Total Absensi</h6>
-            <h3 class="mb-0 fw-bold text-primary">{{ \App\Models\Absensi::count() }}</h3>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon success">
-                <i class="bi bi-check-circle"></i>
-            </div>
-            <h6 class="text-muted mb-1">Full Day</h6>
-            <h3 class="mb-0 fw-bold text-success">{{ \App\Models\Absensi::where('status', 'full')->count() }}</h3>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon warning">
-                <i class="bi bi-clock"></i>
-            </div>
-            <h6 class="text-muted mb-1">Setengah Hari</h6>
-            <h3 class="mb-0 fw-bold text-warning">{{ \App\Models\Absensi::where('status', 'setengah_hari')->count() }}</h3>
-        </div>
-    </div>
-</div>
-
 <!-- Enhanced Search Form -->
 <div class="search-form mb-4">
     <form method="GET" action="{{ route(auth()->user()->isManager() ? 'manager.absensis.index' : 'admin.absensis.index') }}">
@@ -569,6 +538,37 @@ body {
                 Tidak ada data absensi yang ditemukan.
             </div>
         @endif
+    </div>
+</div>
+
+<!-- Enhanced Statistics Cards -->
+<div class="row mt-4">
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon primary">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+            <h6 class="text-muted mb-1">Total Absensi</h6>
+            <h3 class="mb-0 fw-bold text-primary">{{ \App\Models\Absensi::count() }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon success">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <h6 class="text-muted mb-1">Full Day</h6>
+            <h3 class="mb-0 fw-bold text-success">{{ \App\Models\Absensi::where('status', 'full')->count() }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon warning">
+                <i class="bi bi-clock"></i>
+            </div>
+            <h6 class="text-muted mb-1">Setengah Hari</h6>
+            <h3 class="mb-0 fw-bold text-warning">{{ \App\Models\Absensi::where('status', 'setengah_hari')->count() }}</h3>
+        </div>
     </div>
 </div>
 

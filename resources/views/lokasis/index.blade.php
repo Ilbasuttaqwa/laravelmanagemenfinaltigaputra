@@ -16,55 +16,6 @@
         </a>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Total Lokasi</h6>
-                            <h4 class="mb-0">{{ \App\Models\Lokasi::count() }}</h4>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="bi bi-geo-alt-fill fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Lokasi Terpakai</h6>
-                            <h4 class="mb-0">{{ \App\Models\Lokasi::has('kandangs')->count() }}</h4>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="bi bi-geo-alt-check fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Total Kandang</h6>
-                            <h4 class="mb-0">{{ \App\Models\Kandang::count() }}</h4>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="bi bi-house-door fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Search Form -->
     <div class="card mb-4">
         <div class="card-body">
@@ -156,6 +107,55 @@
                     Tidak ada data lokasi yang ditemukan.
                 </div>
             @endif
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Lokasi</h6>
+                            <h4 class="mb-0">{{ \App\Models\Lokasi::count() }}</h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-geo-alt-fill fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Lokasi Terpakai</h6>
+                            <h4 class="mb-0">{{ \App\Models\Lokasi::has('kandangs')->count() }}</h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-geo-alt-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Kandang</h6>
+                            <h4 class="mb-0">{{ \App\Models\Kandang::count() }}</h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-house-door fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

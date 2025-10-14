@@ -13,16 +13,6 @@ class MandorSeeder extends Seeder
      */
     public function run(): void
     {
-        $mandors = [
-            ['nama' => 'Mandor A', 'gaji' => 9000000, 'role' => 'mandor'],
-            ['nama' => 'Mandor B', 'gaji' => 11000000, 'role' => 'mandor'],
-            ['nama' => 'Mandor C', 'gaji' => 8000000, 'role' => 'mandor'],
-            ['nama' => 'Mandor D', 'gaji' => 7500000, 'role' => 'mandor'],
-            ['nama' => 'Mandor E', 'gaji' => 13000000, 'role' => 'mandor'],
-        ];
-
-        foreach ($mandors as $mandor) {
-            Employee::create($mandor);
-        }
+        // Data mandor dikosongkan - akan diinput manual oleh user
     }
 }
