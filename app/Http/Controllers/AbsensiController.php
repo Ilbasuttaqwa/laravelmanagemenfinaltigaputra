@@ -37,54 +37,59 @@ class AbsensiController extends Controller
 
     public function create()
     {
+        // Get all employees from different sources
+        $allEmployees = collect();
+        
         // Get employees from employees table
         $query = Employee::orderBy('nama');
-        
-        // Admin can only see karyawan (not mandor)
         if (auth()->user()->isAdmin()) {
             $query->where('role', 'karyawan');
         }
-        
         $employees = $query->get();
         
-        // Get gudang employees (karyawan gudang)
-        $gudangEmployees = collect();
-        if (auth()->user()->isManager()) {
-            $gudangEmployees = \App\Models\Gudang::orderBy('nama')->get()->map(function($gudang) {
-                return (object) [
-                    'id' => 'gudang_' . $gudang->id,
-                    'nama' => $gudang->nama,
-                    'role' => 'karyawan_gudang',
-                    'gaji' => $gudang->gaji,
-                    'source' => 'gudang'
-                ];
-            });
-        }
-        
-        // Get mandor employees
-        $mandorEmployees = collect();
-        if (auth()->user()->isManager()) {
-            $mandorEmployees = \App\Models\Mandor::orderBy('nama')->get()->map(function($mandor) {
-                return (object) [
-                    'id' => 'mandor_' . $mandor->id,
-                    'nama' => $mandor->nama,
-                    'role' => 'mandor',
-                    'gaji' => $mandor->gaji,
-                    'source' => 'mandor'
-                ];
-            });
-        }
-        
-        // Combine all employees
-        $allEmployees = $employees->map(function($employee) {
-            return (object) [
+        foreach ($employees as $employee) {
+            $allEmployees->push((object) [
                 'id' => 'employee_' . $employee->id,
                 'nama' => $employee->nama,
                 'role' => $employee->role,
                 'gaji' => $employee->gaji,
-                'source' => 'employee'
-            ];
-        })->concat($gudangEmployees)->concat($mandorEmployees)->sortBy('nama');
+                'source' => 'employee',
+                'source_id' => $employee->id
+            ]);
+        }
+        
+        // Get gudang employees (karyawan gudang) - only for manager
+        if (auth()->user()->isManager()) {
+            $gudangs = \App\Models\Gudang::orderBy('nama')->get();
+            foreach ($gudangs as $gudang) {
+                $allEmployees->push((object) [
+                    'id' => 'gudang_' . $gudang->id,
+                    'nama' => $gudang->nama,
+                    'role' => 'karyawan_gudang',
+                    'gaji' => $gudang->gaji,
+                    'source' => 'gudang',
+                    'source_id' => $gudang->id
+                ]);
+            }
+        }
+        
+        // Get mandor employees - only for manager
+        if (auth()->user()->isManager()) {
+            $mandors = \App\Models\Mandor::orderBy('nama')->get();
+            foreach ($mandors as $mandor) {
+                $allEmployees->push((object) [
+                    'id' => 'mandor_' . $mandor->id,
+                    'nama' => $mandor->nama,
+                    'role' => 'mandor',
+                    'gaji' => $mandor->gaji,
+                    'source' => 'mandor',
+                    'source_id' => $mandor->id
+                ]);
+            }
+        }
+        
+        // Sort by name
+        $allEmployees = $allEmployees->sortBy('nama');
         
         return view('absensis.create', compact('allEmployees'));
     }
@@ -99,49 +104,49 @@ class AbsensiController extends Controller
 
         // Parse employee_id to determine source and actual ID
         $employeeId = $validated['employee_id'];
-        $actualEmployeeId = null;
-        $employeeRole = null;
+        $sourceType = null;
+        $sourceId = null;
         $employeeName = null;
+        $employeeRole = null;
+        $employeeGaji = null;
+        $actualEmployeeId = null;
 
         if (str_starts_with($employeeId, 'employee_')) {
             // From employees table
             $actualEmployeeId = str_replace('employee_', '', $employeeId);
             $employee = Employee::find($actualEmployeeId);
             if ($employee) {
-                $employeeRole = $employee->role;
+                $sourceType = 'employee';
+                $sourceId = $employee->id;
                 $employeeName = $employee->nama;
+                $employeeRole = $employee->role;
+                $employeeGaji = $employee->gaji;
             }
         } elseif (str_starts_with($employeeId, 'gudang_')) {
-            // From gudangs table - create temporary employee record
+            // From gudangs table
             $gudangId = str_replace('gudang_', '', $employeeId);
             $gudang = \App\Models\Gudang::find($gudangId);
             if ($gudang) {
-                // Create or find employee record for gudang
-                $employee = Employee::firstOrCreate(
-                    ['nama' => $gudang->nama, 'role' => 'karyawan_gudang'],
-                    ['gaji' => $gudang->gaji]
-                );
-                $actualEmployeeId = $employee->id;
-                $employeeRole = 'karyawan_gudang';
+                $sourceType = 'gudang';
+                $sourceId = $gudang->id;
                 $employeeName = $gudang->nama;
+                $employeeRole = 'karyawan_gudang';
+                $employeeGaji = $gudang->gaji;
             }
         } elseif (str_starts_with($employeeId, 'mandor_')) {
-            // From mandors table - create temporary employee record
+            // From mandors table
             $mandorId = str_replace('mandor_', '', $employeeId);
             $mandor = \App\Models\Mandor::find($mandorId);
             if ($mandor) {
-                // Create or find employee record for mandor
-                $employee = Employee::firstOrCreate(
-                    ['nama' => $mandor->nama, 'role' => 'mandor'],
-                    ['gaji' => $mandor->gaji]
-                );
-                $actualEmployeeId = $employee->id;
-                $employeeRole = 'mandor';
+                $sourceType = 'mandor';
+                $sourceId = $mandor->id;
                 $employeeName = $mandor->nama;
+                $employeeRole = 'mandor';
+                $employeeGaji = $mandor->gaji;
             }
         }
 
-        if (!$actualEmployeeId) {
+        if (!$sourceType || !$sourceId) {
             return redirect()->back()
                 ->with('error', 'Karyawan tidak ditemukan.')
                 ->withInput();
@@ -154,8 +159,25 @@ class AbsensiController extends Controller
                 ->withInput();
         }
 
+        // Check for duplicate attendance on the same date
+        $existingAbsensi = Absensi::where('source_type', $sourceType)
+            ->where('source_id', $sourceId)
+            ->whereDate('tanggal', $validated['tanggal'])
+            ->first();
+
+        if ($existingAbsensi) {
+            return redirect()->back()
+                ->with('error', 'Data absensi untuk karyawan ini pada tanggal tersebut sudah ada.')
+                ->withInput();
+        }
+
         $data = [
             'employee_id' => $actualEmployeeId,
+            'source_type' => $sourceType,
+            'source_id' => $sourceId,
+            'nama_karyawan' => $employeeName,
+            'role_karyawan' => $employeeRole,
+            'gaji_karyawan' => $employeeGaji,
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
         ];

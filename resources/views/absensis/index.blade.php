@@ -486,16 +486,16 @@ body {
                                             <i class="bi bi-person-fill text-primary"></i>
                                         </div>
                                         <div>
-                                            <strong class="text-dark">{{ $absensi->employee->nama ?? 'Karyawan Tidak Ditemukan' }}</strong>
+                                            <strong class="text-dark">{{ $absensi->nama_karyawan ?? 'Karyawan Tidak Ditemukan' }}</strong>
                                             <br>
-                                            <small class="text-muted">ID: {{ $absensi->employee_id }}</small>
+                                            <small class="text-muted">ID: {{ $absensi->source_id ?? $absensi->employee_id }}</small>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge bg-{{ $absensi->employee && $absensi->employee->role == 'mandor' ? 'success' : 'primary' }} px-3 py-2">
-                                        <i class="bi bi-{{ $absensi->employee && $absensi->employee->role == 'mandor' ? 'person-badge' : 'building' }} me-1"></i>
-                                        {{ ucfirst($absensi->employee->role ?? 'karyawan') }}
+                                    <span class="badge bg-{{ $absensi->role_karyawan == 'mandor' ? 'success' : ($absensi->role_karyawan == 'karyawan_gudang' ? 'info' : 'primary') }} px-3 py-2">
+                                        <i class="bi bi-{{ $absensi->role_karyawan == 'mandor' ? 'person-badge' : ($absensi->role_karyawan == 'karyawan_gudang' ? 'building' : 'building') }} me-1"></i>
+                                        {{ ucfirst(str_replace('_', ' ', $absensi->role_karyawan ?? 'karyawan')) }}
                                     </span>
                                 </td>
                                 <td class="text-center">
@@ -522,7 +522,7 @@ body {
                                         </a>
                                         @if(auth()->user()->isManager())
                                         <button type="button" class="btn btn-outline-danger btn-sm"
-                                                onclick="confirmDelete({{ $absensi->id }}, '{{ $absensi->employee->nama ?? 'Karyawan Tidak Ditemukan' }}')" title="Hapus Data">
+                                                onclick="confirmDelete({{ $absensi->id }}, '{{ $absensi->nama_karyawan ?? 'Karyawan Tidak Ditemukan' }}')" title="Hapus Data">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                         @endif
