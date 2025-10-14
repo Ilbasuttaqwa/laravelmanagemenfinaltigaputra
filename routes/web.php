@@ -79,12 +79,39 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
 });
 
-// Admin Routes (Posisi Di Bawah Manager)
+// Admin Routes (Akses Terbatas - Tidak bisa input/edit mandor dan karyawan mandor)
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('gudangs', GudangController::class)->except(['destroy']);
-    Route::resource('mandors', MandorController::class)->except(['destroy']);
-    Route::resource('employees', EmployeeController::class)->except(['destroy']);
-    Route::resource('absensis', AbsensiController::class)->except(['destroy']);
+    // Admin hanya bisa lihat master gudang (read-only)
+    Route::get('gudangs', [GudangController::class, 'index'])->name('gudangs.index');
+    Route::get('gudangs/{gudang}', [GudangController::class, 'show'])->name('gudangs.show');
+    Route::get('gudangs/create', [GudangController::class, 'create'])->name('gudangs.create');
+    Route::post('gudangs', [GudangController::class, 'store'])->name('gudangs.store');
+    Route::get('gudangs/{gudang}/edit', [GudangController::class, 'edit'])->name('gudangs.edit');
+    Route::put('gudangs/{gudang}', [GudangController::class, 'update'])->name('gudangs.update');
+    // Admin tidak bisa hapus gudang
+    
+    // Admin tidak bisa akses mandor sama sekali
+    // Route::resource('mandors', MandorController::class)->except(['destroy']); // DIHAPUS
+    
+    // Admin hanya bisa lihat karyawan dengan role 'karyawan' (bukan mandor)
+    Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::get('employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
+    Route::get('employees/create', [EmployeeController::class, 'create'])->name('employees.create');
+    Route::post('employees', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+    Route::put('employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
+    // Admin tidak bisa hapus karyawan
+    
+    // Admin bisa akses absensi tapi hanya untuk karyawan (bukan mandor)
+    Route::get('absensis', [AbsensiController::class, 'index'])->name('absensis.index');
+    Route::get('absensis/create', [AbsensiController::class, 'create'])->name('absensis.create');
+    Route::post('absensis', [AbsensiController::class, 'store'])->name('absensis.store');
+    Route::get('absensis/{absensi}', [AbsensiController::class, 'show'])->name('absensis.show');
+    Route::get('absensis/{absensi}/edit', [AbsensiController::class, 'edit'])->name('absensis.edit');
+    Route::put('absensis/{absensi}', [AbsensiController::class, 'update'])->name('absensis.update');
+    // Admin tidak bisa hapus absensi
+    Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
+    
     Route::resource('pembibitans', PembibitanController::class)->except(['destroy']);
     Route::resource('kandangs', KandangController::class)->except(['destroy']);
     Route::resource('lokasis', LokasiController::class)->except(['destroy']);

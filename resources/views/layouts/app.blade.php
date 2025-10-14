@@ -397,13 +397,7 @@
                                         Master Gudang
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.mandors.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.mandors.index') }}">
-                                        <i class="bi bi-person-badge"></i>
-                                        Master Mandor
-                                    </a>
-                                </li>
+                                {{-- Admin tidak bisa akses Master Mandor --}}
                                 <li class="nav-item">
                                     <a class="nav-link {{ request()->routeIs('admin.absensis.*') ? 'active' : '' }}"
                                        href="{{ route('admin.absensis.index') }}">

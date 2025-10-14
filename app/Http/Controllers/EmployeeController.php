@@ -14,6 +14,11 @@ class EmployeeController extends Controller
     {
         $query = Employee::query();
 
+        // Admin can only see karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('role', 'karyawan');
+        }
+
         // Search by nama if provided
         if ($request->filled('search')) {
             $search = $request->search;
@@ -86,7 +91,22 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji' => 'required|numeric|min:0',
+            'role' => 'nullable|string|in:karyawan,mandor',
         ]);
+
+        // Admin cannot change employee role to mandor
+        if (auth()->user()->isAdmin() && isset($validated['role']) && $validated['role'] === 'mandor') {
+            return redirect()->back()
+                            ->with('error', 'Admin tidak dapat mengubah role karyawan menjadi mandor.')
+                            ->withInput();
+        }
+
+        // Admin cannot change existing mandor employee
+        if (auth()->user()->isAdmin() && $employee->role === 'mandor') {
+            return redirect()->back()
+                            ->with('error', 'Admin tidak dapat mengubah data karyawan mandor.')
+                            ->withInput();
+        }
 
         $employee->update($validated);
 

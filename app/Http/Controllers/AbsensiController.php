@@ -14,6 +14,13 @@ class AbsensiController extends Controller
     {
         $query = Absensi::with(['employee']);
         
+        // Admin can only see absensi for karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->whereHas('employee', function($employeeQuery) {
+                $employeeQuery->where('role', 'karyawan');
+            });
+        }
+        
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -31,7 +38,14 @@ class AbsensiController extends Controller
 
     public function create()
     {
-        $employees = Employee::orderBy('nama')->get();
+        $query = Employee::orderBy('nama');
+        
+        // Admin can only see karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('role', 'karyawan');
+        }
+        
+        $employees = $query->get();
         
         return view('absensis.create', compact('employees'));
     }
@@ -43,6 +57,16 @@ class AbsensiController extends Controller
             'tanggal' => 'required|date',
             'status' => 'required|in:full,setengah_hari',
         ]);
+
+        // Admin cannot create absensi for mandor employees
+        if (auth()->user()->isAdmin()) {
+            $employee = Employee::find($validated['employee_id']);
+            if ($employee && $employee->role === 'mandor') {
+                return redirect()->back()
+                    ->with('error', 'Admin tidak dapat membuat absensi untuk karyawan mandor.')
+                    ->withInput();
+            }
+        }
 
         $data = [
             'employee_id' => $validated['employee_id'],
@@ -231,7 +255,14 @@ class AbsensiController extends Controller
      */
     public function getEmployees(Request $request)
     {
-        $employees = Employee::select('id', 'nama', 'role')->get();
+        $query = Employee::select('id', 'nama', 'role');
+        
+        // Admin can only see karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('role', 'karyawan');
+        }
+        
+        $employees = $query->get();
         return response()->json($employees);
     }
 }
