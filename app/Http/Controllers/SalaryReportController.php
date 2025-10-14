@@ -31,6 +31,11 @@ class SalaryReportController extends Controller
             ->pembibitan($pembibitanId)
             ->tanggalRange($tanggalMulai, $tanggalSelesai);
 
+        // Admin can only see salary reports for karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('tipe_karyawan', 'karyawan');
+        }
+
         $reports = $query->orderBy('nama_karyawan')->get();
 
         // Get filter options
@@ -53,6 +58,11 @@ class SalaryReportController extends Controller
 
     public function show(SalaryReport $salaryReport)
     {
+        // Admin cannot view salary reports for mandor employees
+        if (auth()->user()->isAdmin() && $salaryReport->tipe_karyawan === 'mandor') {
+            abort(403, 'Admin tidak dapat melihat laporan gaji karyawan mandor.');
+        }
+
         return view('salary-reports.show', compact('salaryReport'));
     }
 

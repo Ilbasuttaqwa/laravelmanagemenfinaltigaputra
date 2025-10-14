@@ -19,8 +19,15 @@ class CalendarAttendanceController extends Controller
         $bulan = $request->get('bulan', Carbon::now()->month);
         $tipe = $request->get('tipe', 'all');
 
-        // Get all employees (realtime from master data)
-        $employees = Employee::all();
+        // Get employees based on user role
+        $query = Employee::query();
+        
+        // Admin can only see karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('role', 'karyawan');
+        }
+        
+        $employees = $query->get();
 
         // Create virtual attendance records for all employees
         $attendances = collect();
@@ -60,7 +67,14 @@ class CalendarAttendanceController extends Controller
      */
     public function create()
     {
-        $employees = Employee::all();
+        $query = Employee::query();
+        
+        // Admin can only see karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('role', 'karyawan');
+        }
+        
+        $employees = $query->get();
         $tahun = Carbon::now()->year;
         $bulan = Carbon::now()->month;
 
@@ -245,11 +259,19 @@ class CalendarAttendanceController extends Controller
     {
         $tipe = $request->get('tipe');
         
-        if ($tipe === 'all') {
-            $employees = Employee::select('id', 'nama', 'role')->get();
+        $query = Employee::select('id', 'nama', 'role');
+        
+        // Admin can only see karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('role', 'karyawan');
         } else {
-            $employees = Employee::where('role', $tipe)->select('id', 'nama', 'role')->get();
+            // Manager can see all employees
+            if ($tipe !== 'all') {
+                $query->where('role', $tipe);
+            }
         }
+        
+        $employees = $query->get();
 
         return response()->json($employees);
     }

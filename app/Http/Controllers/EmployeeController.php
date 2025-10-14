@@ -72,6 +72,11 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
+        // Admin cannot view mandor employees
+        if (auth()->user()->isAdmin() && $employee->role === 'mandor') {
+            abort(403, 'Admin tidak dapat melihat data karyawan mandor.');
+        }
+
         return view('employees.show', compact('employee'));
     }
 
@@ -80,6 +85,11 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
+        // Admin cannot edit mandor employees
+        if (auth()->user()->isAdmin() && $employee->role === 'mandor') {
+            abort(403, 'Admin tidak dapat mengedit data karyawan mandor.');
+        }
+
         return view('employees.edit', compact('employee'));
     }
 

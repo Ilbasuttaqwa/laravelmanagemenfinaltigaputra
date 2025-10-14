@@ -86,12 +86,30 @@ class AbsensiController extends Controller
     public function show(Absensi $absensi)
     {
         $absensi->load(['employee']);
+        
+        // Admin cannot view absensi for mandor employees
+        if (auth()->user()->isAdmin() && $absensi->employee && $absensi->employee->role === 'mandor') {
+            abort(403, 'Admin tidak dapat melihat data absensi karyawan mandor.');
+        }
+        
         return view('absensis.show', compact('absensi'));
     }
 
     public function edit(Absensi $absensi)
     {
-        $employees = Employee::orderBy('nama')->get();
+        // Admin cannot edit absensi for mandor employees
+        if (auth()->user()->isAdmin() && $absensi->employee && $absensi->employee->role === 'mandor') {
+            abort(403, 'Admin tidak dapat mengedit data absensi karyawan mandor.');
+        }
+        
+        $query = Employee::orderBy('nama');
+        
+        // Admin can only see karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('role', 'karyawan');
+        }
+        
+        $employees = $query->get();
         
         return view('absensis.edit', compact('absensi', 'employees'));
     }
