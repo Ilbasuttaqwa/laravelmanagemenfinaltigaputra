@@ -119,6 +119,11 @@ class SalaryReportController extends Controller
             ->pembibitan($pembibitanId)
             ->tanggalRange($tanggalMulai, $tanggalSelesai);
 
+        // Admin can only see salary reports for karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('tipe_karyawan', 'karyawan');
+        }
+
         $reports = $query->orderBy('nama_karyawan')->get();
 
         $availableMonths = [
@@ -138,12 +143,19 @@ class SalaryReportController extends Controller
         // Clear existing reports for this period
         SalaryReport::periode($tahun, $bulan)->delete();
 
-        // Get all employees
-        $employees = Employee::all();
+        // Get employees based on user role
+        $query = Employee::query();
+        
+        // Admin can only generate reports for karyawan (not mandor)
+        if (auth()->user()->isAdmin()) {
+            $query->where('jabatan', 'karyawan');
+        }
+        
+        $employees = $query->get();
 
-        // Generate reports for all employees
+        // Generate reports for employees
         foreach ($employees as $employee) {
-            $this->createSalaryReport($employee, $employee->role, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
+            $this->createSalaryReport($employee, $employee->jabatan, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
         }
     }
 
@@ -161,7 +173,7 @@ class SalaryReportController extends Controller
                        ($attendances->where('status', 'setengah_hari')->count() * 0.5);
 
         // Calculate total salary
-        $gajiPokok = $employee->gaji;
+        $gajiPokok = $employee->gaji_pokok;
         $totalGaji = $gajiPokok * ($jmlHariKerja / 22); // Assuming 22 working days per month
 
         // Get related entities (simplified for now)

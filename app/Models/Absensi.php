@@ -11,24 +11,32 @@ class Absensi extends Model
 
     protected $fillable = [
         'employee_id',
-        'source_type',
-        'source_id',
+        'pembibitan_id',
         'nama_karyawan',
-        'role_karyawan',
-        'gaji_karyawan',
+        'jabatan',
+        'gaji_pokok_saat_itu',
         'tanggal',
         'status',
+        'gaji_hari_itu',
+        'lokasi_kerja',
     ];
 
     protected $casts = [
         'tanggal' => 'date',
-        'gaji_karyawan' => 'decimal:2',
+        'gaji_pokok_saat_itu' => 'decimal:2',
+        'gaji_hari_itu' => 'decimal:2',
     ];
 
     // Relations
     public function employee()
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    // Relationship dengan Pembibitan (sesuai ERD)
+    public function pembibitan()
+    {
+        return $this->belongsTo(Pembibitan::class, 'pembibitan_id');
     }
 
     // Accessor untuk status yang lebih readable
@@ -72,7 +80,7 @@ class Absensi extends Model
     // Accessor untuk mendapatkan gaji karyawan
     public function getGajiKaryawanAttribute()
     {
-        return $this->gaji_karyawan ?? $this->employee->gaji ?? 0;
+        return $this->gaji_pokok_saat_itu ?? $this->employee->gaji ?? 0;
     }
 
     // Scope untuk filter berdasarkan tanggal

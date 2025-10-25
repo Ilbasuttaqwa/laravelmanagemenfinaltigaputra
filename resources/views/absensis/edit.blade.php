@@ -31,7 +31,7 @@
                                 $isSelected = old('employee_id', $currentValue) == $employee->id;
                             @endphp
                             <option value="{{ $employee->id }}" {{ $isSelected ? 'selected' : '' }}>
-                                {{ $employee->nama }} ({{ ucfirst(str_replace('_', ' ', $employee->role)) }})
+                                {{ $employee->nama }} ({{ ucfirst(str_replace('_', ' ', $employee->jabatan)) }})
                             </option>
                         @endforeach
                     </select>

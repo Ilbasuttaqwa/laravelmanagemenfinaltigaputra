@@ -17,7 +17,7 @@ class EmployeeController extends Controller
 
         // Admin can only see karyawan (not mandor)
         if (auth()->user()->isAdmin()) {
-            $query->where('role', 'karyawan');
+            $query->where('jabatan', 'karyawan');
         }
 
         // Filter by kandang if provided
@@ -56,21 +56,25 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji' => 'required|numeric|min:0',
-            'role' => 'nullable|string|in:karyawan,mandor',
+            'jabatan' => 'nullable|string|in:karyawan,mandor',
             'kandang_id' => 'nullable|exists:kandangs,id',
             'lokasi_kerja' => 'nullable|string|max:255',
         ]);
 
+        // Rename gaji to gaji_pokok for database
+        $validated['gaji_pokok'] = $validated['gaji'];
+        unset($validated['gaji']);
+
         // Admin cannot create mandor employees
-        if (auth()->user()->isAdmin() && isset($validated['role']) && $validated['role'] === 'mandor') {
+        if (auth()->user()->isAdmin() && isset($validated['jabatan']) && $validated['jabatan'] === 'mandor') {
             return redirect()->back()
                             ->with('error', 'Admin tidak dapat membuat karyawan dengan role mandor.')
                             ->withInput();
         }
 
-        // Set default role to karyawan if not specified
-        if (!isset($validated['role'])) {
-            $validated['role'] = 'karyawan';
+        // Set default jabatan to karyawan if not specified
+        if (!isset($validated['jabatan'])) {
+            $validated['jabatan'] = 'karyawan';
         }
 
         Employee::create($validated);
@@ -85,7 +89,7 @@ class EmployeeController extends Controller
     public function show(Employee $employee)
     {
         // Admin cannot view mandor employees
-        if (auth()->user()->isAdmin() && $employee->role === 'mandor') {
+        if (auth()->user()->isAdmin() && $employee->jabatan === 'mandor') {
             abort(403, 'Admin tidak dapat melihat data karyawan mandor.');
         }
 
@@ -98,7 +102,7 @@ class EmployeeController extends Controller
     public function edit(Employee $employee)
     {
         // Admin cannot edit mandor employees
-        if (auth()->user()->isAdmin() && $employee->role === 'mandor') {
+        if (auth()->user()->isAdmin() && $employee->jabatan === 'mandor') {
             abort(403, 'Admin tidak dapat mengedit data karyawan mandor.');
         }
 
@@ -113,18 +117,22 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji' => 'required|numeric|min:0',
-            'role' => 'nullable|string|in:karyawan,mandor',
+            'jabatan' => 'nullable|string|in:karyawan,mandor',
         ]);
 
+        // Rename gaji to gaji_pokok for database
+        $validated['gaji_pokok'] = $validated['gaji'];
+        unset($validated['gaji']);
+
         // Admin cannot change employee role to mandor
-        if (auth()->user()->isAdmin() && isset($validated['role']) && $validated['role'] === 'mandor') {
+        if (auth()->user()->isAdmin() && isset($validated['jabatan']) && $validated['jabatan'] === 'mandor') {
             return redirect()->back()
                             ->with('error', 'Admin tidak dapat mengubah role karyawan menjadi mandor.')
                             ->withInput();
         }
 
         // Admin cannot change existing mandor employee
-        if (auth()->user()->isAdmin() && $employee->role === 'mandor') {
+        if (auth()->user()->isAdmin() && $employee->jabatan === 'mandor') {
             return redirect()->back()
                             ->with('error', 'Admin tidak dapat mengubah data karyawan mandor.')
                             ->withInput();

@@ -51,4 +51,12 @@ class Kandang extends Model
         return $this->primaryEmployees()->get()->merge($this->employees()->get());
     }
 
+    /**
+     * Get the pembibitans for the kandang.
+     */
+    public function pembibitans()
+    {
+        return $this->hasMany(Pembibitan::class);
+    }
+
 }

@@ -15,6 +15,11 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    
     <style>
         .sidebar {
             min-height: 100vh;
@@ -588,15 +593,15 @@
                                 <li class="nav-item">
                                     <a class="nav-link {{ request()->routeIs('admin.absensis.*') ? 'active' : '' }}"
                                        href="{{ route('admin.absensis.index') }}">
-                                        <i class="bi bi-calendar-check"></i>
-                                        Master Absensi
+                                        <i class="bi bi-table"></i>
+                                        Master Absensi & Kalender
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.pembibitans.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.pembibitans.index') }}">
-                                        <i class="bi bi-seedling"></i>
-                                        Master Pembibitan
+                                    <a class="nav-link {{ request()->routeIs('admin.lokasis.*') ? 'active' : '' }}"
+                                       href="{{ route('admin.lokasis.index') }}">
+                                        <i class="bi bi-geo-alt"></i>
+                                        Master Lokasi
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -607,10 +612,17 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.lokasis.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.lokasis.index') }}">
-                                        <i class="bi bi-geo-alt"></i>
-                                        Master Lokasi
+                                    <a class="nav-link {{ request()->routeIs('admin.pembibitans.*') ? 'active' : '' }}"
+                                       href="{{ route('admin.pembibitans.index') }}">
+                                        <i class="bi bi-egg"></i>
+                                        Master Pembibitan
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('admin.karyawan-kandangs.*') ? 'active' : '' }}"
+                                       href="{{ route('admin.karyawan-kandangs.index') }}">
+                                        <i class="bi bi-people-fill"></i>
+                                        Master Karyawan Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -627,20 +639,6 @@
                                         Manage
                                     </a>
                                 </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('admin.monthly-attendance-reports.*') ? 'active' : '' }}"
-                                   href="{{ route('admin.monthly-attendance-reports.index') }}">
-                                    <i class="bi bi-graph-up"></i>
-                                    Laporan Absensi Bulanan
-                                </a>
-                            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.calendar-attendances.*') ? 'active' : '' }}"
-                   href="{{ route('admin.calendar-attendances.index') }}">
-                    <i class="bi bi-calendar-check"></i>
-                    Kalender Absensi
-                </a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.salary-reports.*') ? 'active' : '' }}"
                    href="{{ route('admin.salary-reports.index') }}">
@@ -666,15 +664,15 @@
                                 <li class="nav-item">
                                     <a class="nav-link {{ request()->routeIs('manager.absensis.*') ? 'active' : '' }}"
                                        href="{{ route('manager.absensis.index') }}">
-                                        <i class="bi bi-calendar-check"></i>
-                                        Master Absensi
+                                        <i class="bi bi-table"></i>
+                                        Master Absensi & Kalender
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.pembibitans.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.pembibitans.index') }}">
-                                        <i class="bi bi-seedling"></i>
-                                        Master Pembibitan
+                                    <a class="nav-link {{ request()->routeIs('manager.lokasis.*') ? 'active' : '' }}"
+                                       href="{{ route('manager.lokasis.index') }}">
+                                        <i class="bi bi-geo-alt"></i>
+                                        Master Lokasi
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -685,26 +683,19 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.lokasis.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.lokasis.index') }}">
-                                        <i class="bi bi-geo-alt"></i>
-                                        Master Lokasi
+                                    <a class="nav-link {{ request()->routeIs('manager.pembibitans.*') ? 'active' : '' }}"
+                                       href="{{ route('manager.pembibitans.index') }}">
+                                        <i class="bi bi-egg"></i>
+                                        Master Pembibitan
                                     </a>
                                 </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('manager.monthly-attendance-reports.*') ? 'active' : '' }}"
-                                   href="{{ route('manager.monthly-attendance-reports.index') }}">
-                                    <i class="bi bi-graph-up"></i>
-                                    Laporan Absensi Bulanan
-                                </a>
-                            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('manager.calendar-attendances.*') ? 'active' : '' }}"
-                   href="{{ route('manager.calendar-attendances.index') }}">
-                    <i class="bi bi-calendar-check"></i>
-                    Kalender Absensi
-                </a>
-            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('manager.karyawan-kandangs.*') ? 'active' : '' }}"
+                                       href="{{ route('manager.karyawan-kandangs.index') }}">
+                                        <i class="bi bi-people-fill"></i>
+                                        Master Karyawan Kandang
+                                    </a>
+                                </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('manager.salary-reports.*') ? 'active' : '' }}"
                    href="{{ route('manager.salary-reports.index') }}">
@@ -739,8 +730,23 @@
         
     </div>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     
     @stack('scripts')
     </body>

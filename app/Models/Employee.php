@@ -11,14 +11,15 @@ class Employee extends Model
 
     protected $fillable = [
         'nama',
-        'gaji',
-        'role',
+        'gaji_pokok',
+        'jabatan',
         'kandang_id',
+        'lokasi_id',
         'lokasi_kerja',
     ];
 
     protected $casts = [
-        'gaji' => 'decimal:2',
+        'gaji_pokok' => 'decimal:2',
     ];
 
     /**
@@ -27,6 +28,14 @@ class Employee extends Model
     public function kandang()
     {
         return $this->belongsTo(Kandang::class);
+    }
+
+    /**
+     * Get the lokasi that the employee belongs to.
+     */
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
     }
 
     /**
@@ -43,5 +52,33 @@ class Employee extends Model
     public function absensis()
     {
         return $this->hasMany(Absensi::class);
+    }
+
+    /**
+     * Accessor untuk mendapatkan jabatan (sesuai ERD)
+     */
+    public function getJabatanAttribute($value)
+    {
+        // Auto-fill jabatan berdasarkan role
+        if (empty($value)) {
+            return $this->role ?? 'karyawan';
+        }
+        return $value;
+    }
+
+    /**
+     * Accessor untuk mengecek apakah mandor
+     */
+    public function getIsMandorAttribute()
+    {
+        return $this->jabatan === 'mandor';
+    }
+
+    /**
+     * Accessor untuk mengecek apakah gudang kandang
+     */
+    public function getIsGudangKandangAttribute()
+    {
+        return $this->jabatan === 'gud_kandang';
     }
 }

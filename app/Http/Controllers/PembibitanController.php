@@ -49,6 +49,9 @@ class PembibitanController extends Controller
         ]);
 
         Pembibitan::create($validated);
+        
+        // Clear cache to ensure real-time updates
+        \Cache::forget('pembibitans_data');
 
         return redirect()->route(auth()->user()->isManager() ? 'manager.pembibitans.index' : 'admin.pembibitans.index')
                         ->with('success', 'Data pembibitan berhasil ditambahkan.');

@@ -50,14 +50,6 @@
             </div>
 
 
-            <div class="mb-3">
-                <label for="deskripsi" class="form-label">Deskripsi</label>
-                <textarea class="form-control @error('deskripsi') is-invalid @enderror"
-                          id="deskripsi" name="deskripsi" rows="3">{{ old('deskripsi') }}</textarea>
-                @error('deskripsi')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
 
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route(auth()->user()->isAdmin() ? 'admin.kandangs.index' : 'manager.kandangs.index') }}"

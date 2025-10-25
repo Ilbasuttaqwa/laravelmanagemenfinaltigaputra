@@ -9,6 +9,10 @@ class GudangController extends Controller
 {
     public function index(Request $request)
     {
+        // Clear cache untuk memastikan data fresh
+        \Cache::forget('gudangs_data');
+        \Cache::forget('employees_data');
+        
         $query = Gudang::query();
         
         if ($request->filled('search')) {
@@ -65,6 +69,9 @@ class GudangController extends Controller
     public function destroy(Gudang $gudang)
     {
         $gudang->delete();
+        
+        // Clear all caches after deletion
+        \Cache::flush();
 
         return redirect()->route(auth()->user()->isManager() ? 'manager.gudangs.index' : 'admin.gudangs.index')
                         ->with('success', 'Data karyawan gudang berhasil dihapus.');

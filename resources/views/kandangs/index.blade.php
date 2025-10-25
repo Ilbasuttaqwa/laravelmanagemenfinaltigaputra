@@ -53,7 +53,6 @@
                             <th>No</th>
                             <th>Nama Kandang</th>
                             <th>Lokasi</th>
-                            <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -67,13 +66,6 @@
                                         <span class="badge bg-info">{{ $kandang->lokasi->nama_lokasi }}</span>
                                     @else
                                         <span class="badge bg-secondary">Belum ada</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($kandang->deskripsi)
-                                        {{ Str::limit($kandang->deskripsi, 50) }}
-                                    @else
-                                        <span class="text-muted">-</span>
                                     @endif
                                 </td>
                                 <td>

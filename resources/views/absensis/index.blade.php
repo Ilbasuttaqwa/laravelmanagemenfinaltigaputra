@@ -1,624 +1,1034 @@
 @extends('layouts.app')
 
-@section('title', 'Master Absensi')
+@section('title', 'Master Absensi & Kalender')
 
 @push('styles')
 <style>
-/* Modern Design System */
-:root {
-    --primary-color: #2563eb;
-    --secondary-color: #64748b;
-    --success-color: #10b981;
-    --warning-color: #f59e0b;
-    --danger-color: #ef4444;
-    --light-bg: #ffffff;
-    --border-color: #d1d5db;
-    --text-primary: #111827;
-    --text-secondary: #374151;
-    --text-muted: #6b7280;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    --radius-sm: 0.375rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
+/* Excel-like DataTables Styling */
+.dataTables_wrapper {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Enhanced Avatar */
-.avatar-sm {
-    width: 48px;
-    height: 48px;
-    font-size: 18px;
-    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
-    border: 2px solid #ffffff;
-    box-shadow: var(--shadow-sm);
-    color: white !important;
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+    color: #333;
+    font-size: 14px;
 }
 
-/* Modern Table Design */
-.table {
-    border-collapse: separate;
-    border-spacing: 0;
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 8px;
     background: white;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
 }
 
-.table th {
-    border: none;
-    font-weight: 700;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: linear-gradient(135deg, #1e293b, #334155);
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-left: 8px;
+    background: white;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Excel-like table styling */
+#absensiTable {
+    border-collapse: collapse;
+    width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+}
+
+#absensiTable thead th {
+    background: #2c3e50 !important;
+    border: 1px solid #ddd;
+    padding: 12px 8px;
+    font-weight: 600;
     color: #ffffff !important;
-    padding: 1rem 0.75rem;
-    position: relative;
     text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-.table th:first-child {
-    border-top-left-radius: var(--radius-lg);
-}
-
-.table th:last-child {
-    border-top-right-radius: var(--radius-lg);
-}
-
-.table td {
+#absensiTable tbody td {
+    border: 1px solid #ddd;
+    padding: 8px;
     vertical-align: middle;
-    padding: 1rem 0.75rem;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
-    background: #ffffff;
-    transition: all 0.2s ease;
-    color: var(--text-primary) !important;
+    background: white;
 }
 
-.table tbody tr {
-    transition: all 0.2s ease;
+#absensiTable tbody tr:hover {
+    background-color: #f5f5f5;
 }
 
-.table tbody tr:hover {
-    background: #f8fafc !important;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+#absensiTable tbody tr:nth-child(even) {
+    background-color: #fafafa;
 }
 
-.table tbody tr:hover td {
-    color: var(--text-primary) !important;
+#absensiTable tbody tr:nth-child(even):hover {
+    background-color: #f0f0f0;
 }
 
-.table tbody tr:last-child td:first-child {
-    border-bottom-left-radius: var(--radius-lg);
+/* Excel-like buttons */
+.dt-buttons {
+    margin-bottom: 20px;
 }
 
-.table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: var(--radius-lg);
+.dt-buttons .btn {
+    background: #007bff;
+    border: 1px solid #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-right: 5px;
+    transition: all 0.2s;
 }
 
-/* Enhanced Badges */
+.dt-buttons .btn:hover {
+    background: #0056b3;
+    border-color: #0056b3;
+    color: white;
+}
+
+.dt-buttons .btn:active {
+    background: #004085;
+    border-color: #004085;
+}
+
+/* Status badges */
 .badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-md);
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-    box-shadow: var(--shadow-sm);
-    color: #ffffff !important;
-}
-
-.badge-gudang {
-    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
-    color: #ffffff !important;
-}
-
-.badge-mandor {
-    background: linear-gradient(135deg, var(--success-color), #34d399);
-    color: #ffffff !important;
-}
-
-/* Status Badges */
-.badge-success {
-    background: linear-gradient(135deg, var(--success-color), #34d399);
-    color: #ffffff !important;
-}
-
-.badge-warning {
-    background: linear-gradient(135deg, var(--warning-color), #fbbf24);
-    color: #ffffff !important;
-}
-
-/* Modern Buttons */
-.btn-group-sm .btn {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    border-radius: var(--radius-sm);
-    border: none;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 12px;
     font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: var(--shadow-sm);
 }
 
-.btn-outline-info {
-    background: white;
-    color: #0ea5e9;
-    border: 2px solid #0ea5e9;
+.badge.bg-success {
+    background-color: #28a745 !important;
 }
 
-.btn-outline-info:hover {
-    background: #0ea5e9;
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-outline-warning {
-    background: white;
-    color: var(--warning-color);
-    border: 2px solid var(--warning-color);
-}
-
-.btn-outline-warning:hover {
-    background: var(--warning-color);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-outline-danger {
-    background: white;
-    color: var(--danger-color);
-    border: 2px solid var(--danger-color);
-}
-
-.btn-outline-danger:hover {
-    background: var(--danger-color);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-/* Enhanced Cards */
-.card {
-    border: none;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    background: white;
-    overflow: hidden;
-}
-
-.card-header {
-    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-    border: none;
-    font-weight: 700;
-    padding: 1.5rem;
-    color: var(--text-primary);
-}
-
-.card-body {
-    padding: 2rem;
-}
-
-/* Statistics Cards Enhancement */
-.stats-card {
-    background: #ffffff;
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border-color);
-    transition: all 0.2s ease;
-}
-
-.stats-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.stats-card h6 {
-    color: var(--text-secondary) !important;
-    font-weight: 600;
-}
-
-.stats-card h3 {
-    color: var(--text-primary) !important;
-    font-weight: 800;
-}
-
-.stats-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    margin-bottom: 1rem;
-}
-
-.stats-icon.primary {
-    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+.badge.bg-warning {
+    background-color: #ffc107 !important;
     color: #ffffff !important;
 }
 
-.stats-icon.success {
-    background: linear-gradient(135deg, var(--success-color), #34d399);
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+/* Action buttons */
+.btn-group .btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    margin: 0 1px;
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+.btn-warning {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
     color: #ffffff !important;
 }
 
-.stats-icon.warning {
-    background: linear-gradient(135deg, var(--warning-color), #fbbf24);
-    color: #ffffff !important;
-}
-
-/* Search Form Enhancement */
-.search-form {
-    background: #ffffff;
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border-color);
-}
-
-.search-form label {
-    color: var(--text-primary) !important;
-    font-weight: 600;
-}
-
-.form-control {
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-    color: var(--text-primary) !important;
-    background: #ffffff;
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
-    color: var(--text-primary) !important;
-}
-
-.form-control::placeholder {
-    color: var(--text-muted) !important;
-}
-
-/* Page Header */
-.page-header {
-    background: linear-gradient(135deg, #1e293b, #334155);
-    color: #ffffff !important;
-    padding: 2rem;
-    border-radius: var(--radius-lg);
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.page-title {
-    font-size: 2rem;
-    font-weight: 800;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: #ffffff !important;
-}
-
-.page-title i {
-    font-size: 2.5rem;
+/* Ensure action buttons are visible */
+.btn-group .btn:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Fix any text visibility issues in action column */
+#absensiTable tbody td:last-child {
+    background-color: #ffffff !important;
+    color: #333 !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 10px;
+    }
+    
+    .dt-buttons {
+        margin-bottom: 15px;
+    }
+    
+    .dt-buttons .btn {
+        font-size: 11px;
+        padding: 4px 8px;
+        margin-right: 3px;
+    }
+}
+
+/* Excel-like pagination */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    padding: 6px 12px;
+    margin: 0 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    background: #f8f9fa;
+    border-color: #ddd;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Loading spinner */
+.dataTables_processing {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Info display */
+.dataTables_info {
+    color: #6c757d;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+/* Override DataTables Bootstrap theme for better header visibility */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+    color: #333;
+    font-size: 14px;
+}
+
+/* Force header text to be white and visible */
+#absensiTable thead th,
+#absensiTable thead th * {
+    color: #ffffff !important;
+    background-color: #2c3e50 !important;
+}
+
+/* Override any Bootstrap DataTables theme */
+table.dataTable thead th {
+    background-color: #2c3e50 !important;
+    color: #ffffff !important;
+    border-color: #ddd !important;
+}
+
+table.dataTable thead th.sorting,
+table.dataTable thead th.sorting_asc,
+table.dataTable thead th.sorting_desc {
+    background-color: #2c3e50 !important;
     color: #ffffff !important;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .table-responsive {
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-md);
-    }
-    
-    .page-title {
-        font-size: 1.5rem;
-    }
-    
-    .stats-card {
-        margin-bottom: 1rem;
-    }
-}
-
-/* Loading Animation */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-.loading {
-    animation: pulse 2s infinite;
-}
-
-/* Custom Scrollbar */
-.table-responsive::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
-}
-
-.table-responsive::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: var(--radius-sm);
-}
-
-.table-responsive::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: var(--radius-sm);
-}
-
-.table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #1d4ed8;
-}
-
-/* Enhanced Table Scroll */
-.table-responsive {
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-}
-
-.table-responsive::-webkit-scrollbar-corner {
-    background: #f1f5f9;
-}
-
-/* Force Text Visibility */
-body {
-    color: var(--text-primary) !important;
-}
-
-.text-dark {
-    color: var(--text-primary) !important;
-}
-
-.text-muted {
-    color: var(--text-muted) !important;
-}
-
-.text-primary {
-    color: var(--primary-color) !important;
-}
-
-.text-success {
-    color: var(--success-color) !important;
-}
-
-.text-warning {
-    color: var(--warning-color) !important;
-}
-
-/* Table Text Override */
-.table td strong {
-    color: var(--text-primary) !important;
-}
-
-.table td small {
-    color: var(--text-muted) !important;
-}
-
-/* Alert Text */
-.alert {
-    color: var(--text-primary) !important;
-}
-
-.alert-light {
-    background-color: #f8f9fa !important;
-    border-color: var(--border-color) !important;
-    color: var(--text-primary) !important;
+/* Ensure all header text is visible */
+#absensiTable thead th {
+    text-shadow: none !important;
+    font-weight: 600 !important;
 }
 </style>
 @endpush
 
 @section('content')
-<div class="page-header">
-    <div class="d-flex justify-content-between align-items-center">
-        <h1 class="page-title">
-            <i class="bi bi-calendar-check"></i> Master Absensi
-        </h1>
-        <a href="{{ route(auth()->user()->isManager() ? 'manager.absensis.create' : 'admin.absensis.create') }}" 
-           class="btn btn-light btn-lg px-4 py-2" style="border-radius: var(--radius-md); font-weight: 600;">
-            <i class="bi bi-plus-circle me-2"></i> Tambah Absensi
-        </a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0">
+                        <i class="bi bi-table me-2"></i>
+                        Master Absensi & Kalender
+                    </h4>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success" onclick="showBulkAttendance()">
+                            <i class="bi bi-people-fill me-1"></i>
+                            Tambah Cepat Absensi
+                        </button>
+                        @if(auth()->user()->isAdmin())
+                            <a href="{{ route('admin.absensis.create') }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                Tambah Absensi
+                            </a>
+                        @else
+                            <a href="{{ route('manager.absensis.create') }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                Tambah Absensi
+                            </a>
+                        @endif
+                    </div>
     </div>
+                <div class="card-body">
+                    <!-- Filter Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="lokasi_filter" class="form-label">Filter Lokasi:</label>
+                            <select id="lokasi_filter" class="form-select">
+                                <option value="">Semua Lokasi</option>
+                                @foreach($lokasis as $lokasi)
+                                    <option value="{{ $lokasi->nama_lokasi }}">{{ $lokasi->nama_lokasi }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tanggal_filter" class="form-label">Filter Tanggal:</label>
+                            <input type="date" id="tanggal_filter" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="kandang_filter" class="form-label">Filter Kandang:</label>
+                            <select id="kandang_filter" class="form-select">
+                                <option value="">Semua Kandang</option>
+                                @foreach($kandangs as $kandang)
+                                    <option value="{{ $kandang->nama_kandang }}">{{ $kandang->nama_kandang }} - {{ $kandang->lokasi->nama_lokasi ?? '' }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="bibit_filter" class="form-label">Cari Bibit/Pembibitan:</label>
+                            <input type="text" id="bibit_filter" class="form-control" placeholder="Masukkan nama pembibitan...">
 </div>
-
-<!-- Enhanced Search Form -->
-<div class="search-form mb-4">
-    <form method="GET" action="{{ route(auth()->user()->isManager() ? 'manager.absensis.index' : 'admin.absensis.index') }}">
-        <div class="row align-items-end">
-            <div class="col-md-8">
-                <label for="search" class="form-label fw-semibold">
-                    <i class="bi bi-search me-1"></i> Pencarian
-                </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="search" name="search"
-                           value="{{ request('search') }}" 
-                           placeholder="Cari berdasarkan status, nama karyawan, atau master data...">
-                    <button class="btn btn-primary px-4" type="submit" style="border-radius: 0 var(--radius-md) var(--radius-md) 0;">
-                        <i class="bi bi-search me-1"></i> Cari
+                        <div class="col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div>
+                                <button id="filterBtn" class="btn btn-primary me-2">
+                                    <i class="bi bi-search"></i> Filter
+                                </button>
+                                <button id="resetBtn" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i> Reset
                     </button>
                 </div>
             </div>
-            <div class="col-md-4">
-                <a href="{{ route(auth()->user()->isManager() ? 'manager.absensis.index' : 'admin.absensis.index') }}" 
-                   class="btn btn-outline-secondary px-4" style="border-radius: var(--radius-md);">
-                    <i class="bi bi-arrow-clockwise me-1"></i> Reset
-                </a>
-            </div>
-        </div>
-    </form>
 </div>
 
-<!-- Absensis Table -->
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title mb-0">Daftar Absensi</h5>
-    </div>
-    <div class="card-body">
-        @if($absensis->count() > 0)
-            <div class="table-responsive" style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th width="5%" class="text-center">No</th>
-                            <th width="25%">Nama Karyawan</th>
-                            <th width="10%" class="text-center">Tipe</th>
-                            <th width="15%" class="text-center">Tanggal</th>
-                            <th width="15%" class="text-center">Status</th>
-                            <th width="15%" class="text-center">Aksi</th>
+                    <div class="table-responsive">
+                        <table id="absensiTable" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th width="10%">Tanggal</th>
+                                    <th width="20%">Nama Karyawan</th>
+                                    <th width="12%">Role</th>
+                                    <th width="10%">Status</th>
+                                    <th width="12%">Lokasi</th>
+                                    <th width="12%">Pembibitan</th>
+                                    <th width="19%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($absensis as $index => $absensi)
+                                <!-- Data akan dimuat via DataTables AJAX -->
+                    </tbody>
+                </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Attendance Modal -->
+<div class="modal fade" id="bulkAttendanceModal" tabindex="-1" aria-labelledby="bulkAttendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="bulkAttendanceModalLabel">
+                    <i class="bi bi-people-fill me-2"></i>Tambah Cepat Absensi - Absensi Massal
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Filter Section -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filter Lokasi</label>
+                        <select class="form-select" id="filterLokasiBulk" onchange="filterEmployeesBulk()">
+                            <option value="">Semua Lokasi</option>
+                            @foreach($lokasis as $lokasi)
+                                <option value="{{ $lokasi->id }}">{{ $lokasi->nama_lokasi }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filter Kandang</label>
+                        <select class="form-select" id="filterKandangBulk" onchange="filterEmployeesBulk()">
+                            <option value="">Semua Kandang</option>
+                            @foreach($kandangs as $kandang)
+                                <option value="{{ $kandang->id }}">{{ $kandang->nama_kandang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Tanggal Absensi</label>
+                        <input type="date" class="form-control" id="tanggalBulk" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                    </div>
+                </div>
+
+                <!-- Bulk Attendance Form -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="selectAllBulk" onchange="toggleSelectAll()">
+                            <label class="form-check-label fw-bold" for="selectAllBulk">
+                                Pilih Semua Karyawan
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button type="button" class="btn btn-success" onclick="submitBulkAttendance()">
+                            <i class="bi bi-save me-1"></i>Simpan Tambah Cepat Absensi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Employees List -->
+                <div class="table-responsive">
+                    <table class="table table-hover" id="employeesTableBulk">
+                        <thead class="table-dark">
                             <tr>
-                                <td class="text-center">{{ $index + 1 }}</td>
+                                <th width="5%">Pilih</th>
+                                <th width="20%">Nama Karyawan</th>
+                                <th width="15%">Lokasi</th>
+                                <th width="15%">Kandang</th>
+                                <th width="10%">Gaji Pokok</th>
+                                <th width="15%">Status</th>
+                                <th width="15%">Pembibitan</th>
+                                <th width="5%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTableBodyBulk">
+                            @foreach($employees as $employee)
+                            <tr data-employee-id="{{ $employee->id }}">
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center me-2">
-                                            <i class="bi bi-person-fill text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <strong class="text-dark">{{ $absensi->nama_karyawan ?? 'Karyawan Tidak Ditemukan' }}</strong>
-                                            <br>
-                                            <small class="text-muted">ID: {{ $absensi->source_id ?? $absensi->employee_id }}</small>
-                                        </div>
-                                    </div>
+                                    <input type="checkbox" class="form-check-input employee-checkbox-bulk" 
+                                           value="{{ $employee->id }}" 
+                                           data-employee='{{ json_encode($employee) }}'>
                                 </td>
-                                <td class="text-center">
-                                    <span class="badge bg-{{ $absensi->role_karyawan == 'mandor' ? 'success' : ($absensi->role_karyawan == 'karyawan_gudang' ? 'info' : 'primary') }} px-3 py-2">
-                                        <i class="bi bi-{{ $absensi->role_karyawan == 'mandor' ? 'person-badge' : ($absensi->role_karyawan == 'karyawan_gudang' ? 'building' : 'building') }} me-1"></i>
-                                        {{ ucfirst(str_replace('_', ' ', $absensi->role_karyawan ?? 'karyawan')) }}
-                                    </span>
+                                <td>
+                                    <strong>{{ $employee->nama }}</strong>
+                                    <br><small class="text-muted">{{ $employee->jabatan }}</small>
                                 </td>
-                                <td class="text-center">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <span class="fw-bold text-dark">{{ $absensi->tanggal->format('d') }}</span>
-                                        <small class="text-muted">{{ $absensi->tanggal->format('M Y') }}</small>
-                                    </div>
+                                <td>{{ $employee->lokasi->nama_lokasi ?? 'N/A' }}</td>
+                                <td>{{ $employee->kandang->nama_kandang ?? 'N/A' }}</td>
+                                <td>
+                                    <span class="badge bg-info">Rp {{ number_format($employee->gaji_pokok, 0, ',', '.') }}</span>
                                 </td>
-                                <td class="text-center">
-                                    <span class="badge bg-{{ $absensi->status == 'full' ? 'success' : 'warning' }} px-3 py-2">
-                                        <i class="bi bi-{{ $absensi->status == 'full' ? 'check-circle' : 'clock' }} me-1"></i>
-                                        {{ $absensi->status_label }}
-                                    </span>
+                                <td>
+                                    <select class="form-select form-select-sm status-select-bulk" data-employee-id="{{ $employee->id }}">
+                                        <option value="full">Full Day</option>
+                                        <option value="setengah_hari">½ Hari</option>
+                                    </select>
                                 </td>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <a href="{{ route(auth()->user()->isManager() ? 'manager.absensis.show' : 'admin.absensis.show', $absensi) }}"
-                                           class="btn btn-outline-info btn-sm" title="Lihat Detail">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ route(auth()->user()->isManager() ? 'manager.absensis.edit' : 'admin.absensis.edit', $absensi) }}"
-                                           class="btn btn-outline-warning btn-sm" title="Edit Data">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        @if(auth()->user()->isManager())
-                                        <button type="button" class="btn btn-outline-danger btn-sm"
-                                                onclick="confirmDelete({{ $absensi->id }}, '{{ $absensi->nama_karyawan ?? 'Karyawan Tidak Ditemukan' }}')" title="Hapus Data">
-                                            <i class="bi bi-trash"></i>
+                                <td>
+                                    <select class="form-select form-select-sm pembibitan-select-bulk" data-employee-id="{{ $employee->id }}">
+                                        <option value="">Pilih Pembibitan</option>
+                                        @foreach($pembibitans as $pembibitan)
+                                            <option value="{{ $pembibitan->id }}">
+                                                {{ $pembibitan->judul }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm" 
+                                            onclick="quickAbsenBulk({{ $employee->id }})">
+                                        <i class="bi bi-lightning"></i>
                                         </button>
-                                        @endif
-                                    </div>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-            
-            <!-- Clean Results Info -->
-            <div class="mt-4 text-center">
-                <div class="alert alert-light border-0" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: var(--radius-lg);">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <i class="bi bi-info-circle text-primary me-2"></i>
-                        <span class="text-muted">
-                            Menampilkan <strong>{{ $absensis->count() }}</strong> data absensi
-                        </span>
-                    </div>
-                </div>
             </div>
-        @else
-            <div class="alert alert-info" role="alert">
-                Tidak ada data absensi yang ditemukan.
-            </div>
-        @endif
-    </div>
-</div>
-
-<!-- Enhanced Statistics Cards -->
-<div class="row mt-4">
-    <div class="col-md-4 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon primary">
-                <i class="bi bi-calendar-check"></i>
-            </div>
-            <h6 class="text-muted mb-1">Total Absensi</h6>
-            <h3 class="mb-0 fw-bold text-primary">{{ \App\Models\Absensi::count() }}</h3>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon success">
-                <i class="bi bi-check-circle"></i>
-            </div>
-            <h6 class="text-muted mb-1">Full Day</h6>
-            <h3 class="mb-0 fw-bold text-success">{{ \App\Models\Absensi::where('status', 'full')->count() }}</h3>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon warning">
-                <i class="bi bi-clock"></i>
-            </div>
-            <h6 class="text-muted mb-1">Setengah Hari</h6>
-            <h3 class="mb-0 fw-bold text-warning">{{ \App\Models\Absensi::where('status', 'setengah_hari')->count() }}</h3>
         </div>
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-@if(auth()->user()->isManager())
-<div class="modal fade" id="deleteModal" tabindex="-1">
+<!-- Quick Attendance Modal -->
+<div class="modal fade" id="quickAttendanceModalBulk" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-lightning me-2"></i>Quick Absensi
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus absensi tanggal <strong id="absensiName"></strong>?</p>
-                <p class="text-danger"><small>Tindakan ini tidak dapat dibatalkan.</small></p>
+                <form id="quickAttendanceFormBulk">
+                    @csrf
+                    <input type="hidden" id="quickEmployeeIdBulk">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Karyawan</label>
+                        <input type="text" class="form-control" id="quickEmployeeNameBulk" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tanggal</label>
+                        <input type="date" class="form-control" id="quickTanggalBulk" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Status</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="quickStatusBulk" id="quickFullBulk" value="full" checked>
+                                    <label class="form-check-label" for="quickFullBulk">
+                                        Full Day
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="quickStatusBulk" id="quickHalfBulk" value="setengah_hari">
+                                    <label class="form-check-label" for="quickHalfBulk">
+                                        ½ Hari
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Pembibitan (Opsional)</label>
+                        <select class="form-select" id="quickPembibitanBulk">
+                            <option value="">Pilih Pembibitan</option>
+                            @foreach($pembibitans as $pembibitan)
+                                <option value="{{ $pembibitan->id }}">
+                                    {{ $pembibitan->judul }} - {{ $pembibitan->kandang->nama_kandang ?? 'N/A' }} ({{ $pembibitan->lokasi->nama_lokasi ?? 'N/A' }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <form id="deleteForm" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </form>
+                <button type="button" class="btn btn-success" onclick="submitQuickAttendanceBulk()">
+                    <i class="bi bi-save me-1"></i>Simpan
+                </button>
             </div>
         </div>
     </div>
 </div>
-@endif
 @endsection
 
 @push('scripts')
 <script>
-    function confirmDelete(id, name) {
-        document.getElementById('absensiName').textContent = name;
-        document.getElementById('deleteForm').action = '{{ route("manager.absensis.destroy", ":id") }}'.replace(':id', id);
+$(document).ready(function() {
+    $('#absensiTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ auth()->user()->isAdmin() ? route('admin.absensis.index') : route('manager.absensis.index') }}",
+            type: 'GET',
+            cache: false, // Disable caching for real-time updates
+            data: function(d) {
+                // Force fresh data with timestamp
+                d._t = new Date().getTime();
+                d._token = $('meta[name="csrf-token"]').attr('content');
+                d.lokasi_filter = $('#lokasi_filter').val();
+                d.kandang_filter = $('#kandang_filter').val();
+                d.tanggal_filter = $('#tanggal_filter').val();
+                d.bibit_filter = $('#bibit_filter').val();
+                d._t = new Date().getTime(); // Cache busting for real-time updates
+            }
+        },
+        columns: [
+            { 
+                data: 'DT_RowIndex', 
+                name: 'DT_RowIndex', 
+                orderable: false, 
+                searchable: false,
+                width: '5%',
+                title: 'No'
+            },
+            { 
+                data: 'nama_karyawan', 
+                name: 'nama_karyawan',
+                width: '18%',
+                title: 'Nama Karyawan'
+            },
+            { 
+                data: 'role_karyawan', 
+                name: 'role_karyawan',
+                width: '12%',
+                title: 'Role'
+            },
+            { 
+                data: 'tanggal_formatted', 
+                name: 'tanggal',
+                width: '10%',
+                title: 'Tanggal'
+            },
+            { 
+                data: 'status_badge', 
+                name: 'status',
+                orderable: false,
+                searchable: false,
+                width: '10%',
+                title: 'Status'
+            },
+            { 
+                data: 'lokasi_kerja', 
+                name: 'lokasi_kerja',
+                width: '10%',
+                title: 'Lokasi'
+            },
+            { 
+                data: 'pembibitan_info', 
+                name: 'pembibitan_info',
+                orderable: false,
+                searchable: false,
+                width: '10%',
+                title: 'Pembibitan'
+            },
+            { 
+                data: 'action', 
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                width: '13%',
+                title: 'Aksi'
+            }
+        ],
+        order: [[4, 'desc']], // Sort by tanggal descending
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua"]],
+        language: {
+            processing: "Memproses data...",
+            lengthMenu: "Tampilkan _MENU_ data per halaman",
+            zeroRecords: "Tidak ada data yang ditemukan",
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            search: "Cari:",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<i class="bi bi-file-excel"></i> Excel',
+                className: 'btn btn-success',
+                title: 'Master Absensi & Kalender',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        body: function (data, row, column, node) {
+                            return data.replace(/<[^>]*>/g, '');
+                        }
+                    }
+                }
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="bi bi-file-pdf"></i> PDF',
+                className: 'btn btn-danger',
+                title: 'Master Absensi & Kalender',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        body: function (data, row, column, node) {
+                            return data.replace(/<[^>]*>/g, '');
+                        }
+                    }
+                }
+            },
+            {
+                extend: 'print',
+                text: '<i class="bi bi-printer"></i> Print',
+                className: 'btn btn-info',
+                title: 'Master Absensi & Kalender',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        body: function (data, row, column, node) {
+                            return data.replace(/<[^>]*>/g, '');
+                        }
+                    }
+                }
+            },
+            {
+                extend: 'copy',
+                text: '<i class="bi bi-clipboard"></i> Copy',
+                className: 'btn btn-secondary',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        body: function (data, row, column, node) {
+                            return data.replace(/<[^>]*>/g, '');
+                        }
+                    }
+                }
+            }
+        ],
+        responsive: true,
+        scrollX: true,
+        autoWidth: false,
+        columnDefs: [
+            {
+                targets: [0, 4, 5, 7], // No, Tanggal, Status, Aksi
+                className: 'text-center'
+            },
+            {
+                targets: [3], // Gaji
+                className: 'text-end'
+            }
+        ]
+    });
+    
+    // Filter functionality
+    $('#filterBtn').on('click', function() {
+        $('#absensiTable').DataTable().ajax.reload();
+    });
+    
+    // Reset functionality
+    $('#resetBtn').on('click', function() {
+        $('#lokasi_filter').val('');
+        $('#kandang_filter').val('');
+        $('#tanggal_filter').val('');
+        $('#bibit_filter').val('');
+        $('#absensiTable').DataTable().ajax.reload();
+    });
+    
+    // Real-time refresh master data
+    function refreshMasterData() {
+        fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update filter dropdowns
+                    updateFilterDropdowns(data.data);
+                    console.log('✅ Master data refreshed');
+                }
+            })
+            .catch(error => {
+                console.error('Error refreshing master data:', error);
+            });
+    }
+    
+    // Update filter dropdowns with fresh data
+    function updateFilterDropdowns(data) {
+        // Update lokasi filter
+        const lokasiSelect = document.getElementById('lokasi_filter');
+        if (lokasiSelect) {
+            const currentValue = lokasiSelect.value;
+            lokasiSelect.innerHTML = '<option value="">Semua Lokasi</option>';
+            data.lokasis.forEach(lokasi => {
+                const option = document.createElement('option');
+                option.value = lokasi.nama_lokasi;
+                option.textContent = lokasi.nama_lokasi;
+                if (lokasi.nama_lokasi === currentValue) {
+                    option.selected = true;
+                }
+                lokasiSelect.appendChild(option);
+            });
+        }
         
-        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        // Update kandang filter
+        const kandangSelect = document.getElementById('kandang_filter');
+        if (kandangSelect) {
+            const currentValue = kandangSelect.value;
+            kandangSelect.innerHTML = '<option value="">Semua Kandang</option>';
+            data.kandangs.forEach(kandang => {
+                const option = document.createElement('option');
+                option.value = kandang.nama_kandang;
+                option.textContent = `${kandang.nama_kandang} - ${kandang.lokasi ? kandang.lokasi.nama_lokasi : 'N/A'}`;
+                if (kandang.nama_kandang === currentValue) {
+                    option.selected = true;
+                }
+                kandangSelect.appendChild(option);
+            });
+        }
+    }
+    
+    // Auto-refresh master data every 30 seconds
+    setInterval(refreshMasterData, 30000);
+    
+    // Update absensi lokasi every 10 seconds
+    setInterval(updateAbsensiLokasi, 10000);
+    
+    // Refresh bulk attendance data every 15 seconds
+    setInterval(refreshBulkAttendanceData, 15000);
+    
+    // Function to update absensi lokasi
+    function updateAbsensiLokasi() {
+        fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.update-lokasi" : "admin.absensis.update-lokasi") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.updated_count > 0) {
+                console.log('✅ Updated ' + data.updated_count + ' absensi records with correct lokasi');
+                // Refresh table to show updated data
+                $('#absensiTable').DataTable().ajax.reload(null, false);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating absensi lokasi:', error);
+        });
+    }
+    
+    // Function to refresh bulk attendance data
+    function refreshBulkAttendanceData() {
+        // Only refresh if bulk modal is open
+        const bulkModal = document.getElementById('bulkAttendanceModal');
+        if (bulkModal && bulkModal.classList.contains('show')) {
+            fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update employee list in bulk modal
+                        updateBulkEmployeeList(data.data.employees);
+                        console.log('✅ Bulk attendance data refreshed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing bulk attendance data:', error);
+                });
+        }
+    }
+    
+    // Function to update bulk employee list
+    function updateBulkEmployeeList(employees) {
+        const tbody = document.getElementById('employeesTableBodyBulk');
+        if (!tbody) return;
+        
+        // Clear existing rows
+        tbody.innerHTML = '';
+        
+        // Add new rows
+        employees.forEach(employee => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-employee-id', employee.id);
+            row.innerHTML = `
+                <td>
+                    <input type="checkbox" class="form-check-input employee-checkbox-bulk" 
+                           value="${employee.id}" 
+                           data-employee='${JSON.stringify(employee)}'>
+                </td>
+                <td>
+                    <strong>${employee.nama}</strong>
+                    <br><small class="text-muted">${employee.jabatan}</small>
+                </td>
+                <td>${employee.lokasi ? employee.lokasi.nama_lokasi : 'N/A'}</td>
+                <td>${employee.kandang ? employee.kandang.nama_kandang : 'N/A'}</td>
+                <td>
+                    <span class="badge bg-info">Rp ${new Intl.NumberFormat('id-ID').format(employee.gaji_pokok)}</span>
+                </td>
+                <td>
+                    <select class="form-select form-select-sm status-select-bulk" data-employee-id="${employee.id}">
+                        <option value="full">Full Day</option>
+                        <option value="setengah_hari">½ Hari</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select form-select-sm pembibitan-select-bulk" data-employee-id="${employee.id}">
+                        <option value="">Pilih Pembibitan</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-sm" onclick="quickAbsenBulk('${employee.id}')">
+                        <i class="bi bi-lightning-fill"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+        // Force refresh on page load
+        setTimeout(function() {
+            $('#absensiTable').DataTable().ajax.reload(null, false);
+        }, 1000);
+        
+        // Auto-refresh every 5 seconds for real-time updates
+        setInterval(function() {
+            $('#absensiTable').DataTable().ajax.reload(null, false); // false = keep current page
+        }, 5000); // Refresh every 5 seconds for real-time updates
+    
+    // Real-time search on bibit filter
+    $('#bibit_filter').on('keyup', function() {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(function() {
+            $('#absensiTable').DataTable().ajax.reload();
+        }, 500);
+    });
+});
+
+// Tambah Cepat Absensi Functions
+function showBulkAttendance() {
+    const modal = new bootstrap.Modal(document.getElementById('bulkAttendanceModal'));
+    modal.show();
+}
+
+function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAllBulk');
+    const checkboxes = document.querySelectorAll('.employee-checkbox-bulk');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+}
+
+function submitBulkAttendance() {
+    const selectedEmployees = [];
+    const tanggal = document.getElementById('tanggalBulk').value;
+    
+    if (!tanggal) {
+        alert('Mohon pilih tanggal absensi');
+        return;
+    }
+
+    document.querySelectorAll('.employee-checkbox-bulk:checked').forEach(checkbox => {
+        const employeeId = checkbox.value;
+        const statusSelect = document.querySelector(`.status-select-bulk[data-employee-id="${employeeId}"]`);
+        const pembibitanSelect = document.querySelector(`.pembibitan-select-bulk[data-employee-id="${employeeId}"]`);
+        
+        selectedEmployees.push({
+            id: employeeId,
+            status: statusSelect.value,
+            pembibitan_id: pembibitanSelect.value || null
+        });
+    });
+
+    if (selectedEmployees.length === 0) {
+        alert('Mohon pilih minimal satu karyawan');
+        return;
+    }
+
+    // Show loading
+    const submitBtn = event.target;
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i>Menyimpan...';
+
+    fetch('{{ route("manager.absensis.store") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            tanggal: tanggal,
+            employees: selectedEmployees
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Tambah cepat absensi berhasil! ${data.success_count} berhasil, ${data.error_count} gagal`);
+            if (data.errors.length > 0) {
+                console.log('Errors:', data.errors);
+            }
+            // Refresh table
+            $('#absensiTable').DataTable().ajax.reload();
+            bootstrap.Modal.getInstance(document.getElementById('bulkAttendanceModal')).hide();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan: ' + error.message);
+    })
+    .finally(() => {
+        // Restore button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    });
+}
+
+function quickAbsenBulk(employeeId) {
+    const employee = document.querySelector(`[data-employee-id="${employeeId}"]`);
+    const employeeData = JSON.parse(employee.querySelector('.employee-checkbox-bulk').getAttribute('data-employee'));
+    
+    document.getElementById('quickEmployeeIdBulk').value = employeeId;
+    document.getElementById('quickEmployeeNameBulk').value = employeeData.nama;
+    
+    const modal = new bootstrap.Modal(document.getElementById('quickAttendanceModalBulk'));
         modal.show();
+    }
+
+function submitQuickAttendanceBulk() {
+    const employeeId = document.getElementById('quickEmployeeIdBulk').value;
+    const tanggal = document.getElementById('quickTanggalBulk').value;
+    const status = document.querySelector('input[name="quickStatusBulk"]:checked').value;
+    const pembibitanId = document.getElementById('quickPembibitanBulk').value;
+
+    if (!tanggal) {
+        alert('Mohon pilih tanggal');
+        return;
+    }
+
+    fetch('{{ route("manager.absensis.store") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            employee_id: employeeId,
+            tanggal: tanggal,
+            status: status,
+            pembibitan_id: pembibitanId || null
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Absensi berhasil disimpan!');
+            bootstrap.Modal.getInstance(document.getElementById('quickAttendanceModalBulk')).hide();
+            $('#absensiTable').DataTable().ajax.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan: ' + error.message);
+    });
     }
 </script>
 @endpush

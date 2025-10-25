@@ -120,36 +120,7 @@
 </div>
 
 <div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    <i class="bi bi-info-circle"></i>
-                    Informasi
-                </h6>
-            </div>
-            <div class="card-body">
-                <p class="card-text">
-                    <strong>Admin dapat:</strong>
-                </p>
-                <ul class="mb-0">
-                    <li>Melihat daftar semua karyawan</li>
-                    <li>Menambah karyawan baru</li>
-                    <li>Mengedit data karyawan</li>
-                    <li>Melihat detail karyawan</li>
-                </ul>
-                <hr>
-                <p class="card-text">
-                    <strong>Admin tidak dapat:</strong>
-                </p>
-                <ul class="mb-0">
-                    <li>Membuat karyawan dengan role mandor</li>
-                    <li>Menghapus data karyawan</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
+    <div class="col-12">
         <div class="card">
             <div class="card-header">
                 <h6 class="card-title mb-0">
@@ -159,11 +130,11 @@
             </div>
             <div class="card-body">
                 <div class="row text-center">
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <h4 class="text-primary">{{ $employees->total() }}</h4>
                         <small class="text-muted">Total Karyawan</small>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <h4 class="text-success">
                             Rp {{ number_format($employees->sum('gaji'), 0, ',', '.') }}
                         </h4>

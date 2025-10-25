@@ -17,8 +17,7 @@ class LokasiController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('nama_lokasi', 'like', "%{$search}%")
-                  ->orWhere('deskripsi', 'like', "%{$search}%");
+                $q->where('nama_lokasi', 'like', "%{$search}%");
             });
         }
         
@@ -42,10 +41,14 @@ class LokasiController extends Controller
     {
         $validated = $request->validate([
             'nama_lokasi' => 'required|string|max:255|unique:lokasis,nama_lokasi',
-            'deskripsi' => 'nullable|string',
         ]);
 
         Lokasi::create($validated);
+        
+        // Clear cache to ensure real-time updates
+        \Cache::forget('lokasis_data');
+        \Cache::forget('kandangs_data');
+        \Cache::forget('pembibitans_data');
 
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.lokasis.index' : 'manager.lokasis.index')
                         ->with('success', 'Data lokasi berhasil ditambahkan.');
@@ -75,10 +78,14 @@ class LokasiController extends Controller
     {
         $validated = $request->validate([
             'nama_lokasi' => 'required|string|max:255|unique:lokasis,nama_lokasi,' . $lokasi->id,
-            'deskripsi' => 'nullable|string',
         ]);
 
         $lokasi->update($validated);
+        
+        // Clear cache to ensure real-time updates
+        \Cache::forget('lokasis_data');
+        \Cache::forget('kandangs_data');
+        \Cache::forget('pembibitans_data');
 
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.lokasis.index' : 'manager.lokasis.index')
                         ->with('success', 'Data lokasi berhasil diperbarui.');

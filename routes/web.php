@@ -8,9 +8,8 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\PembibitanController;
 use App\Http\Controllers\KandangController;
 use App\Http\Controllers\LokasiController;
-use App\Http\Controllers\MonthlyAttendanceReportController;
-use App\Http\Controllers\CalendarAttendanceController;
 use App\Http\Controllers\SalaryReportController;
+use App\Http\Controllers\KaryawanKandangController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,22 +54,19 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::resource('employees', EmployeeController::class);
     Route::resource('absensis', AbsensiController::class);
     Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
+    Route::get('absensis/get-salary/{employeeId}', [AbsensiController::class, 'getSalary'])->name('absensis.get-salary');
+    Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
+    Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
+    
+    Route::get('system/monitor', [App\Http\Controllers\SystemMonitorController::class, 'dashboard'])->name('system.monitor');
+    Route::get('api/system/status', [App\Http\Controllers\SystemMonitorController::class, 'status'])->name('api.system.status');
+    Route::post('api/system/fix-integrity', [App\Http\Controllers\SystemMonitorController::class, 'fixIntegrity'])->name('api.system.fix-integrity');
     Route::post('absensis/update-existing', [AbsensiController::class, 'updateExisting'])->name('absensis.update-existing');
     Route::resource('pembibitans', PembibitanController::class);
     Route::resource('kandangs', KandangController::class);
     Route::resource('lokasis', LokasiController::class);
+    Route::resource('karyawan-kandangs', KaryawanKandangController::class);
     
-    // Monthly Attendance Reports
-    Route::get('monthly-attendance-reports', [MonthlyAttendanceReportController::class, 'index'])->name('monthly-attendance-reports.index');
-    Route::get('monthly-attendance-reports/{monthlyAttendanceReport}', [MonthlyAttendanceReportController::class, 'show'])->name('monthly-attendance-reports.show');
-    Route::post('monthly-attendance-reports/generate', [MonthlyAttendanceReportController::class, 'generate'])->name('monthly-attendance-reports.generate');
-    Route::get('monthly-attendance-reports/export/pdf', [MonthlyAttendanceReportController::class, 'export'])->name('monthly-attendance-reports.export');
-    
-    // Calendar Attendance
-    Route::resource('calendar-attendances', CalendarAttendanceController::class);
-    Route::post('calendar-attendances/{calendarAttendance}/update-day', [CalendarAttendanceController::class, 'updateDay'])->name('calendar-attendances.update-day');
-    Route::get('calendar-attendances/get-attendance-data', [CalendarAttendanceController::class, 'getAttendanceData'])->name('calendar-attendances.get-attendance-data');
-    Route::get('calendar-attendances/get-employees', [CalendarAttendanceController::class, 'getEmployees'])->name('calendar-attendances.get-employees');
     
     // Salary Reports
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');
@@ -109,21 +105,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('absensis/{absensi}', [AbsensiController::class, 'show'])->name('absensis.show');
     Route::get('absensis/{absensi}/edit', [AbsensiController::class, 'edit'])->name('absensis.edit');
     Route::put('absensis/{absensi}', [AbsensiController::class, 'update'])->name('absensis.update');
-    // Admin tidak bisa hapus absensi
+    Route::delete('absensis/{absensi}', [AbsensiController::class, 'destroy'])->name('absensis.destroy');
     Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
+    Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
+    Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
+    
     
     Route::resource('pembibitans', PembibitanController::class)->except(['destroy']);
     Route::resource('kandangs', KandangController::class)->except(['destroy']);
     Route::resource('lokasis', LokasiController::class)->except(['destroy']);
+    Route::resource('karyawan-kandangs', KaryawanKandangController::class)->except(['destroy']);
     
-    // Monthly Attendance Reports (Read Only)
-    Route::get('monthly-attendance-reports', [MonthlyAttendanceReportController::class, 'index'])->name('monthly-attendance-reports.index');
-    Route::get('monthly-attendance-reports/{monthlyAttendanceReport}', [MonthlyAttendanceReportController::class, 'show'])->name('monthly-attendance-reports.show');
-    Route::get('monthly-attendance-reports/export/pdf', [MonthlyAttendanceReportController::class, 'export'])->name('monthly-attendance-reports.export');
     
     // Calendar Attendance (Read Only)
-    Route::get('calendar-attendances', [CalendarAttendanceController::class, 'index'])->name('calendar-attendances.index');
-    Route::get('calendar-attendances/{calendarAttendance}', [CalendarAttendanceController::class, 'show'])->name('calendar-attendances.show');
     
     // Salary Reports (Read Only)
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');

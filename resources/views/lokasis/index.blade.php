@@ -24,7 +24,7 @@
                     <div class="col-md-8">
                         <label for="search" class="form-label">Cari Lokasi</label>
                         <input type="text" class="form-control" id="search" name="search"
-                               value="{{ request('search') }}" placeholder="Masukkan nama lokasi atau deskripsi">
+                               value="{{ request('search') }}" placeholder="Masukkan nama lokasi">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">&nbsp;</label>
@@ -53,7 +53,6 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Lokasi</th>
-                                <th>Deskripsi</th>
                                 <th>Jumlah Kandang</th>
                                 <th>Aksi</th>
                             </tr>
@@ -64,13 +63,6 @@
                                     <td>{{ $lokasis->firstItem() + $index }}</td>
                                     <td>
                                         <strong>{{ $lokasi->nama_lokasi }}</strong>
-                                    </td>
-                                    <td>
-                                        @if($lokasi->deskripsi)
-                                            {{ Str::limit($lokasi->deskripsi, 50) }}
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
                                     </td>
                                     <td>
                                         <span class="badge bg-primary">{{ $lokasi->kandangs_count }}</span>

@@ -85,7 +85,7 @@
                                         <span class="badge bg-primary">Karyawan</span>
                                     @endif
                                 </td>
-                                <td>Rp {{ number_format($employee->gaji, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($employee->gaji_pokok, 0, ',', '.') }}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
                                         <a href="{{ route(auth()->user()->isManager() ? 'manager.employees.show' : 'admin.employees.show', $employee) }}" 

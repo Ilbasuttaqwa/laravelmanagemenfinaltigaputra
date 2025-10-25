@@ -33,6 +33,6 @@ class Pembibitan extends Model
 
     public function absensis()
     {
-        return $this->hasMany(Absensi::class);
+        return $this->hasMany(Absensi::class, 'pembibitan_id');
     }
 }

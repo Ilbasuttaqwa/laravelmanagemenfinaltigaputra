@@ -47,14 +47,16 @@ class KandangController extends Controller
         $validated = $request->validate([
             'nama_kandang' => 'required|string|max:255',
             'lokasi_id' => 'required|exists:lokasis,id',
-            'deskripsi' => 'nullable|string',
         ]);
 
         Kandang::create([
             'nama_kandang' => $validated['nama_kandang'],
             'lokasi_id' => $validated['lokasi_id'],
-            'deskripsi' => $validated['deskripsi'],
         ]);
+        
+        // Clear cache to ensure real-time updates
+        \Cache::forget('kandangs_data');
+        \Cache::forget('pembibitans_data');
 
         return redirect()->route(auth()->user()->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
                         ->with('success', 'Data kandang berhasil ditambahkan.');
@@ -87,13 +89,11 @@ class KandangController extends Controller
         $validated = $request->validate([
             'nama_kandang' => 'required|string|max:255',
             'lokasi_id' => 'required|exists:lokasis,id',
-            'deskripsi' => 'nullable|string',
         ]);
 
         $kandang->update([
             'nama_kandang' => $validated['nama_kandang'],
             'lokasi_id' => $validated['lokasi_id'],
-            'deskripsi' => $validated['deskripsi'],
         ]);
 
         return redirect()->route(auth()->user()->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
