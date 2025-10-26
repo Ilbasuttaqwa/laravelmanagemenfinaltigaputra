@@ -611,6 +611,7 @@ class AbsensiController extends Controller
             }
         }
         
+        
         if (!$employee) {
             return response()->json([
                 'success' => false,
@@ -710,6 +711,7 @@ class AbsensiController extends Controller
             'gaji_hari_itu' => $validated['gaji_hari_itu'],
             'lokasi_kerja' => $lokasiKerja,
         ];
+        
 
         // VALIDASI: Pastikan nama_karyawan tidak kosong
         if (empty($data['nama_karyawan'])) {

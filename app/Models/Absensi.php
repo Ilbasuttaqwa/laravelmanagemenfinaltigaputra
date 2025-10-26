@@ -59,10 +59,21 @@ class Absensi extends Model
         };
     }
 
-    // Accessor untuk mendapatkan nama karyawan
+    // Accessor untuk mendapatkan nama karyawan (tidak mengubah data yang sudah tersimpan)
     public function getNamaKaryawanAttribute()
     {
-        return $this->nama_karyawan ?? $this->employee->nama ?? 'Karyawan Tidak Ditemukan';
+        // Jika nama_karyawan sudah tersimpan, gunakan yang tersimpan
+        if (!empty($this->attributes['nama_karyawan'])) {
+            return $this->attributes['nama_karyawan'];
+        }
+        
+        // Fallback ke employee relationship jika ada
+        if ($this->employee_id && $this->employee) {
+            return $this->employee->nama;
+        }
+        
+        // Fallback terakhir
+        return 'Karyawan Tidak Ditemukan';
     }
 
     // Accessor untuk mendapatkan tipe karyawan
