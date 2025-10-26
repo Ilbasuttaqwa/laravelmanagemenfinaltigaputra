@@ -222,15 +222,22 @@ class SalaryReportController extends Controller
         // Calculate salary components
         $gajiPokokBulanan = $employee->gaji_pokok; // Gaji pokok bulanan dari master data
         
-        // Hitung hari kerja aktual dalam bulan (exclude weekend)
-        $startOfMonth = Carbon::create($tahun, $bulan, 1);
-        $endOfMonth = Carbon::create($tahun, $bulan)->endOfMonth();
-        $hariKerjaAktual = $startOfMonth->diffInDaysFiltered(function($date) {
-            return !$date->isWeekend(); // Exclude Saturday and Sunday
-        }, $endOfMonth) + 1; // +1 to include the start date
+        // LOGIKA YANG BENAR: Gaji harian tetap (bukan dibagi hari kerja dalam bulan)
+        // Jika gaji bulanan Rp 1.800.000, maka gaji harian = Rp 60.000 (full day)
+        // Setengah hari = Rp 30.000
+        $gajiHarianFull = $gajiPokokBulanan / 30; // Gaji harian full day (30 hari per bulan)
+        $gajiHarianSetengah = $gajiHarianFull / 2; // Gaji harian setengah hari
         
-        $gajiHarian = $gajiPokokBulanan / $hariKerjaAktual; // Gaji harian berdasarkan hari kerja aktual
-        $gajiSaatIni = $gajiHarian * $jmlHariKerja; // Gaji saat ini berdasarkan hari kerja
+        // Hitung gaji saat ini berdasarkan status absensi
+        $gajiSaatIni = 0;
+        foreach ($attendances as $attendance) {
+            if ($attendance->status === 'full') {
+                $gajiSaatIni += $gajiHarianFull;
+            } elseif ($attendance->status === 'setengah_hari') {
+                $gajiSaatIni += $gajiHarianSetengah;
+            }
+        }
+        
         $totalGaji = $gajiSaatIni; // Total gaji = gaji saat ini
 
         // Get pembibitan from employee's recent attendance records
