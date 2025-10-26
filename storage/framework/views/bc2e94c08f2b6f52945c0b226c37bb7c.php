@@ -11,11 +11,6 @@
                     Laporan Gaji
                 </h1>
                 <p class="page-subtitle">Sistem laporan gaji terintegrasi dengan semua fitur</p>
-                <div class="real-time-info">
-                    <i class="fas fa-clock me-1"></i>
-                    <span><?php echo e(now()->format('d F Y pukul H.i.s')); ?></span>
-                    <small class="ms-2">(Waktu Jakarta)</small>
-                </div>
             </div>
 
             <!-- Action Buttons -->
@@ -48,7 +43,7 @@
             <!-- Filter Form -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <form method="GET" action="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index')); ?>" class="row g-3">
+                    <form method="GET" action="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index')); ?>" class="row g-3 filter-form">
                         <div class="col-md-2">
                             <label for="tahun" class="form-label">Tahun</label>
                             <input type="number" 
@@ -157,6 +152,7 @@
                                         <th>Kandang</th>
                                         <th>Pembibitan</th>
                                         <th>Jml Hari Kerja</th>
+                                        <th>Gaji Saat Ini</th>
                                         <th>Gaji Pokok</th>
                                         <th>Total Gaji</th>
                                         <th>Periode</th>
@@ -179,6 +175,7 @@
                                             <td><?php echo e($report->pembibitan->judul ?? '-'); ?></td>
                                             <td class="text-center"><?php echo e($report->jml_hari_kerja); ?></td>
                                             <td class="text-end"><?php echo e($report->gaji_pokok_formatted); ?></td>
+                                            <td class="text-end"><?php echo e($report->gaji_pokok_asli_formatted); ?></td>
                                             <td class="text-end"><?php echo e($report->total_gaji_formatted); ?></td>
                                             <td class="text-center"><?php echo e($report->periode); ?></td>
                                             <td class="text-center">
@@ -194,6 +191,7 @@
                                     <tr>
                                         <th colspan="7" class="text-end">Total:</th>
                                         <th class="text-end"><?php echo e('Rp ' . number_format($reports->sum('gaji_pokok'), 0, ',', '.')); ?></th>
+                                        <th class="text-end">-</th>
                                         <th class="text-end"><?php echo e('Rp ' . number_format($reports->sum('total_gaji'), 0, ',', '.')); ?></th>
                                         <th colspan="2"></th>
                                     </tr>
@@ -294,34 +292,135 @@
 
 <?php $__env->startPush('styles'); ?>
 <style>
-.real-time-info {
-    background: rgba(0, 123, 255, 0.1);
-    padding: 8px 16px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 14px;
+/* Perbaikan tampilan tabel - kolom lebih proporsional */
+.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table th,
+.table td {
+    padding: 8px 4px;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Kolom NO - kecil */
+.table th:nth-child(1),
+.table td:nth-child(1) {
+    width: 5%;
+    text-align: center;
+}
+
+/* Kolom Nama Karyawan - sedang */
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: 15%;
+}
+
+/* Kolom Tipe - kecil */
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    width: 12%;
+    text-align: center;
+}
+
+/* Kolom Lokasi - kecil */
+.table th:nth-child(4),
+.table td:nth-child(4) {
+    width: 10%;
+    text-align: center;
+}
+
+/* Kolom Kandang - kecil */
+.table th:nth-child(5),
+.table td:nth-child(5) {
+    width: 10%;
+    text-align: center;
+}
+
+/* Kolom Pembibitan - kecil */
+.table th:nth-child(6),
+.table td:nth-child(6) {
+    width: 10%;
+    text-align: center;
+}
+
+/* Kolom Jml Hari Kerja - sedang */
+.table th:nth-child(7),
+.table td:nth-child(7) {
+    width: 10%;
+    text-align: center;
+}
+
+/* Kolom Gaji Saat Ini - sedang */
+.table th:nth-child(8),
+.table td:nth-child(8) {
+    width: 12%;
+    text-align: right;
+}
+
+/* Kolom Gaji Pokok - sedang */
+.table th:nth-child(9),
+.table td:nth-child(9) {
+    width: 12%;
+    text-align: right;
+}
+
+/* Kolom Total Gaji - sedang */
+.table th:nth-child(10),
+.table td:nth-child(10) {
+    width: 12%;
+    text-align: right;
+}
+
+/* Kolom Periode - kecil */
+.table th:nth-child(11),
+.table td:nth-child(11) {
+    width: 10%;
+    text-align: center;
+}
+
+/* Kolom Aksi - kecil */
+.table th:nth-child(12),
+.table td:nth-child(12) {
+    width: 6%;
+    text-align: center;
+}
+
+/* Filter form lebih kecil */
+.filter-form .form-control,
+.filter-form .form-select {
+    font-size: 12px;
+    padding: 4px 8px;
+    height: auto;
+}
+
+.filter-form .form-label {
+    font-size: 11px;
+    margin-bottom: 2px;
     font-weight: 500;
-    border: 1px solid rgba(0, 123, 255, 0.2);
 }
 
-.real-time-info i {
-    color: #007bff;
-    animation: pulse 2s infinite;
+.filter-form .btn {
+    font-size: 12px;
+    padding: 4px 12px;
 }
 
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+/* Badge lebih kecil */
+.badge {
+    font-size: 10px;
+    padding: 2px 6px;
 }
 </style>
 <?php $__env->stopPush(); ?>
 
 <?php $__env->startPush('scripts'); ?>
 <script>
-$(document).ready(function() {
-    // Production ready - no realtime requirements
+// Production ready - no realtime requirements
+document.addEventListener('DOMContentLoaded', function() {
     console.log('Salary Reports loaded successfully');
 });
 </script>

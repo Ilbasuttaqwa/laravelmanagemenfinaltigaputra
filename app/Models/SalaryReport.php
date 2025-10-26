@@ -60,6 +60,19 @@ class SalaryReport extends Model
         return 'Rp ' . number_format($this->gaji_pokok, 0, ',', '.');
     }
 
+    public function getGajiPokokAsliFormattedAttribute()
+    {
+        // Ambil gaji pokok asli dari master data employee
+        $gajiPokokAsli = 0;
+        
+        if ($this->employee) {
+            // Employee menggunakan kolom 'gaji_pokok'
+            $gajiPokokAsli = $this->employee->gaji_pokok ?? 0;
+        }
+        
+        return 'Rp ' . number_format($gajiPokokAsli, 0, ',', '.');
+    }
+
     public function getTotalGajiFormattedAttribute()
     {
         return 'Rp ' . number_format($this->total_gaji, 0, ',', '.');
@@ -67,7 +80,13 @@ class SalaryReport extends Model
 
     public function getTipeKaryawanLabelAttribute()
     {
-        return ucfirst($this->tipe_karyawan);
+        // Transform role names for display
+        return match($this->tipe_karyawan) {
+            'karyawan' => 'karyawan kandang',
+            'karyawan_gudang' => 'karyawan gudang',
+            'mandor' => 'mandor',
+            default => ucfirst($this->tipe_karyawan)
+        };
     }
 
     public function getTipeKaryawanBadgeAttribute()
