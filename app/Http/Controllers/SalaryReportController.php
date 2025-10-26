@@ -33,8 +33,13 @@ class SalaryReportController extends Controller
         $tanggalMulai = $request->get('tanggal_mulai');
         $tanggalSelesai = $request->get('tanggal_selesai');
 
-        // Selalu tampilkan data berdasarkan tahun dan bulan yang dipilih
-        // Filter tambahan hanya untuk mempersempit hasil
+        // Cek apakah ada filter yang dipilih
+        $hasFilter = $lokasiId || $kandangId || $pembibitanId || $tanggalMulai || $tanggalSelesai || ($tipe !== 'all');
+        
+        if (!$hasFilter) {
+            // Jika tidak ada filter, tampilkan tabel kosong
+            $reports = collect();
+        } else {
             $query = SalaryReport::periode($tahun, $bulan)
                 ->tipeKaryawan($tipe)
                 ->tanggalRange($tanggalMulai, $tanggalSelesai);
@@ -67,11 +72,12 @@ class SalaryReportController extends Controller
                 }
             }
             
-        $reports = $query->orderBy('nama_karyawan')->get();
-        
-        // Admin can only see salary reports for karyawan (not mandor)
-        if ($this->getCurrentUser()?->isAdmin()) {
-            $reports = $reports->where('tipe_karyawan', 'karyawan');
+            $reports = $query->orderBy('nama_karyawan')->get();
+            
+            // Admin can only see salary reports for karyawan (not mandor)
+            if ($this->getCurrentUser()?->isAdmin()) {
+                $reports = $reports->where('tipe_karyawan', 'karyawan');
+            }
         }
 
         // Get filter options
