@@ -69,7 +69,7 @@
                                         </a>
                                         @if(auth()->user()->isManager())
                                             <button type="button" class="btn btn-danger btn-sm"
-                                                    data-item-id="{{ $mandor->id }}" data-item-name="{{ $mandor-&gt;nama }}" onclick="confirmDelete(this)" title="Hapus">
+                                                    data-item-id="{{ $mandor->id }}" data-item-name="{{ $mandor->nama }}" onclick="confirmDelete(this)" title="Hapus">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         @endif

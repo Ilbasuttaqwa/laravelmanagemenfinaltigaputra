@@ -96,7 +96,7 @@
                                         </a>
                                         @if(auth()->user()->isManager())
                                         <button type="button" class="btn btn-danger btn-sm"
-                                                data-item-id="{{ $pembibitan->id }}" data-item-name="{{ $pembibitan-&gt;judul }}" onclick="confirmDelete(this)" title="Hapus">
+                                                data-item-id="{{ $pembibitan->id }}" data-item-name="{{ $pembibitan->judul }}" onclick="confirmDelete(this)" title="Hapus">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                         @endif
