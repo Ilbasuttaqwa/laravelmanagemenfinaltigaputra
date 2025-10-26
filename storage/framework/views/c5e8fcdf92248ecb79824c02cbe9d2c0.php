@@ -685,14 +685,10 @@ $(document).ready(function() {
     function updateFilterDropdowns(data) {
     }
     
-    // Auto-refresh master data every 5 minutes (reduced frequency)
-    setInterval(refreshMasterData, 300000);
-    
-    // Update absensi lokasi every 2 minutes (reduced frequency)
-    setInterval(updateAbsensiLokasi, 120000);
-    
-    // Refresh bulk attendance data every 3 minutes (reduced frequency)
-    setInterval(refreshBulkAttendanceData, 180000);
+    // Auto-refresh disabled for better performance
+    // setInterval(refreshMasterData, 300000);
+    // setInterval(updateAbsensiLokasi, 120000);
+    // setInterval(refreshBulkAttendanceData, 180000);
     
     // Function to update absensi lokasi
     function updateAbsensiLokasi() {
@@ -784,15 +780,14 @@ $(document).ready(function() {
         });
     }
     
-        // Force refresh on page load
-        setTimeout(function() {
-            $('#absensiTable').DataTable().ajax.reload(null, false);
-        }, 1000);
+        // Auto-refresh disabled for better performance
+        // setTimeout(function() {
+        //     $('#absensiTable').DataTable().ajax.reload(null, false);
+        // }, 1000);
         
-        // Auto-refresh every 5 seconds for real-time updates
-        setInterval(function() {
-            $('#absensiTable').DataTable().ajax.reload(null, false); // false = keep current page
-        }, 5000); // Refresh every 5 seconds for real-time updates
+        // setInterval(function() {
+        //     $('#absensiTable').DataTable().ajax.reload(null, false);
+        // }, 5000);
     
     // Real-time search on bibit filter
     $('#bibit_filter').on('keyup', function() {
