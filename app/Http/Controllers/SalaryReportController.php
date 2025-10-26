@@ -221,7 +221,15 @@ class SalaryReportController extends Controller
 
         // Calculate salary components
         $gajiPokokBulanan = $employee->gaji_pokok; // Gaji pokok bulanan dari master data
-        $gajiHarian = $gajiPokokBulanan / 22; // Gaji harian (22 hari kerja per bulan)
+        
+        // Hitung hari kerja aktual dalam bulan (exclude weekend)
+        $startOfMonth = Carbon::create($tahun, $bulan, 1);
+        $endOfMonth = Carbon::create($tahun, $bulan)->endOfMonth();
+        $hariKerjaAktual = $startOfMonth->diffInDaysFiltered(function($date) {
+            return !$date->isWeekend(); // Exclude Saturday and Sunday
+        }, $endOfMonth) + 1; // +1 to include the start date
+        
+        $gajiHarian = $gajiPokokBulanan / $hariKerjaAktual; // Gaji harian berdasarkan hari kerja aktual
         $gajiSaatIni = $gajiHarian * $jmlHariKerja; // Gaji saat ini berdasarkan hari kerja
         $totalGaji = $gajiSaatIni; // Total gaji = gaji saat ini
 

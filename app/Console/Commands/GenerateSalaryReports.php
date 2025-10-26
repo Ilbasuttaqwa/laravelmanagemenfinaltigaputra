@@ -50,16 +50,19 @@ class GenerateSalaryReports extends Command
         $jmlHariKerja = $attendances->where('status', 'full')->count() + 
                        ($attendances->where('status', 'setengah_hari')->count() * 0.5);
         
-        // Calculate salary - PRODUCTION FIX: Gunakan gaji dari absensi
-        $gajiPokok = 0;
-        $totalGaji = 0;
+        // Calculate salary components
+        $gajiPokokBulanan = $employee->gaji_pokok; // Gaji pokok bulanan dari master data
         
-        if ($attendances->isNotEmpty()) {
-            // Ambil gaji dari absensi terbaru
-            $latestAttendance = $attendances->sortByDesc('tanggal')->first();
-            $gajiPokok = $latestAttendance->gaji_hari_itu ?? 0;
-            $totalGaji = $gajiPokok * $jmlHariKerja;
-        }
+        // Hitung hari kerja aktual dalam bulan (exclude weekend)
+        $startOfMonth = Carbon::create($tahun, $bulan, 1);
+        $endOfMonth = Carbon::create($tahun, $bulan)->endOfMonth();
+        $hariKerjaAktual = $startOfMonth->diffInDaysFiltered(function($date) {
+            return !$date->isWeekend(); // Exclude Saturday and Sunday
+        }, $endOfMonth) + 1; // +1 to include the start date
+        
+        $gajiHarian = $gajiPokokBulanan / $hariKerjaAktual; // Gaji harian berdasarkan hari kerja aktual
+        $gajiSaatIni = $gajiHarian * $jmlHariKerja; // Gaji saat ini berdasarkan hari kerja
+        $totalGaji = $gajiSaatIni; // Total gaji = gaji saat ini
         
         // Get related entities
         $lokasi = null;
@@ -94,7 +97,8 @@ class GenerateSalaryReports extends Command
             'pembibitan_id' => $pembibitan?->id,
             'nama_karyawan' => $employee->nama,
             'tipe_karyawan' => $employee->jabatan,
-            'gaji_pokok' => $gajiPokok,
+            'gaji_pokok' => $gajiSaatIni, // Gaji saat ini (berdasarkan hari kerja)
+            'gaji_pokok_bulanan' => $gajiPokokBulanan, // Gaji pokok bulanan dari master data
             'jml_hari_kerja' => $jmlHariKerja,
             'total_gaji' => $totalGaji,
             'tanggal_mulai' => $startDate,
