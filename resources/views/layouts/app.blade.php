@@ -591,10 +591,10 @@
                                 </li>
                                 {{-- Admin tidak bisa akses Master Mandor --}}
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.absensis.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.absensis.index') }}">
-                                        <i class="bi bi-table"></i>
-                                        Master Absensi & Kalender
+                                    <a class="nav-link {{ request()->routeIs('admin.karyawan-kandangs.*') ? 'active' : '' }}"
+                                       href="{{ route('admin.karyawan-kandangs.index') }}">
+                                        <i class="bi bi-people-fill"></i>
+                                        Master Karyawan Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -619,10 +619,10 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.karyawan-kandangs.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.karyawan-kandangs.index') }}">
-                                        <i class="bi bi-people-fill"></i>
-                                        Master Karyawan Kandang
+                                    <a class="nav-link {{ request()->routeIs('admin.absensis.*') ? 'active' : '' }}"
+                                       href="{{ route('admin.absensis.index') }}">
+                                        <i class="bi bi-table"></i>
+                                        Transaksi Absensi
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -662,10 +662,10 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.absensis.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.absensis.index') }}">
-                                        <i class="bi bi-table"></i>
-                                        Master Absensi & Kalender
+                                    <a class="nav-link {{ request()->routeIs('manager.karyawan-kandangs.*') ? 'active' : '' }}"
+                                       href="{{ route('manager.karyawan-kandangs.index') }}">
+                                        <i class="bi bi-people-fill"></i>
+                                        Master Karyawan Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -690,10 +690,10 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.karyawan-kandangs.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.karyawan-kandangs.index') }}">
-                                        <i class="bi bi-people-fill"></i>
-                                        Master Karyawan Kandang
+                                    <a class="nav-link {{ request()->routeIs('manager.absensis.*') ? 'active' : '' }}"
+                                       href="{{ route('manager.absensis.index') }}">
+                                        <i class="bi bi-table"></i>
+                                        Transaksi Absensi
                                     </a>
                                 </li>
             <li class="nav-item">

@@ -57,6 +57,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('absensis/get-salary/{employeeId}', [AbsensiController::class, 'getSalary'])->name('absensis.get-salary');
     Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
     Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
+    Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
     
     Route::get('system/monitor', [App\Http\Controllers\SystemMonitorController::class, 'dashboard'])->name('system.monitor');
     Route::get('api/system/status', [App\Http\Controllers\SystemMonitorController::class, 'status'])->name('api.system.status');
@@ -73,6 +74,12 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
     Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
     Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
+    
+    // Auto-sync gaji routes
+    Route::post('sync-gaji/employee/{employee}', [App\Http\Controllers\SyncGajiController::class, 'syncEmployee'])->name('sync-gaji.employee');
+    Route::post('sync-gaji/gudang/{gudang}', [App\Http\Controllers\SyncGajiController::class, 'syncGudang'])->name('sync-gaji.gudang');
+    Route::post('sync-gaji/mandor/{mandor}', [App\Http\Controllers\SyncGajiController::class, 'syncMandor'])->name('sync-gaji.mandor');
+    Route::post('sync-gaji/all', [App\Http\Controllers\SyncGajiController::class, 'syncAll'])->name('sync-gaji.all');
 });
 
 // Admin Routes (Akses Terbatas - Tidak bisa input/edit mandor dan karyawan mandor)
@@ -109,6 +116,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
     Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
     Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
+    Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
     
     
     Route::resource('pembibitans', PembibitanController::class)->except(['destroy']);

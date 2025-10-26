@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gudang;
+use App\Services\AutoSyncGajiService;
 use Illuminate\Http\Request;
 
 class GudangController extends Controller
@@ -60,10 +61,30 @@ class GudangController extends Controller
             'gaji' => 'required|numeric|min:0',
         ]);
 
+        // Simpan gaji lama untuk perbandingan
+        $oldGaji = $gudang->gaji;
+        
         $gudang->update($validated);
 
+        // Auto-sync gaji jika gaji berubah
+        if ($oldGaji != $validated['gaji']) {
+            $autoSyncService = new AutoSyncGajiService();
+            $syncResult = $autoSyncService->syncGudangGaji(
+                $gudang->id, 
+                $validated['gaji']
+            );
+            
+            if ($syncResult['success']) {
+                $message = "Data karyawan gudang berhasil diperbarui. Gaji otomatis disinkronkan untuk {$syncResult['updated_count']} absensi.";
+            } else {
+                $message = "Data karyawan gudang berhasil diperbarui, namun gagal sinkronisasi gaji: {$syncResult['message']}";
+            }
+        } else {
+            $message = "Data karyawan gudang berhasil diperbarui.";
+        }
+
         return redirect()->route(auth()->user()->isManager() ? 'manager.gudangs.index' : 'admin.gudangs.index')
-                        ->with('success', 'Data karyawan gudang berhasil diperbarui.');
+                        ->with('success', $message);
     }
 
     public function destroy(Gudang $gudang)

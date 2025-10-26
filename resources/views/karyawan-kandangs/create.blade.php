@@ -41,17 +41,17 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="kandang_id" class="form-label">Kandang <span class="text-danger">*</span></label>
-                    <select class="form-control @error('kandang_id') is-invalid @enderror"
-                            id="kandang_id" name="kandang_id" required>
-                        <option value="">Pilih Kandang</option>
-                        @foreach($kandangs as $kandang)
-                            <option value="{{ $kandang->id }}" {{ old('kandang_id') == $kandang->id ? 'selected' : '' }}>
-                                {{ $kandang->nama_kandang }} - {{ $kandang->lokasi->nama_lokasi }}
+                    <label for="pembibitan_id" class="form-label">Pembibitan <span class="text-danger">*</span></label>
+                    <select class="form-control @error('pembibitan_id') is-invalid @enderror"
+                            id="pembibitan_id" name="pembibitan_id" required>
+                        <option value="">Pilih Pembibitan</option>
+                        @foreach($pembibitans as $pembibitan)
+                            <option value="{{ $pembibitan->id }}" {{ old('pembibitan_id') == $pembibitan->id ? 'selected' : '' }}>
+                                {{ $pembibitan->judul }} - {{ $pembibitan->kandang->nama_kandang }} ({{ $pembibitan->kandang->lokasi->nama_lokasi }})
                             </option>
                         @endforeach
                     </select>
-                    @error('kandang_id')
+                    @error('pembibitan_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

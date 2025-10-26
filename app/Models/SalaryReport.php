@@ -95,7 +95,14 @@ class SalaryReport extends Model
     public function scopeTipeKaryawan($query, $tipe)
     {
         if ($tipe !== 'all') {
-            return $query->where('tipe_karyawan', $tipe);
+            // Handle different tipe values
+            if ($tipe === 'gudang') {
+                return $query->where('tipe_karyawan', 'like', '%gudang%');
+            } elseif ($tipe === 'mandor') {
+                return $query->where('tipe_karyawan', 'mandor');
+            } elseif ($tipe === 'karyawan') {
+                return $query->where('tipe_karyawan', 'karyawan');
+            }
         }
         return $query;
     }

@@ -272,7 +272,7 @@ table.dataTable thead th.sorting_desc {
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0">
                         <i class="bi bi-table me-2"></i>
-                        Master Absensi & Kalender
+                        Transaksi Absensi
                     </h4>
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-success" onclick="showBulkAttendance()">
@@ -290,32 +290,18 @@ table.dataTable thead th.sorting_desc {
                                 Tambah Absensi
                             </a>
                         @endif
+                        <button type="button" class="btn btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedAbsensi()" disabled>
+                            <i class="bi bi-trash me-1"></i>
+                            Hapus
+                        </button>
                     </div>
     </div>
                 <div class="card-body">
                     <!-- Filter Section -->
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label for="lokasi_filter" class="form-label">Filter Lokasi:</label>
-                            <select id="lokasi_filter" class="form-select">
-                                <option value="">Semua Lokasi</option>
-                                @foreach($lokasis as $lokasi)
-                                    <option value="{{ $lokasi->nama_lokasi }}">{{ $lokasi->nama_lokasi }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3">
                             <label for="tanggal_filter" class="form-label">Filter Tanggal:</label>
                             <input type="date" id="tanggal_filter" class="form-control">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="kandang_filter" class="form-label">Filter Kandang:</label>
-                            <select id="kandang_filter" class="form-select">
-                                <option value="">Semua Kandang</option>
-                                @foreach($kandangs as $kandang)
-                                    <option value="{{ $kandang->nama_kandang }}">{{ $kandang->nama_kandang }} - {{ $kandang->lokasi->nama_lokasi ?? '' }}</option>
-                                @endforeach
-                            </select>
                         </div>
                         <div class="col-md-3">
                             <label for="bibit_filter" class="form-label">Cari Bibit/Pembibitan:</label>
@@ -338,14 +324,17 @@ table.dataTable thead th.sorting_desc {
                         <table id="absensiTable" class="table table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th width="3%">
+                                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                                    </th>
                                     <th width="5%">No</th>
                                     <th width="10%">Tanggal</th>
-                                    <th width="20%">Nama Karyawan</th>
-                                    <th width="12%">Role</th>
+                                    <th width="18%">Nama Karyawan</th>
+                                    <th width="10%">Role</th>
                                     <th width="10%">Status</th>
                                     <th width="12%">Lokasi</th>
                                     <th width="12%">Pembibitan</th>
-                                    <th width="19%">Aksi</th>
+                                    <th width="20%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -372,25 +361,16 @@ table.dataTable thead th.sorting_desc {
             <div class="modal-body">
                 <!-- Filter Section -->
                 <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Filter Lokasi</label>
-                        <select class="form-select" id="filterLokasiBulk" onchange="filterEmployeesBulk()">
-                            <option value="">Semua Lokasi</option>
-                            @foreach($lokasis as $lokasi)
-                                <option value="{{ $lokasi->id }}">{{ $lokasi->nama_lokasi }}</option>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Filter Pembibitan</label>
+                        <select class="form-select" id="filterPembibitanBulk" onchange="filterEmployeesBulk()">
+                            <option value="">Semua Pembibitan</option>
+                            @foreach($pembibitans as $pembibitan)
+                                <option value="{{ $pembibitan->id }}">{{ $pembibitan->judul }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Filter Kandang</label>
-                        <select class="form-select" id="filterKandangBulk" onchange="filterEmployeesBulk()">
-                            <option value="">Semua Kandang</option>
-                            @foreach($kandangs as $kandang)
-                                <option value="{{ $kandang->id }}">{{ $kandang->nama_kandang }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label fw-bold">Tanggal Absensi</label>
                         <input type="date" class="form-control" id="tanggalBulk" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
                     </div>
@@ -438,7 +418,7 @@ table.dataTable thead th.sorting_desc {
                                 </td>
                                 <td>
                                     <strong>{{ $employee->nama }}</strong>
-                                    <br><small class="text-muted">{{ $employee->jabatan }}</small>
+                                    <br><small class="text-muted">{{ $employee->jabatan === 'karyawan' ? 'karyawan kandang' : $employee->jabatan }}</small>
                                 </td>
                                 <td>{{ $employee->lokasi->nama_lokasi ?? 'N/A' }}</td>
                                 <td>{{ $employee->kandang->nama_kandang ?? 'N/A' }}</td>
@@ -463,9 +443,9 @@ table.dataTable thead th.sorting_desc {
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" 
-                                            onclick="quickAbsenBulk({{ $employee->id }})">
+                                            onclick="quickAbsenBulk('{{ $employee->id }}')">
                                         <i class="bi bi-lightning"></i>
-                                        </button>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -558,14 +538,22 @@ $(document).ready(function() {
                 // Force fresh data with timestamp
                 d._t = new Date().getTime();
                 d._token = $('meta[name="csrf-token"]').attr('content');
-                d.lokasi_filter = $('#lokasi_filter').val();
-                d.kandang_filter = $('#kandang_filter').val();
                 d.tanggal_filter = $('#tanggal_filter').val();
                 d.bibit_filter = $('#bibit_filter').val();
                 d._t = new Date().getTime(); // Cache busting for real-time updates
             }
         },
         columns: [
+            { 
+                data: null,
+                orderable: false, 
+                searchable: false,
+                width: '3%',
+                title: '<input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">',
+                render: function(data, type, row) {
+                    return '<input type="checkbox" class="absensi-checkbox" value="' + row.id + '" onchange="updateDeleteButton()">';
+                }
+            },
             { 
                 data: 'DT_RowIndex', 
                 name: 'DT_RowIndex', 
@@ -584,7 +572,15 @@ $(document).ready(function() {
                 data: 'role_karyawan', 
                 name: 'role_karyawan',
                 width: '12%',
-                title: 'Role'
+                title: 'Role',
+                render: function(data, type, row) {
+                    if (data === 'karyawan') {
+                        return 'karyawan kandang';
+                    } else if (data === 'karyawan_gudang') {
+                        return 'karyawan gudang';
+                    }
+                    return data;
+                }
             },
             { 
                 data: 'tanggal_formatted', 
@@ -721,8 +717,6 @@ $(document).ready(function() {
     
     // Reset functionality
     $('#resetBtn').on('click', function() {
-        $('#lokasi_filter').val('');
-        $('#kandang_filter').val('');
         $('#tanggal_filter').val('');
         $('#bibit_filter').val('');
         $('#absensiTable').DataTable().ajax.reload();
@@ -746,47 +740,16 @@ $(document).ready(function() {
     
     // Update filter dropdowns with fresh data
     function updateFilterDropdowns(data) {
-        // Update lokasi filter
-        const lokasiSelect = document.getElementById('lokasi_filter');
-        if (lokasiSelect) {
-            const currentValue = lokasiSelect.value;
-            lokasiSelect.innerHTML = '<option value="">Semua Lokasi</option>';
-            data.lokasis.forEach(lokasi => {
-                const option = document.createElement('option');
-                option.value = lokasi.nama_lokasi;
-                option.textContent = lokasi.nama_lokasi;
-                if (lokasi.nama_lokasi === currentValue) {
-                    option.selected = true;
-                }
-                lokasiSelect.appendChild(option);
-            });
-        }
-        
-        // Update kandang filter
-        const kandangSelect = document.getElementById('kandang_filter');
-        if (kandangSelect) {
-            const currentValue = kandangSelect.value;
-            kandangSelect.innerHTML = '<option value="">Semua Kandang</option>';
-            data.kandangs.forEach(kandang => {
-                const option = document.createElement('option');
-                option.value = kandang.nama_kandang;
-                option.textContent = `${kandang.nama_kandang} - ${kandang.lokasi ? kandang.lokasi.nama_lokasi : 'N/A'}`;
-                if (kandang.nama_kandang === currentValue) {
-                    option.selected = true;
-                }
-                kandangSelect.appendChild(option);
-            });
-        }
     }
     
-    // Auto-refresh master data every 30 seconds
-    setInterval(refreshMasterData, 30000);
+    // Auto-refresh master data every 5 minutes (reduced frequency)
+    setInterval(refreshMasterData, 300000);
     
-    // Update absensi lokasi every 10 seconds
-    setInterval(updateAbsensiLokasi, 10000);
+    // Update absensi lokasi every 2 minutes (reduced frequency)
+    setInterval(updateAbsensiLokasi, 120000);
     
-    // Refresh bulk attendance data every 15 seconds
-    setInterval(refreshBulkAttendanceData, 15000);
+    // Refresh bulk attendance data every 3 minutes (reduced frequency)
+    setInterval(refreshBulkAttendanceData, 180000);
     
     // Function to update absensi lokasi
     function updateAbsensiLokasi() {
@@ -850,7 +813,7 @@ $(document).ready(function() {
                 </td>
                 <td>
                     <strong>${employee.nama}</strong>
-                    <br><small class="text-muted">${employee.jabatan}</small>
+                    <br><small class="text-muted">${employee.jabatan === 'karyawan' ? 'karyawan kandang' : (employee.jabatan === 'karyawan_gudang' ? 'karyawan gudang' : employee.jabatan)}</small>
                 </td>
                 <td>${employee.lokasi ? employee.lokasi.nama_lokasi : 'N/A'}</td>
                 <td>${employee.kandang ? employee.kandang.nama_kandang : 'N/A'}</td>
@@ -901,6 +864,53 @@ $(document).ready(function() {
 function showBulkAttendance() {
     const modal = new bootstrap.Modal(document.getElementById('bulkAttendanceModal'));
     modal.show();
+    
+    // Load employees when modal opens
+    loadBulkEmployees();
+}
+
+// Load employees for bulk attendance
+function loadBulkEmployees() {
+    fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateBulkEmployeeList(data.data.employees);
+                console.log('✅ Bulk employees loaded:', data.data.employees.length);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading bulk employees:', error);
+        });
+}
+
+// Filter employees by pembibitan
+function filterEmployeesBulk() {
+    const pembibitanId = document.getElementById('filterPembibitanBulk').value;
+    
+    fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let filteredEmployees = data.data.employees;
+                
+                // Filter by pembibitan if selected
+                if (pembibitanId) {
+                    filteredEmployees = filteredEmployees.filter(employee => {
+                        // Check if employee has attendance records in the selected pembibitan
+                        return employee.absensis && employee.absensis.some(absensi => 
+                            absensi.pembibitan_id == pembibitanId
+                        );
+                    });
+                }
+                
+                updateBulkEmployeeList(filteredEmployees);
+                console.log('✅ Filtered employees by pembibitan:', filteredEmployees.length);
+            }
+        })
+        .catch(error => {
+            console.error('Error filtering bulk employees:', error);
+        });
 }
 
 function toggleSelectAll() {
@@ -1030,5 +1040,110 @@ function submitQuickAttendanceBulk() {
         alert('Terjadi kesalahan: ' + error.message);
     });
     }
+
+// Bulk Delete Functions
+function toggleSelectAll() {
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const checkboxes = document.querySelectorAll('.absensi-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+    
+    updateDeleteButton();
+}
+
+function updateDeleteButton() {
+    const checkboxes = document.querySelectorAll('.absensi-checkbox:checked');
+    const deleteBtn = document.getElementById('deleteSelectedBtn');
+    
+    if (checkboxes.length > 0) {
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = `Hapus (${checkboxes.length})`;
+    } else {
+        deleteBtn.disabled = true;
+        deleteBtn.textContent = 'Hapus';
+    }
+}
+
+function deleteSelectedAbsensi() {
+    const checkboxes = document.querySelectorAll('.absensi-checkbox:checked');
+    
+    if (checkboxes.length === 0) {
+        alert('Pilih absensi yang akan dihapus terlebih dahulu!');
+        return;
+    }
+    
+    const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.value);
+    
+    if (confirm(`Apakah Anda yakin ingin menghapus ${selectedIds.length} absensi yang dipilih?`)) {
+        // Show loading
+        const deleteBtn = document.getElementById('deleteSelectedBtn');
+        const originalText = deleteBtn.innerHTML;
+        deleteBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Menghapus...';
+        deleteBtn.disabled = true;
+        
+        // Send delete request
+        fetch('{{ route(auth()->user()->isAdmin() ? "admin.absensis.bulk-delete" : "manager.absensis.bulk-delete") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                ids: selectedIds
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Berhasil menghapus ${data.deleted_count} absensi!`);
+                // Reload DataTables
+                $('#absensiTable').DataTable().ajax.reload();
+                // Reset select all checkbox
+                document.getElementById('selectAllCheckbox').checked = false;
+                updateDeleteButton();
+            } else {
+                alert('Gagal menghapus absensi: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan: ' + error.message);
+        })
+        .finally(() => {
+            // Restore button
+            deleteBtn.innerHTML = originalText;
+            deleteBtn.disabled = false;
+        });
+    }
+}
 </script>
+
+<style>
+/* Fix table header visibility */
+#absensiTable thead th {
+    background-color: #1e40af !important;
+    color: white !important;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px 8px;
+    border: none;
+    font-size: 0.875rem;
+}
+
+/* Fix DataTables controls visibility */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+    color: #333 !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: #333 !important;
+}
+</style>
 @endpush

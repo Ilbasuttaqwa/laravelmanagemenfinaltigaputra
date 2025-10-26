@@ -40,26 +40,31 @@
                     <select class="form-control @error('employee_id') is-invalid @enderror"
                             id="employee_id" name="employee_id" required>
                         <option value="">Pilih Karyawan</option>
-                        @foreach($allEmployees as $employee)
-                            <option value="{{ $employee->id }}" 
-                                    data-jabatan="{{ $employee->jabatan }}"
-                                    data-gaji="{{ $employee->gaji_pokok }}"
-                                    data-source="{{ $employee->source ?? 'unknown' }}"
-                                    {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
-                                {{ $employee->nama }} ({{ $employee->jabatan }})
-                            </option>
-                        @endforeach
+                        @if(isset($allEmployees) && $allEmployees->count() > 0)
+                            @foreach($allEmployees as $employee)
+                                <option value="{{ $employee->id }}" 
+                                        data-jabatan="{{ $employee->jabatan }}"
+                                        data-gaji="{{ $employee->gaji_pokok }}"
+                                        data-source="{{ $employee->source ?? 'unknown' }}"
+                                        {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                                    {{ $employee->nama }} ({{ $employee->jabatan === 'karyawan' ? 'karyawan kandang' : $employee->jabatan }})
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="" disabled>Data karyawan tidak tersedia. Silakan refresh halaman.</option>
+                        @endif
                     </select>
                     
                     <!-- Debug Info -->
-                    <small class="text-muted">
-                        Total employees: {{ count($allEmployees) }} | 
-                        Gudang: {{ $allEmployees->where('source', 'gudang')->count() }} | 
-                        Regular: {{ $allEmployees->where('source', 'employee')->count() }}
-                    </small>
                     @error('employee_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    
+                    @if(config('app.debug'))
+                        <small class="text-muted">
+                            Debug: Total karyawan: {{ isset($allEmployees) ? $allEmployees->count() : 0 }}
+                        </small>
+                    @endif
                 </div>
             </div>
 
@@ -181,8 +186,18 @@ $(document).ready(function() {
             console.log('Employee changed to:', this.value);
             const selectedOption = this.options[this.selectedIndex];
             if (selectedOption.value) {
-                // Ambil gaji terbaru dari server secara real-time
-                fetchLatestSalary(this.value);
+                // Ambil gaji dari data attribute (lebih cepat dan reliable)
+                const gaji = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
+                console.log('Gaji from data attribute:', gaji);
+                
+                if (gajiPokokDisplay && gajiPokokInput) {
+                    gajiPokokDisplay.value = formatCurrency(gaji);
+                    gajiPokokInput.value = gaji;
+                    console.log('Gaji pokok filled:', gaji);
+                }
+                
+                // Hitung gaji hari itu
+                calculateGajiHariItu();
             } else {
                 if (gajiPokokDisplay && gajiPokokInput) {
                     gajiPokokDisplay.value = '';
@@ -196,35 +211,6 @@ $(document).ready(function() {
         });
     }
 
-    // Function to fetch latest salary from server
-    function fetchLatestSalary(employeeId) {
-        fetch('/manager/absensis/get-salary/' + employeeId)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Latest salary from server:', data.gaji);
-                const gaji = parseFloat(data.gaji) || 0;
-                
-                if (gajiPokokDisplay && gajiPokokInput) {
-                    gajiPokokDisplay.value = formatCurrency(gaji);
-                    gajiPokokInput.value = gaji;
-                    console.log('Gaji pokok filled with latest data:', gajiPokokInput.value);
-                }
-                
-                // Hitung gaji hari itu berdasarkan status
-                calculateGajiHariItu();
-            })
-            .catch(error => {
-                console.error('Error fetching salary:', error);
-                // Fallback to data attribute if API fails
-                const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
-                const gaji = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
-                if (gajiPokokDisplay && gajiPokokInput) {
-                    gajiPokokDisplay.value = formatCurrency(gaji);
-                    gajiPokokInput.value = gaji;
-                }
-                calculateGajiHariItu();
-            });
-    }
 
     // Hitung gaji hari itu saat status berubah
     statusRadios.forEach(radio => {
@@ -365,7 +351,27 @@ function forceClearCache() {
     window.location.href = window.location.href + '?t=' + timestamp;
 }
 
-// Auto-clear cache on page load
-setTimeout(forceClearCache, 1000);
+// Auto-clear cache on page load - DISABLED to prevent continuous refresh
+// setTimeout(forceClearCache, 1000);
+
+// Auto-refresh employee data if empty
+function checkAndRefreshEmployeeData() {
+    const employeeSelect = document.getElementById('employee_id');
+    if (employeeSelect && employeeSelect.options.length <= 1) {
+        console.log('⚠️ No employee data found, refreshing...');
+        // Add loading indicator
+        employeeSelect.innerHTML = '<option value="">Memuat data karyawan...</option>';
+        
+        // Refresh the page after 2 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    }
+}
+
+// Check on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAndRefreshEmployeeData();
+});
 </script>
 @endpush

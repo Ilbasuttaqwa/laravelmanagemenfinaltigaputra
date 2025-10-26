@@ -591,10 +591,10 @@
                                 </li>
                                 
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo e(request()->routeIs('admin.absensis.*') ? 'active' : ''); ?>"
-                                       href="<?php echo e(route('admin.absensis.index')); ?>">
-                                        <i class="bi bi-table"></i>
-                                        Master Absensi & Kalender
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.karyawan-kandangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.karyawan-kandangs.index')); ?>">
+                                        <i class="bi bi-people-fill"></i>
+                                        Master Karyawan Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -619,10 +619,10 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo e(request()->routeIs('admin.karyawan-kandangs.*') ? 'active' : ''); ?>"
-                                       href="<?php echo e(route('admin.karyawan-kandangs.index')); ?>">
-                                        <i class="bi bi-people-fill"></i>
-                                        Master Karyawan Kandang
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.absensis.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.absensis.index')); ?>">
+                                        <i class="bi bi-table"></i>
+                                        Transaksi Absensi
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -662,10 +662,10 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo e(request()->routeIs('manager.absensis.*') ? 'active' : ''); ?>"
-                                       href="<?php echo e(route('manager.absensis.index')); ?>">
-                                        <i class="bi bi-table"></i>
-                                        Master Absensi & Kalender
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.karyawan-kandangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.karyawan-kandangs.index')); ?>">
+                                        <i class="bi bi-people-fill"></i>
+                                        Master Karyawan Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -690,10 +690,10 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo e(request()->routeIs('manager.karyawan-kandangs.*') ? 'active' : ''); ?>"
-                                       href="<?php echo e(route('manager.karyawan-kandangs.index')); ?>">
-                                        <i class="bi bi-people-fill"></i>
-                                        Master Karyawan Kandang
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.absensis.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.absensis.index')); ?>">
+                                        <i class="bi bi-table"></i>
+                                        Transaksi Absensi
                                     </a>
                                 </li>
             <li class="nav-item">

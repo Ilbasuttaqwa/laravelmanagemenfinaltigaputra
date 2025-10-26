@@ -45,24 +45,22 @@ endif;
 unset($__errorArgs, $__bag); ?>"
                             id="employee_id" name="employee_id" required>
                         <option value="">Pilih Karyawan</option>
-                        <?php $__currentLoopData = $allEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <option value="<?php echo e($employee->id); ?>" 
-                                    data-jabatan="<?php echo e($employee->jabatan); ?>"
-                                    data-gaji="<?php echo e($employee->gaji_pokok); ?>"
-                                    data-source="<?php echo e($employee->source ?? 'unknown'); ?>"
-                                    <?php echo e(old('employee_id') == $employee->id ? 'selected' : ''); ?>>
-                                <?php echo e($employee->nama); ?> (<?php echo e($employee->jabatan); ?>)
-                            </option>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(isset($allEmployees) && $allEmployees->count() > 0): ?>
+                            <?php $__currentLoopData = $allEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($employee->id); ?>" 
+                                        data-jabatan="<?php echo e($employee->jabatan); ?>"
+                                        data-gaji="<?php echo e($employee->gaji_pokok); ?>"
+                                        data-source="<?php echo e($employee->source ?? 'unknown'); ?>"
+                                        <?php echo e(old('employee_id') == $employee->id ? 'selected' : ''); ?>>
+                                    <?php echo e($employee->nama); ?> (<?php echo e($employee->jabatan === 'karyawan' ? 'karyawan kandang' : $employee->jabatan); ?>)
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php else: ?>
+                            <option value="" disabled>Data karyawan tidak tersedia. Silakan refresh halaman.</option>
+                        <?php endif; ?>
                     </select>
                     
                     <!-- Debug Info -->
-                    <small class="text-muted">
-                        Total employees: <?php echo e(count($allEmployees)); ?> | 
-                        Gudang: <?php echo e($allEmployees->where('source', 'gudang')->count()); ?> | 
-                        Regular: <?php echo e($allEmployees->where('source', 'employee')->count()); ?>
-
-                    </small>
                     <?php $__errorArgs = ['employee_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -73,6 +71,13 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+                    
+                    <?php if(config('app.debug')): ?>
+                        <small class="text-muted">
+                            Debug: Total karyawan: <?php echo e(isset($allEmployees) ? $allEmployees->count() : 0); ?>
+
+                        </small>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -229,8 +234,18 @@ $(document).ready(function() {
             console.log('Employee changed to:', this.value);
             const selectedOption = this.options[this.selectedIndex];
             if (selectedOption.value) {
-                // Ambil gaji terbaru dari server secara real-time
-                fetchLatestSalary(this.value);
+                // Ambil gaji dari data attribute (lebih cepat dan reliable)
+                const gaji = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
+                console.log('Gaji from data attribute:', gaji);
+                
+                if (gajiPokokDisplay && gajiPokokInput) {
+                    gajiPokokDisplay.value = formatCurrency(gaji);
+                    gajiPokokInput.value = gaji;
+                    console.log('Gaji pokok filled:', gaji);
+                }
+                
+                // Hitung gaji hari itu
+                calculateGajiHariItu();
             } else {
                 if (gajiPokokDisplay && gajiPokokInput) {
                     gajiPokokDisplay.value = '';
@@ -244,35 +259,6 @@ $(document).ready(function() {
         });
     }
 
-    // Function to fetch latest salary from server
-    function fetchLatestSalary(employeeId) {
-        fetch('/manager/absensis/get-salary/' + employeeId)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Latest salary from server:', data.gaji);
-                const gaji = parseFloat(data.gaji) || 0;
-                
-                if (gajiPokokDisplay && gajiPokokInput) {
-                    gajiPokokDisplay.value = formatCurrency(gaji);
-                    gajiPokokInput.value = gaji;
-                    console.log('Gaji pokok filled with latest data:', gajiPokokInput.value);
-                }
-                
-                // Hitung gaji hari itu berdasarkan status
-                calculateGajiHariItu();
-            })
-            .catch(error => {
-                console.error('Error fetching salary:', error);
-                // Fallback to data attribute if API fails
-                const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
-                const gaji = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
-                if (gajiPokokDisplay && gajiPokokInput) {
-                    gajiPokokDisplay.value = formatCurrency(gaji);
-                    gajiPokokInput.value = gaji;
-                }
-                calculateGajiHariItu();
-            });
-    }
 
     // Hitung gaji hari itu saat status berubah
     statusRadios.forEach(radio => {
@@ -413,8 +399,28 @@ function forceClearCache() {
     window.location.href = window.location.href + '?t=' + timestamp;
 }
 
-// Auto-clear cache on page load
-setTimeout(forceClearCache, 1000);
+// Auto-clear cache on page load - DISABLED to prevent continuous refresh
+// setTimeout(forceClearCache, 1000);
+
+// Auto-refresh employee data if empty
+function checkAndRefreshEmployeeData() {
+    const employeeSelect = document.getElementById('employee_id');
+    if (employeeSelect && employeeSelect.options.length <= 1) {
+        console.log('⚠️ No employee data found, refreshing...');
+        // Add loading indicator
+        employeeSelect.innerHTML = '<option value="">Memuat data karyawan...</option>';
+        
+        // Refresh the page after 2 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    }
+}
+
+// Check on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAndRefreshEmployeeData();
+});
 </script>
 <?php $__env->stopPush(); ?>
 

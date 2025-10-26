@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Kandang;
+use App\Models\Pembibitan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class KaryawanKandangController extends Controller
@@ -20,8 +22,8 @@ class KaryawanKandangController extends Controller
 
     public function create()
     {
-        $kandangs = Kandang::with('lokasi')->orderBy('nama_kandang')->get();
-        return view('karyawan-kandangs.create', compact('kandangs'));
+        $pembibitans = Pembibitan::with(['kandang', 'kandang.lokasi'])->orderBy('judul')->get();
+        return view('karyawan-kandangs.create', compact('pembibitans'));
     }
 
     public function store(Request $request)
@@ -29,14 +31,17 @@ class KaryawanKandangController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji_pokok' => 'required|numeric|min:0',
-            'kandang_id' => 'required|exists:kandangs,id',
+            'pembibitan_id' => 'required|exists:pembibitans,id',
         ]);
+
+        // Get kandang_id from pembibitan
+        $pembibitan = Pembibitan::find($validated['pembibitan_id']);
 
         Employee::create([
             'nama' => $validated['nama'],
             'gaji_pokok' => $validated['gaji_pokok'],
             'jabatan' => 'karyawan',
-            'kandang_id' => $validated['kandang_id'],
+            'kandang_id' => $pembibitan->kandang_id,
         ]);
 
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
@@ -51,8 +56,8 @@ class KaryawanKandangController extends Controller
 
     public function edit(Employee $karyawanKandang)
     {
-        $kandangs = Kandang::with('lokasi')->orderBy('nama_kandang')->get();
-        return view('karyawan-kandangs.edit', compact('karyawanKandang', 'kandangs'));
+        $pembibitans = Pembibitan::with(['kandang', 'kandang.lokasi'])->orderBy('judul')->get();
+        return view('karyawan-kandangs.edit', compact('karyawanKandang', 'pembibitans'));
     }
 
     public function update(Request $request, Employee $karyawanKandang)
@@ -60,13 +65,16 @@ class KaryawanKandangController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji_pokok' => 'required|numeric|min:0',
-            'kandang_id' => 'required|exists:kandangs,id',
+            'pembibitan_id' => 'required|exists:pembibitans,id',
         ]);
+
+        // Get kandang_id from pembibitan
+        $pembibitan = Pembibitan::find($validated['pembibitan_id']);
 
         $karyawanKandang->update([
             'nama' => $validated['nama'],
             'gaji_pokok' => $validated['gaji_pokok'],
-            'kandang_id' => $validated['kandang_id'],
+            'kandang_id' => $pembibitan->kandang_id,
         ]);
 
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')

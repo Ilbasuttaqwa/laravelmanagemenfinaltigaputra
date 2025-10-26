@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Kandang;
+use App\Services\AutoSyncGajiService;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -118,6 +119,8 @@ class EmployeeController extends Controller
             'nama' => 'required|string|max:255',
             'gaji' => 'required|numeric|min:0',
             'jabatan' => 'nullable|string|in:karyawan,mandor',
+            'kandang_id' => 'nullable|exists:kandangs,id',
+            'lokasi_kerja' => 'nullable|string|max:255',
         ]);
 
         // Rename gaji to gaji_pokok for database
@@ -138,10 +141,30 @@ class EmployeeController extends Controller
                             ->withInput();
         }
 
+        // Simpan gaji lama untuk perbandingan
+        $oldGajiPokok = $employee->gaji_pokok;
+        
         $employee->update($validated);
 
+        // Auto-sync gaji jika gaji berubah
+        if ($oldGajiPokok != $validated['gaji_pokok']) {
+            $autoSyncService = new AutoSyncGajiService();
+            $syncResult = $autoSyncService->syncEmployeeGaji(
+                $employee->id, 
+                $validated['gaji_pokok']
+            );
+            
+            if ($syncResult['success']) {
+                $message = "Data karyawan berhasil diperbarui. Gaji otomatis disinkronkan untuk {$syncResult['updated_count']} absensi.";
+            } else {
+                $message = "Data karyawan berhasil diperbarui, namun gagal sinkronisasi gaji: {$syncResult['message']}";
+            }
+        } else {
+            $message = "Data karyawan berhasil diperbarui.";
+        }
+
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.employees.index' : 'manager.employees.index')
-                        ->with('success', 'Data karyawan berhasil diperbarui.');
+                        ->with('success', $message);
     }
 
     /**

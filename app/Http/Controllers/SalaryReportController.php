@@ -9,6 +9,7 @@ use App\Models\Lokasi;
 use App\Models\Kandang;
 use App\Models\Pembibitan;
 use App\Models\Absensi;
+use App\Models\User;
 use Carbon\Carbon;
 
 class SalaryReportController extends Controller
@@ -24,19 +25,52 @@ class SalaryReportController extends Controller
         $tanggalMulai = $request->get('tanggal_mulai');
         $tanggalSelesai = $request->get('tanggal_selesai');
 
-        $query = SalaryReport::periode($tahun, $bulan)
-            ->tipeKaryawan($tipe)
-            ->lokasi($lokasiId)
-            ->kandang($kandangId)
-            ->pembibitan($pembibitanId)
-            ->tanggalRange($tanggalMulai, $tanggalSelesai);
-
-        // Admin can only see salary reports for karyawan (not mandor)
-        if (auth()->user()->isAdmin()) {
-            $query->where('tipe_karyawan', 'karyawan');
+        // Cek apakah ada filter yang dipilih
+        $hasFilter = $lokasiId || $kandangId || $pembibitanId || $tanggalMulai || $tanggalSelesai || ($tipe !== 'all');
+        
+        if (!$hasFilter) {
+            // Jika tidak ada filter, tampilkan tabel kosong
+            $reports = collect();
+        } else {
+            $query = SalaryReport::periode($tahun, $bulan)
+                ->tipeKaryawan($tipe)
+                ->tanggalRange($tanggalMulai, $tanggalSelesai);
+                
+            // Filter lokasi dan kandang berdasarkan pembibitan yang dipilih
+            if ($pembibitanId) {
+                // Jika pembibitan dipilih, filter berdasarkan pembibitan tersebut
+                $query->where('pembibitan_id', $pembibitanId);
+            } else {
+                // Jika lokasi dipilih, cari pembibitan di lokasi tersebut
+                if ($lokasiId) {
+                    $pembibitansInLokasi = \App\Models\Pembibitan::where('lokasi_id', $lokasiId)->pluck('id');
+                    if ($pembibitansInLokasi->isNotEmpty()) {
+                        $query->whereIn('pembibitan_id', $pembibitansInLokasi);
+                    } else {
+                        // Jika tidak ada pembibitan di lokasi tersebut, tampilkan kosong
+                        $query->where('id', 0); // Force empty result
+                    }
+                }
+                
+                // Jika kandang dipilih, cari pembibitan di kandang tersebut
+                if ($kandangId) {
+                    $pembibitansInKandang = \App\Models\Pembibitan::where('kandang_id', $kandangId)->pluck('id');
+                    if ($pembibitansInKandang->isNotEmpty()) {
+                        $query->whereIn('pembibitan_id', $pembibitansInKandang);
+                    } else {
+                        // Jika tidak ada pembibitan di kandang tersebut, tampilkan kosong
+                        $query->where('id', 0); // Force empty result
+                    }
+                }
+            }
+            
+            $reports = $query->orderBy('nama_karyawan')->get();
+            
+            // Admin can only see salary reports for karyawan (not mandor)
+            if (auth()->user()->isAdmin()) {
+                $reports = $reports->where('tipe_karyawan', 'karyawan');
+            }
         }
-
-        $reports = $query->orderBy('nama_karyawan')->get();
 
         // Get filter options
         $lokasis = Lokasi::orderBy('nama_lokasi')->get();
@@ -176,10 +210,20 @@ class SalaryReportController extends Controller
         $gajiPokok = $employee->gaji_pokok;
         $totalGaji = $gajiPokok * ($jmlHariKerja / 22); // Assuming 22 working days per month
 
-        // Get related entities (simplified for now)
-        $lokasi = null;
-        $kandang = null;
+        // Get related entities from employee relationships
+        $lokasi = $employee->lokasi;
+        $kandang = $employee->kandang;
+        
+        // Get pembibitan from employee's recent attendance records
         $pembibitan = null;
+        $recentAttendance = Absensi::where('employee_id', $employee->id)
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->orderBy('tanggal', 'desc')
+            ->first();
+            
+        if ($recentAttendance && $recentAttendance->pembibitan_id) {
+            $pembibitan = \App\Models\Pembibitan::find($recentAttendance->pembibitan_id);
+        }
 
         SalaryReport::create([
             'employee_id' => $employee->id,

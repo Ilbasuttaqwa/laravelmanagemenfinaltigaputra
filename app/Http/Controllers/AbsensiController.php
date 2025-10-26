@@ -26,6 +26,13 @@ class AbsensiController extends Controller
         // Clear ALL caches untuk memastikan data fresh
         \Cache::flush();
         
+        // Clear specific caches
+        \Cache::forget('lokasis_data');
+        \Cache::forget('kandangs_data');
+        \Cache::forget('pembibitans_data');
+        \Cache::forget('gudangs_data');
+        \Cache::forget('employees_data');
+        
         // Force fresh data - disable query caching
         $employees = Employee::where('jabatan', 'karyawan')
             ->with(['lokasi', 'kandang'])
@@ -87,20 +94,17 @@ class AbsensiController extends Controller
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('nama_karyawan', function($absensi) {
-                    // Prioritize stored data, fallback to employee relationship
+                    // Always get fresh employee data first
+                    if ($absensi->employee_id) {
+                        $employee = Employee::find($absensi->employee_id);
+                        if ($employee) {
+                            return $employee->nama;
+                        }
+                    }
+                    
+                    // For gudang/mandor employees, use stored nama_karyawan
                     if (!empty($absensi->nama_karyawan)) {
                         return $absensi->nama_karyawan;
-                    }
-                    
-                    // Try to get from employee relationship
-                    if ($absensi->employee) {
-                        return $absensi->employee->nama;
-                    }
-                    
-                    // Try to find employee by ID
-                    $employee = Employee::find($absensi->employee_id);
-                    if ($employee) {
-                        return $employee->nama;
                     }
                     
                     return 'Karyawan Tidak Ditemukan';
@@ -126,16 +130,30 @@ class AbsensiController extends Controller
                     return $absensi->tanggal->format('d/m/Y');
                 })
                 ->addColumn('lokasi_kerja', function($absensi) {
-                    // Always get fresh data from employee relationship
-                    if ($absensi->employee_id) {
-                        $employee = Employee::with('lokasi')->find($absensi->employee_id);
-                        if ($employee && $employee->lokasi) {
-                            return $employee->lokasi->nama_lokasi;
+                    // PRIORITAS 1: Ambil dari pembibitan yang dipilih
+                    if ($absensi->pembibitan_id) {
+                        $pembibitan = \App\Models\Pembibitan::with('lokasi')->find($absensi->pembibitan_id);
+                        if ($pembibitan && $pembibitan->lokasi) {
+                            return $pembibitan->lokasi->nama_lokasi;
                         }
                     }
                     
-                    // Fallback to stored data
-                    return $absensi->lokasi_kerja ?? '-';
+                    // PRIORITAS 2: Ambil dari employee relationship (kandang -> lokasi)
+                    if ($absensi->employee_id) {
+                        $employee = Employee::with(['kandang.lokasi'])->find($absensi->employee_id);
+                        if ($employee && $employee->kandang && $employee->kandang->lokasi) {
+                            return $employee->kandang->lokasi->nama_lokasi;
+                        }
+                    }
+                    
+                    // PRIORITAS 3: Ambil dari stored data (jika tidak ada relasi)
+                    $storedLocation = $absensi->lokasi_kerja;
+                    if ($storedLocation && $storedLocation !== 'Kantor Pusat') {
+                        return $storedLocation;
+                    }
+                    
+                    // FALLBACK: Tampilkan dash jika tidak ada data valid
+                    return '-';
                 })
                 ->addColumn('pembibitan_info', function($absensi) {
                     // Cari pembibitan berdasarkan relasi langsung (sesuai ERD)
@@ -286,6 +304,9 @@ class AbsensiController extends Controller
         // Clear ALL caches untuk memastikan data fresh
         \Cache::flush();
         
+        // Force fresh database connection
+        \DB::purge();
+        
         // Get employees from employees table with fresh query - NO CACHE
         $query = Employee::orderBy('nama');
         
@@ -295,6 +316,12 @@ class AbsensiController extends Controller
         }
         
         $employees = $query->get();
+        
+        // Log for debugging
+        \Log::info('Employee data loaded in create method', [
+            'count' => $employees->count(),
+            'employees' => $employees->pluck('nama')->toArray()
+        ]);
         
         // Get gudang employees (karyawan gudang) - ALWAYS FRESH DATA
         $gudangEmployees = collect();
@@ -355,6 +382,15 @@ class AbsensiController extends Controller
         }))->concat($mandorEmployees)
         ->unique('nama') // Remove duplicates by name (gudang employees will be kept first)
         ->sortBy('nama');
+        
+        // Log final result for debugging
+        \Log::info('Final allEmployees data', [
+            'total_count' => $allEmployees->count(),
+            'gudang_count' => $gudangEmployees->count(),
+            'employee_count' => $employees->count(),
+            'mandor_count' => $mandorEmployees->count(),
+            'all_employees' => $allEmployees->pluck('nama')->toArray()
+        ]);
         
         $pembibitans = Pembibitan::with(['kandang', 'lokasi'])->orderBy('judul')->get();
         
@@ -463,28 +499,34 @@ class AbsensiController extends Controller
             ], 409);
         }
 
-        // Get correct lokasi_kerja based on employee source - ALWAYS FRESH DATA
+        // Get correct lokasi_kerja based on pembibitan yang dipilih - PRIORITAS PEMBIBITAN
         $lokasiKerja = 'Kantor Pusat'; // Default
         
-        if ($source === 'employee') {
-            // ALWAYS get fresh data from database
+        // PRIORITAS: Ambil lokasi dari pembibitan yang dipilih
+        if ($validated['pembibitan_id']) {
+            $pembibitan = \App\Models\Pembibitan::with('lokasi')->find($validated['pembibitan_id']);
+            if ($pembibitan && $pembibitan->lokasi) {
+                $lokasiKerja = $pembibitan->lokasi->nama_lokasi;
+            }
+        }
+        
+        // FALLBACK: Jika tidak ada pembibitan, ambil dari employee
+        if ($lokasiKerja === 'Kantor Pusat' && $source === 'employee') {
             $employeeRecord = Employee::with('lokasi')->find($actualEmployeeId);
             if ($employeeRecord && $employeeRecord->lokasi) {
                 $lokasiKerja = $employeeRecord->lokasi->nama_lokasi;
-            } else {
-                // If employee has no lokasi, assign first available lokasi
-                $firstLokasi = \App\Models\Lokasi::orderBy('nama_lokasi')->first();
-                if ($firstLokasi) {
-                    $lokasiKerja = $firstLokasi->nama_lokasi;
-                    // Update employee with this lokasi
-                    $employeeRecord->update(['lokasi_id' => $firstLokasi->id]);
-                }
             }
-        } else {
-            // For gudang/mandor, use their assigned location or default
+        }
+        
+        // FALLBACK: Jika masih default, ambil dari gudang/mandor
+        if ($lokasiKerja === 'Kantor Pusat' && $source !== 'employee') {
             $lokasiKerja = $employee->lokasi_kerja ?? 'Kantor Pusat';
         }
 
+        // Clear cache before creating record
+        \Cache::forget('employees_data');
+        \Cache::forget('absensis_data');
+        
         // Create absensi record (sesuai ERD)
         $data = [
             'employee_id' => $source === 'employee' ? $actualEmployeeId : null,
@@ -770,5 +812,35 @@ class AbsensiController extends Controller
         $allEmployees = $employees->concat($gudangEmployees);
         
         return response()->json($allEmployees);
+    }
+
+    /**
+     * Bulk delete absensi records
+     */
+    public function bulkDelete(Request $request)
+    {
+        try {
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'required|integer|exists:absensis,id'
+            ]);
+
+            $ids = $request->input('ids');
+            $deletedCount = Absensi::whereIn('id', $ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Berhasil menghapus {$deletedCount} absensi",
+                'deleted_count' => $deletedCount
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Bulk delete absensi error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus absensi: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
