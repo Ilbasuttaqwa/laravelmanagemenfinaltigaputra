@@ -61,6 +61,8 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
     Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
     Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
+    Route::get('absensis/check-duplicates', [AbsensiController::class, 'checkDuplicateAbsensi'])->name('absensis.check-duplicates');
+    Route::post('absensis/clean-duplicates', [AbsensiController::class, 'cleanDuplicateAbsensi'])->name('absensis.clean-duplicates');
     
     Route::get('system/monitor', [App\Http\Controllers\SystemMonitorController::class, 'dashboard'])->name('system.monitor');
     Route::get('api/system/status', [App\Http\Controllers\SystemMonitorController::class, 'status'])->name('api.system.status');

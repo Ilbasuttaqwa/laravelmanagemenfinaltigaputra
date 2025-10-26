@@ -270,6 +270,92 @@ class AbsensiController extends Controller
     }
 
     /**
+     * Check and clean duplicate absensi data
+     */
+    public function checkDuplicateAbsensi()
+    {
+        try {
+            // Find potential duplicates
+            $duplicates = Absensi::select('nama_karyawan', 'tanggal', DB::raw('COUNT(*) as count'))
+                ->groupBy('nama_karyawan', 'tanggal')
+                ->having('count', '>', 1)
+                ->get();
+            
+            $duplicateDetails = [];
+            foreach ($duplicates as $dup) {
+                $records = Absensi::where('nama_karyawan', $dup->nama_karyawan)
+                    ->whereDate('tanggal', $dup->tanggal)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                
+                $duplicateDetails[] = [
+                    'nama_karyawan' => $dup->nama_karyawan,
+                    'tanggal' => $dup->tanggal,
+                    'count' => $dup->count,
+                    'records' => $records->pluck('id')->toArray()
+                ];
+            }
+            
+            return response()->json([
+                'success' => true,
+                'duplicates' => $duplicateDetails,
+                'total_duplicates' => count($duplicateDetails)
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error checking duplicates: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error checking duplicates: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Clean duplicate absensi data (keep latest)
+     */
+    public function cleanDuplicateAbsensi()
+    {
+        try {
+            // Find duplicates and keep only the latest one
+            $duplicates = Absensi::select('nama_karyawan', 'tanggal', DB::raw('COUNT(*) as count'))
+                ->groupBy('nama_karyawan', 'tanggal')
+                ->having('count', '>', 1)
+                ->get();
+            
+            $cleaned = 0;
+            foreach ($duplicates as $dup) {
+                $records = Absensi::where('nama_karyawan', $dup->nama_karyawan)
+                    ->whereDate('tanggal', $dup->tanggal)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                
+                // Keep the first (latest) record, delete the rest
+                if ($records->count() > 1) {
+                    $toDelete = $records->skip(1);
+                    foreach ($toDelete as $record) {
+                        $record->delete();
+                        $cleaned++;
+                    }
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => "Cleaned {$cleaned} duplicate records",
+                'cleaned_count' => $cleaned
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error cleaning duplicates: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error cleaning duplicates: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Refresh master data for real-time updates
      */
     public function refreshMasterData()
@@ -535,9 +621,18 @@ class AbsensiController extends Controller
         }
 
         if ($existingAbsensi) {
+            // Log the duplicate attempt for debugging
+            Log::info('Duplicate absensi attempt', [
+                'employee_name' => $employee->nama,
+                'employee_id' => $employeeId,
+                'tanggal' => $validated['tanggal'],
+                'existing_id' => $existingAbsensi->id,
+                'source' => $source
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Data absensi untuk karyawan ini pada tanggal tersebut sudah ada.'
+                'message' => "Data absensi untuk {$employee->nama} pada tanggal {$validated['tanggal']} sudah ada. ID: {$existingAbsensi->id}"
             ], 409);
         }
 

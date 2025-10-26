@@ -301,20 +301,40 @@ $(document).ready(function() {
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
                 const result = await response.json();
-                console.log('✅ Form submitted successfully:', result);
+                console.log('Response:', result);
                 
-                // Show success message
-                alert('Data absensi berhasil disimpan!');
-                window.location.href = '{{ route("admin.absensis.index") }}';
+                if (response.ok && result.success) {
+                    // Show success message
+                    alert('Data absensi berhasil disimpan!');
+                    window.location.href = '{{ route(auth()->user()->isManager() ? "manager.absensis.index" : "admin.absensis.index") }}';
+                } else {
+                    // Handle error response
+                    let errorMessage = 'Terjadi kesalahan saat menyimpan data';
+                    if (result.message) {
+                        errorMessage = result.message;
+                    } else if (response.status === 409) {
+                        errorMessage = 'Data absensi untuk karyawan ini pada tanggal tersebut sudah ada. Silakan pilih tanggal lain atau cek data yang sudah ada.';
+                    } else if (response.status === 422) {
+                        errorMessage = 'Data yang dimasukkan tidak valid. Silakan periksa kembali.';
+                    }
+                    
+                    alert('Error: ' + errorMessage);
+                    
+                    // Restore button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
                 
             } catch (error) {
                 console.error('❌ Form submission error:', error);
-                alert('Terjadi kesalahan: ' + error.message);
+                
+                let errorMessage = 'Terjadi kesalahan: ' + error.message;
+                if (error.message.includes('409')) {
+                    errorMessage = 'Data absensi untuk karyawan ini pada tanggal tersebut sudah ada. Silakan pilih tanggal lain.';
+                }
+                
+                alert(errorMessage);
                 
                 // Restore button
                 submitBtn.disabled = false;
