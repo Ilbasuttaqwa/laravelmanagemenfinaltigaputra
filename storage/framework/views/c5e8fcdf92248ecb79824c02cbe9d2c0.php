@@ -953,7 +953,7 @@ function submitBulkAttendance() {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i>Menyimpan...';
 
-    fetch('<?php echo e(route("manager.absensis.store")); ?>', {
+    fetch('<?php echo e(route("manager.absensis.bulk-store")); ?>', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

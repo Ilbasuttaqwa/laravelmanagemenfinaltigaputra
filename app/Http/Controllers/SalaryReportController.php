@@ -44,31 +44,22 @@ class SalaryReportController extends Controller
                 ->tipeKaryawan($tipe)
                 ->tanggalRange($tanggalMulai, $tanggalSelesai);
                 
-            // Filter lokasi dan kandang berdasarkan pembibitan yang dipilih
+            // Filter yang lebih sederhana
             if ($pembibitanId) {
-                // Jika pembibitan dipilih, filter berdasarkan pembibitan tersebut
                 $query->where('pembibitan_id', $pembibitanId);
-            } else {
-                // Jika lokasi dipilih, cari pembibitan di lokasi tersebut
-                if ($lokasiId) {
-                    $pembibitansInLokasi = \App\Models\Pembibitan::where('lokasi_id', $lokasiId)->pluck('id');
-                    if ($pembibitansInLokasi->isNotEmpty()) {
-                        $query->whereIn('pembibitan_id', $pembibitansInLokasi);
-                    } else {
-                        // Jika tidak ada pembibitan di lokasi tersebut, tampilkan kosong
-                        $query->where('id', 0); // Force empty result
-                    }
+            }
+            
+            if ($lokasiId) {
+                $pembibitansInLokasi = \App\Models\Pembibitan::where('lokasi_id', $lokasiId)->pluck('id');
+                if ($pembibitansInLokasi->isNotEmpty()) {
+                    $query->whereIn('pembibitan_id', $pembibitansInLokasi);
                 }
-                
-                // Jika kandang dipilih, cari pembibitan di kandang tersebut
-                if ($kandangId) {
-                    $pembibitansInKandang = \App\Models\Pembibitan::where('kandang_id', $kandangId)->pluck('id');
-                    if ($pembibitansInKandang->isNotEmpty()) {
-                        $query->whereIn('pembibitan_id', $pembibitansInKandang);
-                    } else {
-                        // Jika tidak ada pembibitan di kandang tersebut, tampilkan kosong
-                        $query->where('id', 0); // Force empty result
-                    }
+            }
+            
+            if ($kandangId) {
+                $pembibitansInKandang = \App\Models\Pembibitan::where('kandang_id', $kandangId)->pluck('id');
+                if ($pembibitansInKandang->isNotEmpty()) {
+                    $query->whereIn('pembibitan_id', $pembibitansInKandang);
                 }
             }
             
@@ -214,13 +205,26 @@ class SalaryReportController extends Controller
         $jmlHariKerja = $attendances->where('status', 'full')->count() + 
                        ($attendances->where('status', 'setengah_hari')->count() * 0.5);
 
-        // Calculate total salary
-        $gajiPokok = $employee->gaji_pokok;
-        $totalGaji = $gajiPokok * ($jmlHariKerja / 22); // Assuming 22 working days per month
+        // Calculate total salary - PRODUCTION FIX: Gunakan gaji dari absensi
+        $gajiPokok = 0;
+        $totalGaji = 0;
+        
+        if ($attendances->isNotEmpty()) {
+            // Ambil gaji dari absensi terbaru
+            $latestAttendance = $attendances->sortByDesc('tanggal')->first();
+            $gajiPokok = $latestAttendance->gaji_hari_itu ?? 0;
+            $totalGaji = $gajiPokok * $jmlHariKerja;
+        }
 
-        // Get related entities from employee relationships
-        $lokasi = $employee->lokasi;
-        $kandang = $employee->kandang;
+        // Get related entities from employee relationships - PRODUCTION FIX
+        $lokasi = null;
+        $kandang = null;
+        
+        // Get lokasi dan kandang dari relationship yang benar
+        if ($employee->kandang) {
+            $kandang = $employee->kandang;
+            $lokasi = $employee->kandang->lokasi;
+        }
         
         // Get pembibitan from employee's recent attendance records
         $pembibitan = null;

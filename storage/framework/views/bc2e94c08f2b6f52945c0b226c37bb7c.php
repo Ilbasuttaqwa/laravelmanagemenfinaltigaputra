@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Laporan Gaji'); ?>
 
-@section('title', 'Laporan Gaji')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -15,7 +13,7 @@
                 <p class="page-subtitle">Sistem laporan gaji terintegrasi dengan semua fitur</p>
                 <div class="real-time-info">
                     <i class="fas fa-clock me-1"></i>
-                    <span>{{ now()->format('d F Y pukul H.i.s') }}</span>
+                    <span><?php echo e(now()->format('d F Y pukul H.i.s')); ?></span>
                     <small class="ms-2">(Waktu Jakarta)</small>
                 </div>
             </div>
@@ -29,17 +27,17 @@
                     </button>
                 </div>
                 <div>
-                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'biaya_gaji'])) }}" 
+                    <a href="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'biaya_gaji']))); ?>" 
                        class="btn btn-success" target="_blank">
                         <i class="bi bi-file-earmark-excel"></i>
                         Export Biaya Gaji
                     </a>
-                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'rinci'])) }}" 
+                    <a href="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'rinci']))); ?>" 
                        class="btn btn-info" target="_blank">
                         <i class="bi bi-file-earmark-text"></i>
                         Export Rinci
                     </a>
-                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'singkat'])) }}" 
+                    <a href="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'singkat']))); ?>" 
                        class="btn btn-warning" target="_blank">
                         <i class="bi bi-file-earmark"></i>
                         Export Singkat
@@ -50,14 +48,14 @@
             <!-- Filter Form -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <form method="GET" action="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index') }}" class="row g-3">
+                    <form method="GET" action="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index')); ?>" class="row g-3">
                         <div class="col-md-2">
                             <label for="tahun" class="form-label">Tahun</label>
                             <input type="number" 
                                    name="tahun" 
                                    id="tahun" 
                                    class="form-control" 
-                                   value="{{ $tahun }}" 
+                                   value="<?php echo e($tahun); ?>" 
                                    min="2020" 
                                    max="2030"
                                    placeholder="Tahun">
@@ -65,68 +63,71 @@
                         <div class="col-md-2">
                             <label for="bulan" class="form-label">Bulan</label>
                             <select name="bulan" id="bulan" class="form-select">
-                                @foreach($availableMonths as $monthNum => $monthName)
-                                    <option value="{{ $monthNum }}" {{ $bulan == $monthNum ? 'selected' : '' }}>{{ $monthName }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $availableMonths; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $monthNum => $monthName): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($monthNum); ?>" <?php echo e($bulan == $monthNum ? 'selected' : ''); ?>><?php echo e($monthName); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="tipe" class="form-label">Tipe Karyawan</label>
                             <select name="tipe" id="tipe" class="form-select">
-                                <option value="all" {{ $tipe == 'all' ? 'selected' : '' }}>Semua</option>
-                                <option value="gudang" {{ $tipe == 'gudang' ? 'selected' : '' }}>Gudang</option>
-                                <option value="mandor" {{ $tipe == 'mandor' ? 'selected' : '' }}>Mandor</option>
+                                <option value="all" <?php echo e($tipe == 'all' ? 'selected' : ''); ?>>Semua</option>
+                                <option value="gudang" <?php echo e($tipe == 'gudang' ? 'selected' : ''); ?>>Gudang</option>
+                                <option value="mandor" <?php echo e($tipe == 'mandor' ? 'selected' : ''); ?>>Mandor</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="lokasi_id" class="form-label">Lokasi</label>
                             <select name="lokasi_id" id="lokasi_id" class="form-select">
                                 <option value="">Semua Lokasi</option>
-                                @foreach($lokasis as $lokasi)
-                                    <option value="{{ $lokasi->id }}" {{ $lokasiId == $lokasi->id ? 'selected' : '' }}>
-                                        {{ $lokasi->nama_lokasi }}
+                                <?php $__currentLoopData = $lokasis; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lokasi): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($lokasi->id); ?>" <?php echo e($lokasiId == $lokasi->id ? 'selected' : ''); ?>>
+                                        <?php echo e($lokasi->nama_lokasi); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="kandang_id" class="form-label">Kandang</label>
                             <select name="kandang_id" id="kandang_id" class="form-select">
                                 <option value="">Semua Kandang</option>
-                                @foreach($kandangs as $kandang)
-                                    <option value="{{ $kandang->id }}" {{ $kandangId == $kandang->id ? 'selected' : '' }}>
-                                        {{ $kandang->nama_kandang }}
+                                <?php $__currentLoopData = $kandangs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kandang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($kandang->id); ?>" <?php echo e($kandangId == $kandang->id ? 'selected' : ''); ?>>
+                                        <?php echo e($kandang->nama_kandang); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="pembibitan_id" class="form-label">Pembibitan</label>
                             <select name="pembibitan_id" id="pembibitan_id" class="form-select">
                                 <option value="">Semua Pembibitan</option>
-                                @foreach($pembibitans as $pembibitan)
-                                    <option value="{{ $pembibitan->id }}" {{ $pembibitanId == $pembibitan->id ? 'selected' : '' }}>
-                                        {{ $pembibitan->judul }}
+                                <?php $__currentLoopData = $pembibitans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pembibitan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($pembibitan->id); ?>" <?php echo e($pembibitanId == $pembibitan->id ? 'selected' : ''); ?>>
+                                        <?php echo e($pembibitan->judul); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
                             <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control" 
-                                   value="{{ $tanggalMulai }}">
+                                   value="<?php echo e($tanggalMulai); ?>">
                         </div>
                         <div class="col-md-3">
                             <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
                             <input type="date" name="tanggal_selesai" id="tanggal_selesai" class="form-control" 
-                                   value="{{ $tanggalSelesai }}">
+                                   value="<?php echo e($tanggalSelesai); ?>">
                         </div>
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-search"></i>
                                 Filter
                             </button>
-                            <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index') }}" class="btn btn-secondary">
+                            <a href="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index')); ?>" class="btn btn-secondary">
                                 <i class="bi bi-arrow-clockwise"></i>
                                 Reset
                             </a>
@@ -144,7 +145,7 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    @if($reports->count() > 0)
+                    <?php if($reports->count() > 0): ?>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead class="table-dark">
@@ -163,47 +164,48 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($reports as $index => $report)
+                                    <?php $__currentLoopData = $reports; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $report): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td class="text-center">{{ $index + 1 }}</td>
+                                            <td class="text-center"><?php echo e($index + 1); ?></td>
                                             <td>
-                                                <strong>{{ $report->nama_karyawan }}</strong>
+                                                <strong><?php echo e($report->nama_karyawan); ?></strong>
                                             </td>
                                             <td class="text-center">
-                                                {!! $report->tipe_karyawan_badge !!}
+                                                <?php echo $report->tipe_karyawan_badge; ?>
+
                                             </td>
-                                            <td>{{ $report->lokasi->nama_lokasi ?? '-' }}</td>
-                                            <td>{{ $report->kandang->nama_kandang ?? '-' }}</td>
-                                            <td>{{ $report->pembibitan->judul ?? '-' }}</td>
-                                            <td class="text-center">{{ $report->jml_hari_kerja }}</td>
-                                            <td class="text-end">{{ $report->gaji_pokok_formatted }}</td>
-                                            <td class="text-end">{{ $report->total_gaji_formatted }}</td>
-                                            <td class="text-center">{{ $report->periode }}</td>
+                                            <td><?php echo e($report->lokasi->nama_lokasi ?? '-'); ?></td>
+                                            <td><?php echo e($report->kandang->nama_kandang ?? '-'); ?></td>
+                                            <td><?php echo e($report->pembibitan->judul ?? '-'); ?></td>
+                                            <td class="text-center"><?php echo e($report->jml_hari_kerja); ?></td>
+                                            <td class="text-end"><?php echo e($report->gaji_pokok_formatted); ?></td>
+                                            <td class="text-end"><?php echo e($report->total_gaji_formatted); ?></td>
+                                            <td class="text-center"><?php echo e($report->periode); ?></td>
                                             <td class="text-center">
-                                                <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.show' : 'manager.salary-reports.show', $report) }}" 
+                                                <a href="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.show' : 'manager.salary-reports.show', $report)); ?>" 
                                                    class="btn btn-sm btn-info" title="Detail">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                                 <tfoot class="table-light">
                                     <tr>
                                         <th colspan="7" class="text-end">Total:</th>
-                                        <th class="text-end">{{ 'Rp ' . number_format($reports->sum('gaji_pokok'), 0, ',', '.') }}</th>
-                                        <th class="text-end">{{ 'Rp ' . number_format($reports->sum('total_gaji'), 0, ',', '.') }}</th>
+                                        <th class="text-end"><?php echo e('Rp ' . number_format($reports->sum('gaji_pokok'), 0, ',', '.')); ?></th>
+                                        <th class="text-end"><?php echo e('Rp ' . number_format($reports->sum('total_gaji'), 0, ',', '.')); ?></th>
                                         <th colspan="2"></th>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="alert alert-info text-center">
                             <i class="bi bi-info-circle"></i>
                             Tidak ada data laporan gaji untuk periode yang dipilih.
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -214,8 +216,8 @@
 <div class="modal fade" id="generateReportModal" tabindex="-1" aria-labelledby="generateReportModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.generate' : 'manager.salary-reports.generate') }}">
-                @csrf
+            <form method="POST" action="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.salary-reports.generate' : 'manager.salary-reports.generate')); ?>">
+                <?php echo csrf_field(); ?>
                 <div class="modal-header">
                     <h5 class="modal-title" id="generateReportModalLabel">Generate Laporan Gaji</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -228,7 +230,7 @@
                                    name="tahun" 
                                    id="generate_tahun" 
                                    class="form-control" 
-                                   value="{{ $tahun }}" 
+                                   value="<?php echo e($tahun); ?>" 
                                    min="2020" 
                                    max="2030"
                                    placeholder="Masukkan tahun"
@@ -238,36 +240,36 @@
                         <div class="col-md-6">
                             <label for="generate_bulan" class="form-label">Bulan</label>
                             <select name="bulan" id="generate_bulan" class="form-select" required>
-                                @foreach($availableMonths as $monthNum => $monthName)
-                                    <option value="{{ $monthNum }}" {{ $bulan == $monthNum ? 'selected' : '' }}>{{ $monthName }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $availableMonths; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $monthNum => $monthName): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($monthNum); ?>" <?php echo e($bulan == $monthNum ? 'selected' : ''); ?>><?php echo e($monthName); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="generate_lokasi_id" class="form-label">Lokasi (Opsional)</label>
                             <select name="lokasi_id" id="generate_lokasi_id" class="form-select">
                                 <option value="">Semua Lokasi</option>
-                                @foreach($lokasis as $lokasi)
-                                    <option value="{{ $lokasi->id }}">{{ $lokasi->nama_lokasi }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $lokasis; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lokasi): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($lokasi->id); ?>"><?php echo e($lokasi->nama_lokasi); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="generate_kandang_id" class="form-label">Kandang (Opsional)</label>
                             <select name="kandang_id" id="generate_kandang_id" class="form-select">
                                 <option value="">Semua Kandang</option>
-                                @foreach($kandangs as $kandang)
-                                    <option value="{{ $kandang->id }}">{{ $kandang->nama_kandang }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $kandangs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kandang): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($kandang->id); ?>"><?php echo e($kandang->nama_kandang); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="generate_pembibitan_id" class="form-label">Pembibitan (Opsional)</label>
                             <select name="pembibitan_id" id="generate_pembibitan_id" class="form-select">
                                 <option value="">Semua Pembibitan</option>
-                                @foreach($pembibitans as $pembibitan)
-                                    <option value="{{ $pembibitan->id }}">{{ $pembibitan->judul }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $pembibitans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pembibitan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($pembibitan->id); ?>"><?php echo e($pembibitan->judul); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -288,9 +290,9 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
 .real-time-info {
     background: rgba(0, 123, 255, 0.1);
@@ -314,13 +316,15 @@
     100% { opacity: 1; }
 }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
-// Production ready - no realtime requirements
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
+    // Production ready - no realtime requirements
     console.log('Salary Reports loaded successfully');
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\Managemen\resources\views/salary-reports/index.blade.php ENDPATH**/ ?>

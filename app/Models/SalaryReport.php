@@ -134,8 +134,19 @@ class SalaryReport extends Model
     public function scopeTanggalRange($query, $tanggalMulai, $tanggalSelesai)
     {
         if ($tanggalMulai && $tanggalSelesai) {
-            return $query->whereBetween('tanggal_mulai', [$tanggalMulai, $tanggalSelesai])
-                        ->orWhereBetween('tanggal_selesai', [$tanggalMulai, $tanggalSelesai]);
+            // Filter berdasarkan range tanggal yang overlap dengan periode laporan
+            return $query->where(function($q) use ($tanggalMulai, $tanggalSelesai) {
+                $q->whereBetween('tanggal_mulai', [$tanggalMulai, $tanggalSelesai])
+                  ->orWhereBetween('tanggal_selesai', [$tanggalMulai, $tanggalSelesai])
+                  ->orWhere(function($subQ) use ($tanggalMulai, $tanggalSelesai) {
+                      $subQ->where('tanggal_mulai', '<=', $tanggalMulai)
+                           ->where('tanggal_selesai', '>=', $tanggalSelesai);
+                  });
+            });
+        } elseif ($tanggalMulai) {
+            return $query->where('tanggal_selesai', '>=', $tanggalMulai);
+        } elseif ($tanggalSelesai) {
+            return $query->where('tanggal_mulai', '<=', $tanggalSelesai);
         }
         return $query;
     }

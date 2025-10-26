@@ -107,10 +107,8 @@ class AbsensiController extends Controller
                 $hasFilter = true;
             }
             
-            // Jika tidak ada filter yang dipilih, return empty result (kecuali untuk admin)
-            if (!$hasFilter && !$this->getCurrentUser()?->isAdmin()) {
-                $query->whereRaw('1 = 0'); // Force empty result
-            }
+            // Show all data by default - no need to force empty result
+            // This ensures consistency between local and hosting environments
             
             return DataTables::of($query)
                 ->addIndexColumn()
@@ -131,8 +129,18 @@ class AbsensiController extends Controller
                     return 'Karyawan Tidak Ditemukan';
                 })
                 ->addColumn('role_karyawan', function($absensi) {
-                    // Get role from employee relationship
-                    return $absensi->employee->jabatan ?? 'karyawan';
+                    // Get role from employee relationship safely
+                    if ($absensi->employee && $absensi->employee->jabatan) {
+                        $jabatan = $absensi->employee->jabatan;
+                        // Transform role names for display
+                        return match($jabatan) {
+                            'karyawan' => 'karyawan kandang',
+                            'karyawan_gudang' => 'karyawan gudang',
+                            'mandor' => 'mandor',
+                            default => $jabatan
+                        };
+                    }
+                    return 'karyawan kandang'; // Default fallback
                 })
                 ->addColumn('status_badge', function($absensi) {
                     $badgeClass = match($absensi->status) {
@@ -151,30 +159,35 @@ class AbsensiController extends Controller
                     return $absensi->tanggal->format('d/m/Y');
                 })
                 ->addColumn('lokasi_kerja', function($absensi) {
-                    // PRIORITAS 1: Ambil dari pembibitan yang dipilih
-                    if ($absensi->pembibitan_id) {
-                        $pembibitan = \App\Models\Pembibitan::with('lokasi')->find($absensi->pembibitan_id);
-                        if ($pembibitan && $pembibitan->lokasi) {
-                            return $pembibitan->lokasi->nama_lokasi;
+                    try {
+                        // PRIORITAS 1: Ambil dari pembibitan yang dipilih
+                        if ($absensi->pembibitan_id) {
+                            $pembibitan = \App\Models\Pembibitan::with('lokasi')->find($absensi->pembibitan_id);
+                            if ($pembibitan && $pembibitan->lokasi) {
+                                return $pembibitan->lokasi->nama_lokasi;
+                            }
                         }
-                    }
-                    
-                    // PRIORITAS 2: Ambil dari employee relationship (kandang -> lokasi)
-                    if ($absensi->employee_id) {
-                        $employee = Employee::with(['kandang.lokasi'])->find($absensi->employee_id);
-                        if ($employee && $employee->kandang && $employee->kandang->lokasi) {
-                            return $employee->kandang->lokasi->nama_lokasi;
+                        
+                        // PRIORITAS 2: Ambil dari employee relationship (kandang -> lokasi)
+                        if ($absensi->employee_id) {
+                            $employee = Employee::with(['kandang.lokasi'])->find($absensi->employee_id);
+                            if ($employee && $employee->kandang && $employee->kandang->lokasi) {
+                                return $employee->kandang->lokasi->nama_lokasi;
+                            }
                         }
+                        
+                        // PRIORITAS 3: Ambil dari stored data (jika tidak ada relasi)
+                        $storedLocation = $absensi->lokasi_kerja;
+                        if ($storedLocation && $storedLocation !== 'Kantor Pusat') {
+                            return $storedLocation;
+                        }
+                        
+                        // FALLBACK: Tampilkan dash jika tidak ada data valid
+                        return '-';
+                    } catch (\Exception $e) {
+                        // Fallback if any relationship fails
+                        return $absensi->lokasi_kerja ?? '-';
                     }
-                    
-                    // PRIORITAS 3: Ambil dari stored data (jika tidak ada relasi)
-                    $storedLocation = $absensi->lokasi_kerja;
-                    if ($storedLocation && $storedLocation !== 'Kantor Pusat') {
-                        return $storedLocation;
-                    }
-                    
-                    // FALLBACK: Tampilkan dash jika tidak ada data valid
-                    return '-';
                 })
                 ->addColumn('pembibitan_info', function($absensi) {
                     // Cari pembibitan berdasarkan relasi langsung (sesuai ERD)
@@ -185,14 +198,20 @@ class AbsensiController extends Controller
                         }
                     }
                     
-                    // Auto-detect pembibitan berdasarkan lokasi kerja dan kandang employee
+                    // Auto-detect pembibitan berdasarkan lokasi kerja dan kandang employee (safely)
                     if ($absensi->employee && $absensi->employee->kandang_id) {
-                        $pembibitan = \App\Models\Pembibitan::where('kandang_id', $absensi->employee->kandang_id)
-                            ->where('lokasi_id', $absensi->employee->kandang->lokasi_id)
-                            ->first();
-                        
-                        if ($pembibitan) {
-                            return '<span class="badge bg-info">' . $pembibitan->judul . '</span>';
+                        try {
+                            $employee = Employee::with(['kandang.lokasi'])->find($absensi->employee_id);
+                            if ($employee && $employee->kandang && $employee->kandang->lokasi) {
+                                $pembibitan = \App\Models\Pembibitan::where('kandang_id', $employee->kandang_id)
+                                    ->where('lokasi_id', $employee->kandang->lokasi_id)
+                                    ->first();
+                                if ($pembibitan) {
+                                    return '<span class="badge bg-info">' . $pembibitan->judul . '</span>';
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            // Fallback if relationship fails
                         }
                     }
                     
@@ -835,6 +854,151 @@ class AbsensiController extends Controller
         $allEmployees = $employees->concat($gudangEmployees);
         
         return response()->json($allEmployees);
+    }
+
+    /**
+     * Bulk store absensi records
+     */
+    public function bulkStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'tanggal' => 'required|date',
+                'employees' => 'required|array',
+                'employees.*.id' => 'required|string',
+                'employees.*.status' => 'required|in:full,setengah_hari',
+                'employees.*.pembibitan_id' => 'nullable|exists:pembibitans,id'
+            ]);
+
+            $tanggal = $request->tanggal;
+            $employees = $request->employees;
+            $successCount = 0;
+            $errors = [];
+
+            foreach ($employees as $employeeData) {
+                try {
+                        // Parse employee_id to get actual ID and source
+                        $employeeId = $employeeData['id'];
+                        $actualEmployeeId = null;
+                        $source = null;
+
+                        if (str_starts_with($employeeId, 'employee_')) {
+                            $actualEmployeeId = str_replace('employee_', '', $employeeId);
+                            $source = 'employee';
+                        } elseif (str_starts_with($employeeId, 'gudang_')) {
+                            $actualEmployeeId = str_replace('gudang_', '', $employeeId);
+                            $source = 'gudang';
+                        } elseif (str_starts_with($employeeId, 'mandor_')) {
+                            $actualEmployeeId = str_replace('mandor_', '', $employeeId);
+                            $source = 'mandor';
+                        } else {
+                            // If no prefix, assume it's a direct employee ID from frontend
+                            $actualEmployeeId = $employeeId;
+                            $source = 'employee';
+                        }
+
+                    // Get employee based on source
+                    $employee = null;
+                    if ($source === 'employee') {
+                        $employee = Employee::find($actualEmployeeId);
+                    } elseif ($source === 'gudang') {
+                        $gudang = \App\Models\Gudang::find($actualEmployeeId);
+                        if ($gudang) {
+                            $employee = (object) [
+                                'id' => 'gudang_' . $gudang->id,
+                                'nama' => $gudang->nama,
+                                'jabatan' => 'karyawan_gudang',
+                                'gaji_pokok' => $gudang->gaji,
+                                'lokasi_kerja' => 'Kantor Pusat'
+                            ];
+                        }
+                    } elseif ($source === 'mandor') {
+                        $mandor = \App\Models\Mandor::find($actualEmployeeId);
+                        if ($mandor) {
+                            $employee = (object) [
+                                'id' => 'mandor_' . $mandor->id,
+                                'nama' => $mandor->nama,
+                                'jabatan' => 'mandor',
+                                'gaji_pokok' => $mandor->gaji,
+                                'lokasi_kerja' => 'Kantor Pusat'
+                            ];
+                        }
+                    }
+                    
+                    if (!$employee) {
+                        $errors[] = "Karyawan dengan ID {$employeeId} tidak ditemukan";
+                        continue;
+                    }
+
+                    // Admin cannot create absensi for mandor employees
+                    if ($this->getCurrentUser()?->isAdmin() && $employee->jabatan === 'mandor') {
+                        $errors[] = "Admin tidak dapat membuat absensi untuk {$employee->nama} (mandor)";
+                        continue;
+                    }
+
+                    // Check for duplicate attendance on the same date
+                    $existingAbsensi = null;
+                    
+                    if ($source === 'employee') {
+                        $existingAbsensi = Absensi::where('employee_id', $actualEmployeeId)
+                            ->whereDate('tanggal', $tanggal)
+                            ->first();
+                    } else {
+                        // For gudang/mandor, check by name and date
+                        $existingAbsensi = Absensi::where('nama_karyawan', $employee->nama)
+                            ->whereDate('tanggal', $tanggal)
+                            ->first();
+                    }
+
+                    if ($existingAbsensi) {
+                        $errors[] = "Absensi untuk {$employee->nama} pada tanggal {$tanggal} sudah ada";
+                        continue;
+                    }
+
+                        // Create absensi record
+                        $absensiData = [
+                            'tanggal' => $tanggal,
+                            'status' => $employeeData['status'],
+                            'nama_karyawan' => $employee->nama,
+                            'gaji_pokok_saat_itu' => $employee->gaji_pokok,
+                            'gaji_hari_itu' => $employee->gaji_pokok,
+                            'lokasi_kerja' => $employee->lokasi_kerja ?? 'Kantor Pusat',
+                            'pembibitan_id' => $employeeData['pembibitan_id'] ?? null,
+                        ];
+
+                    if ($source === 'employee') {
+                        $absensiData['employee_id'] = $actualEmployeeId;
+                        $absensiData['kandang_id'] = $employee->kandang_id ?? null;
+                    }
+
+                    Absensi::create($absensiData);
+                    $successCount++;
+
+                } catch (\Exception $e) {
+                    $errors[] = "Error untuk {$employeeData['id']}: " . $e->getMessage();
+                }
+            }
+
+            $message = "Berhasil menyimpan {$successCount} absensi";
+            if (!empty($errors)) {
+                $message .= ". Error: " . implode(', ', $errors);
+            }
+
+            return response()->json([
+                'success' => $successCount > 0,
+                'message' => $message,
+                'success_count' => $successCount,
+                'errors' => $errors
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Bulk store absensi error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan absensi: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

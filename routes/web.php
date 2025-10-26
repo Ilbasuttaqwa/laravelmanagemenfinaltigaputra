@@ -59,6 +59,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('absensis/get-salary/{employeeId}', [AbsensiController::class, 'getSalary'])->name('absensis.get-salary');
     Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
     Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
+    Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
     Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
     
     Route::get('system/monitor', [App\Http\Controllers\SystemMonitorController::class, 'dashboard'])->name('system.monitor');
@@ -118,6 +119,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
     Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
     Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
+    Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
     Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
     
     
