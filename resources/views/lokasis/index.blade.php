@@ -79,7 +79,9 @@
                                             </a>
                                             @if(auth()->user()->isManager())
                                                 <button type="button" class="btn btn-danger btn-sm"
-                                                        onclick="confirmDelete({{ $lokasi->id }}, '{{ $lokasi->nama_lokasi }}')" title="Hapus">
+                                                        data-lokasi-id="{{ $lokasi->id }}"
+                                                        data-lokasi-name="{{ $lokasi->nama_lokasi }}"
+                                                        onclick="confirmDelete(this)" title="Hapus">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             @endif
@@ -175,7 +177,9 @@
     </div>
 
     <script>
-        function confirmDelete(lokasiId, lokasiName) {
+        function confirmDelete(button) {
+            const lokasiId = button.getAttribute('data-lokasi-id');
+            const lokasiName = button.getAttribute('data-lokasi-name');
             const deleteForm = document.getElementById('deleteForm');
             const lokasiNameToDelete = document.getElementById('lokasiNameToDelete');
             const baseUrl = "{{ url('/') }}";

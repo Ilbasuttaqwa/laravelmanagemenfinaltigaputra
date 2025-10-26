@@ -39,7 +39,7 @@
                     <label for="employee_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
                     <select class="form-control @error('employee_id') is-invalid @enderror"
                             id="employee_id" name="employee_id" required>
-                        <option value="">Pilih Pembibitan terlebih dahulu untuk melihat karyawan</option>
+                        <option value="">Pilih Karyawan</option>
                         @if(isset($allEmployees) && $allEmployees->count() > 0)
                             @foreach($allEmployees as $employee)
                                 <option value="{{ $employee->id }}" 
@@ -51,7 +51,7 @@
                                 </option>
                             @endforeach
                         @else
-                            <option value="" disabled>Pilih Pembibitan terlebih dahulu untuk memuat data karyawan</option>
+                            <option value="" disabled>Tidak ada data karyawan</option>
                         @endif
                     </select>
                     

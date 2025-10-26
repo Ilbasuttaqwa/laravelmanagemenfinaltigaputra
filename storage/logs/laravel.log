@@ -723,3 +723,5 @@
 #29 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #30 {main}
 "} 
+[2025-10-26 15:06:45] local.INFO: Employee data refreshed {"employees":["ani","sakri"],"gudangs":["ani"],"mandors":[]} 
+[2025-10-26 15:34:57] local.INFO: Auto-cleanup: Deleted 2 absensi records older than 1 days  

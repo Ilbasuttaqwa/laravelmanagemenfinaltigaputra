@@ -435,8 +435,25 @@ class AbsensiController extends Controller
         // Force fresh database connection
         DB::purge();
         
-        // Start with empty employees - data will be loaded via AJAX when pembibitan is selected
-        $employees = collect();
+        // Get employees from employees table with fresh query - NO CACHE
+        // Force fresh query without any cache
+        $query = Employee::orderBy('nama');
+        
+        // Admin can only see karyawan (not mandor)
+        if ($this->getCurrentUser()?->isAdmin()) {
+            $query->where('jabatan', 'karyawan');
+        }
+        
+        // Force fresh query execution
+        $employees = $query->get();
+        
+        // Log for debugging - check if we have latest data
+        Log::info('Fresh employee query executed', [
+            'query_sql' => $query->toSql(),
+            'query_bindings' => $query->getBindings(),
+            'result_count' => $employees->count(),
+            'latest_employee' => $employees->sortByDesc('created_at')->first()?->nama ?? 'No employees'
+        ]);
         
         // Log for debugging
         Log::info('Employee data loaded in create method', [

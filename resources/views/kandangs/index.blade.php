@@ -80,7 +80,7 @@
                                         </a>
                                             @if(auth()->user()->isManager())
                                                 <button type="button" class="btn btn-danger btn-sm"
-                                                        onclick="confirmDelete({{ $kandang->id }}, '{{ $kandang->nama_kandang }}')" title="Hapus">
+                                                        data-item-id="{{ $kandang->id }}" data-item-name="{{ $kandang-&gt;nama_kandang }}" onclick="confirmDelete(this)" title="Hapus">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             @endif
@@ -177,7 +177,7 @@
 </div>
 
 <script>
-    function confirmDelete(kandangId, kandangName) {
+    function confirmDelete(button) {
         const deleteForm = document.getElementById('deleteForm');
         const kandangNameToDelete = document.getElementById('kandangNameToDelete');
         const baseUrl = "{{ url('/') }}";

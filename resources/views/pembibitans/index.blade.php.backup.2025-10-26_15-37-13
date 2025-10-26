@@ -96,7 +96,7 @@
                                         </a>
                                         @if(auth()->user()->isManager())
                                         <button type="button" class="btn btn-danger btn-sm"
-                                                data-item-id="{{ $pembibitan->id }}" data-item-name="{{ $pembibitan-&gt;judul }}" onclick="confirmDelete(this)" title="Hapus">
+                                                onclick="confirmDelete({{ $pembibitan->id }}, '{{ $pembibitan->judul }}')" title="Hapus">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                         @endif
@@ -182,7 +182,7 @@
 
 @push('scripts')
 <script>
-    function confirmDelete(button) {
+    function confirmDelete(id, name) {
         document.getElementById('pembibitanName').textContent = name;
         document.getElementById('deleteForm').action = '{{ route("manager.pembibitans.destroy", ":id") }}'.replace(':id', id);
         
