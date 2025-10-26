@@ -44,7 +44,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
                             id="employee_id" name="employee_id" required>
-                        <option value="">Pilih Karyawan</option>
+                        <option value="">Pilih Pembibitan terlebih dahulu untuk melihat karyawan</option>
                         <?php if(isset($allEmployees) && $allEmployees->count() > 0): ?>
                             <?php $__currentLoopData = $allEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($employee->id); ?>" 
@@ -56,7 +56,7 @@ unset($__errorArgs, $__bag); ?>"
                                 </option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         <?php else: ?>
-                            <option value="" disabled>Data karyawan tidak tersedia. Silakan refresh halaman.</option>
+                            <option value="" disabled>Pilih Pembibitan terlebih dahulu untuk memuat data karyawan</option>
                         <?php endif; ?>
                     </select>
                     
@@ -437,9 +437,66 @@ function checkAndRefreshEmployeeData() {
     }
 }
 
-// Check on page load
+// Load employees when pembibitan is selected
+function loadEmployeesByPembibitan(pembibitanId) {
+    if (!pembibitanId) {
+        // Clear employee dropdown if no pembibitan selected
+        const employeeSelect = document.getElementById('employee_id');
+        employeeSelect.innerHTML = '<option value="">Pilih Pembibitan terlebih dahulu untuk melihat karyawan</option>';
+        return;
+    }
+    
+    // Show loading state
+    const employeeSelect = document.getElementById('employee_id');
+    employeeSelect.innerHTML = '<option value="">Memuat data karyawan...</option>';
+    employeeSelect.disabled = true;
+    
+    // Fetch employees based on pembibitan
+    fetch(`<?php echo e(route(auth()->user()->isManager() ? 'manager.absensis.get-employees' : 'admin.absensis.get-employees')); ?>?pembibitan_id=${pembibitanId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.employees) {
+                // Clear and populate employee dropdown
+                employeeSelect.innerHTML = '<option value="">Pilih Karyawan</option>';
+                
+                data.employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.setAttribute('data-jabatan', employee.jabatan);
+                    option.setAttribute('data-gaji', employee.gaji_pokok);
+                    option.setAttribute('data-source', employee.source || 'unknown');
+                    
+                    const roleText = employee.jabatan === 'karyawan' ? 'karyawan kandang' : employee.jabatan;
+                    option.textContent = `${employee.nama} (${roleText})`;
+                    
+                    employeeSelect.appendChild(option);
+                });
+                
+                employeeSelect.disabled = false;
+                console.log('✅ Employees loaded for pembibitan:', pembibitanId);
+            } else {
+                employeeSelect.innerHTML = '<option value="">Tidak ada karyawan ditemukan untuk pembibitan ini</option>';
+                employeeSelect.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading employees:', error);
+            employeeSelect.innerHTML = '<option value="">Error memuat data karyawan</option>';
+            employeeSelect.disabled = false;
+        });
+}
+
+// Add event listener for pembibitan change
 document.addEventListener('DOMContentLoaded', function() {
     checkAndRefreshEmployeeData();
+    
+    // Add event listener for pembibitan selection
+    const pembibitanSelect = document.getElementById('pembibitan_id');
+    if (pembibitanSelect) {
+        pembibitanSelect.addEventListener('change', function() {
+            loadEmployeesByPembibitan(this.value);
+        });
+    }
 });
 </script>
 <?php $__env->stopPush(); ?>

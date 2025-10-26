@@ -663,16 +663,7 @@ $(document).ready(function() {
         // Clear all filter inputs
         $('#tanggal_filter').val('');
         $('#bibit_filter').val('');
-        
-        // Clear DataTables and reload with empty parameters
-        const table = $('#absensiTable').DataTable();
-        table.clear().draw();
-        
-        // Reload with empty parameters to trigger server-side empty result
-        table.ajax.url('{{ route(auth()->user()->isManager() ? "manager.absensis.index" : "admin.absensis.index") }}').load();
-        
-        // Show message that data is cleared
-        console.log('✅ Filters cleared, data table emptied');
+        $('#absensiTable').DataTable().ajax.reload();
     });
     
     // Real-time refresh master data

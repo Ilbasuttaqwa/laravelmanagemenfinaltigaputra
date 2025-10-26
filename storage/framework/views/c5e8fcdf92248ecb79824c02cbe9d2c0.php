@@ -663,12 +663,9 @@ $(document).ready(function() {
         $('#tanggal_filter').val('');
         $('#bibit_filter').val('');
         
-        // Clear DataTables and reload with empty parameters
+        // Clear DataTables and show empty state
         const table = $('#absensiTable').DataTable();
         table.clear().draw();
-        
-        // Reload with empty parameters to trigger server-side empty result
-        table.ajax.url('<?php echo e(route(auth()->user()->isManager() ? "manager.absensis.index" : "admin.absensis.index")); ?>').load();
         
         // Show message that data is cleared
         console.log('✅ Filters cleared, data table emptied');

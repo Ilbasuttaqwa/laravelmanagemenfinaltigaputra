@@ -435,15 +435,8 @@ class AbsensiController extends Controller
         // Force fresh database connection
         DB::purge();
         
-        // Get employees from employees table with fresh query - NO CACHE
-        $query = Employee::orderBy('nama');
-        
-        // Admin can only see karyawan (not mandor)
-        if ($this->getCurrentUser()?->isAdmin()) {
-            $query->where('jabatan', 'karyawan');
-        }
-        
-        $employees = $query->get();
+        // Start with empty employees - data will be loaded via AJAX when pembibitan is selected
+        $employees = collect();
         
         // Log for debugging
         Log::info('Employee data loaded in create method', [
