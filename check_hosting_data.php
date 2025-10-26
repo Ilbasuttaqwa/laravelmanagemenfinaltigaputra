@@ -1,99 +1,83 @@
 <?php
 /**
- * Script untuk mengecek data di hosting
- * Jalankan di hosting untuk debugging error HTTP 409
+ * Script untuk check data di hosting
+ * Jalankan script ini untuk melihat kondisi data saat ini
  */
 
-require_once 'vendor/autoload.php';
+echo "=== CHECKING HOSTING DATA ===\n";
 
-// Load Laravel application
-$app = require_once 'bootstrap/app.php';
-$app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
-
-use App\Models\Absensi;
-use App\Models\Gudang;
-use App\Models\Employee;
-use Illuminate\Support\Facades\DB;
-
-echo "=== CEK DATA HOSTING ===\n\n";
-
+// Bootstrap Laravel
+echo "1. Bootstrapping Laravel...\n";
 try {
-    // 1. Cek data gudang
-    echo "1. Data Gudang:\n";
-    $gudangs = Gudang::all();
-    foreach ($gudangs as $gudang) {
-        echo "- ID: {$gudang->id}, Nama: {$gudang->nama}, Gaji: {$gudang->gaji}\n";
-    }
-    echo "\n";
-    
-    // 2. Cek data employee
-    echo "2. Data Employee:\n";
-    $employees = Employee::all();
-    foreach ($employees as $emp) {
-        echo "- ID: {$emp->id}, Nama: {$emp->nama}, Jabatan: {$emp->jabatan}\n";
-    }
-    echo "\n";
-    
-    // 3. Cek data absensi terbaru
-    echo "3. Data Absensi Terbaru (10 record):\n";
-    $absensis = Absensi::orderBy('created_at', 'desc')->limit(10)->get();
-    foreach ($absensis as $abs) {
-        echo "- ID: {$abs->id}, Nama: {$abs->nama_karyawan}, Tanggal: {$abs->tanggal}, Status: {$abs->status}\n";
-    }
-    echo "\n";
-    
-    // 4. Cek data absensi untuk budi
-    echo "4. Data Absensi untuk 'budi':\n";
-    $budiAbsensi = Absensi::where('nama_karyawan', 'budi')->get();
-    foreach ($budiAbsensi as $abs) {
-        echo "- ID: {$abs->id}, Tanggal: {$abs->tanggal}, Status: {$abs->status}, Created: {$abs->created_at}\n";
-    }
-    echo "\n";
-    
-    // 5. Cek data absensi untuk tanggal 2025-10-01
-    echo "5. Data Absensi untuk tanggal 2025-10-01:\n";
-    $absensiTanggal = Absensi::whereDate('tanggal', '2025-10-01')->get();
-    foreach ($absensiTanggal as $abs) {
-        echo "- ID: {$abs->id}, Nama: {$abs->nama_karyawan}, Status: {$abs->status}\n";
-    }
-    echo "\n";
-    
-    // 6. Cek duplicate berdasarkan nama dan tanggal
-    echo "6. Cek Duplicate berdasarkan nama dan tanggal:\n";
-    $duplicates = DB::select("
-        SELECT nama_karyawan, tanggal, COUNT(*) as count 
-        FROM absensis 
-        GROUP BY nama_karyawan, tanggal 
-        HAVING COUNT(*) > 1
-    ");
-    
-    if (count($duplicates) > 0) {
-        foreach ($duplicates as $dup) {
-            echo "- {$dup->nama_karyawan} pada {$dup->tanggal} ({$dup->count} records)\n";
-        }
-    } else {
-        echo "Tidak ada duplicate ditemukan.\n";
-    }
-    echo "\n";
-    
-    // 7. Cek constraint unique
-    echo "7. Cek Constraint Unique:\n";
-    $constraints = DB::select("
-        SELECT CONSTRAINT_NAME, COLUMN_NAME 
-        FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-        WHERE TABLE_NAME = 'absensis' 
-        AND CONSTRAINT_SCHEMA = DATABASE()
-        AND CONSTRAINT_NAME != 'PRIMARY'
-    ");
-    
-    foreach ($constraints as $constraint) {
-        echo "- {$constraint->CONSTRAINT_NAME} pada {$constraint->COLUMN_NAME}\n";
-    }
-    echo "\n";
-    
-    echo "=== CEK SELESAI ===\n";
-    
+    require_once 'vendor/autoload.php';
+    $app = require_once 'bootstrap/app.php';
+    $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+    echo "   ✓ Laravel bootstrapped successfully\n";
 } catch (Exception $e) {
-    echo "ERROR: " . $e->getMessage() . "\n";
-    echo "Stack trace:\n" . $e->getTraceAsString() . "\n";
+    echo "   ❌ Bootstrap error: " . $e->getMessage() . "\n";
+    exit(1);
 }
+
+// Check employees
+echo "\n2. Checking employees...\n";
+try {
+    $employees = \App\Models\Employee::all();
+    echo "   Total employees: " . $employees->count() . "\n";
+    
+    foreach ($employees as $employee) {
+        $kandangName = $employee->kandang ? $employee->kandang->nama_kandang : 'NULL';
+        $lokasiName = $employee->kandang && $employee->kandang->lokasi ? $employee->kandang->lokasi->nama_lokasi : 'NULL';
+        echo "   - {$employee->nama} ({$employee->jabatan}): Kandang={$kandangName}, Lokasi={$lokasiName}\n";
+    }
+} catch (Exception $e) {
+    echo "   ⚠ Error checking employees: " . $e->getMessage() . "\n";
+}
+
+// Check pembibitans
+echo "\n3. Checking pembibitans...\n";
+try {
+    $pembibitans = \App\Models\Pembibitan::all();
+    echo "   Total pembibitans: " . $pembibitans->count() . "\n";
+    
+    foreach ($pembibitans as $pembibitan) {
+        $lokasiName = $pembibitan->lokasi ? $pembibitan->lokasi->nama_lokasi : 'NULL';
+        $kandangName = $pembibitan->kandang ? $pembibitan->kandang->nama_kandang : 'NULL';
+        echo "   - {$pembibitan->judul}: Lokasi={$lokasiName}, Kandang={$kandangName}\n";
+    }
+} catch (Exception $e) {
+    echo "   ⚠ Error checking pembibitans: " . $e->getMessage() . "\n";
+}
+
+// Check absensis
+echo "\n4. Checking absensis...\n";
+try {
+    $absensis = \App\Models\Absensi::whereBetween('tanggal', ['2025-10-01', '2025-10-31'])->get();
+    echo "   Total absensis in October 2025: " . $absensis->count() . "\n";
+    
+    foreach ($absensis as $absensi) {
+        $employeeName = $absensi->employee ? $absensi->employee->nama : 'NULL';
+        $pembibitanName = $absensi->pembibitan ? $absensi->pembibitan->judul : 'NULL';
+        $kandangName = $absensi->kandang ? $absensi->kandang->nama_kandang : 'NULL';
+        echo "   - {$employeeName} on {$absensi->tanggal}: Pembibitan={$pembibitanName}, Kandang={$kandangName}\n";
+    }
+} catch (Exception $e) {
+    echo "   ⚠ Error checking absensis: " . $e->getMessage() . "\n";
+}
+
+// Check salary reports
+echo "\n5. Checking salary reports...\n";
+try {
+    $reports = \App\Models\SalaryReport::where('tahun', 2025)->where('bulan', 10)->get();
+    echo "   Total salary reports for October 2025: " . $reports->count() . "\n";
+    
+    foreach ($reports as $report) {
+        $lokasiName = $report->lokasi ? $report->lokasi->nama_lokasi : 'NULL';
+        $kandangName = $report->kandang ? $report->kandang->nama_kandang : 'NULL';
+        $pembibitanName = $report->pembibitan ? $report->pembibitan->judul : 'NULL';
+        echo "   - {$report->nama_karyawan}: Lokasi={$lokasiName}, Kandang={$kandangName}, Pembibitan={$pembibitanName}\n";
+    }
+} catch (Exception $e) {
+    echo "   ⚠ Error checking salary reports: " . $e->getMessage() . "\n";
+}
+
+echo "\n=== DATA CHECK COMPLETED ===\n";
