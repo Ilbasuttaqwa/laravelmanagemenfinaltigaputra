@@ -10,6 +10,7 @@ use App\Models\Kandang;
 use App\Models\Pembibitan;
 use App\Models\Absensi;
 use App\Models\User;
+use App\Services\AutoSyncService;
 use Carbon\Carbon;
 
 class SalaryReportController extends Controller
@@ -24,6 +25,10 @@ class SalaryReportController extends Controller
     }
     public function index(Request $request)
     {
+        // Auto-sync logic (runs automatically, no manual intervention needed)
+        AutoSyncService::syncSalaryReports();
+        AutoSyncService::clearCacheIfNeeded();
+        
         $tahun = $request->get('tahun', Carbon::now()->year);
         $bulan = $request->get('bulan', Carbon::now()->month);
         $tipe = $request->get('tipe', 'all');
