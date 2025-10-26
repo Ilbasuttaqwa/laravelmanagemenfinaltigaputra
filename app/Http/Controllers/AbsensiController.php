@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Services\SmartCacheService;
 use Yajra\DataTables\Facades\DataTables;
 
 class AbsensiController extends Controller
@@ -44,15 +45,8 @@ class AbsensiController extends Controller
      */
     public function index(Request $request)
     {
-        // Clear ALL caches untuk memastikan data fresh
-        Cache::flush();
-        
-        // Clear specific caches
-        Cache::forget('lokasis_data');
-        Cache::forget('kandangs_data');
-        Cache::forget('pembibitans_data');
-        Cache::forget('gudangs_data');
-        Cache::forget('employees_data');
+        // Smart cache management
+        SmartCacheService::clearByPattern('absensis_*');
         
         // Force fresh data - disable query caching
         $employees = Employee::where('jabatan', 'karyawan')

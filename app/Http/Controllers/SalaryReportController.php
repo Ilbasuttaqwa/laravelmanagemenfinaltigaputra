@@ -41,13 +41,10 @@ class SalaryReportController extends Controller
         // Cek apakah ada filter yang dipilih
         $hasFilter = $lokasiId || $kandangId || $pembibitanId || $tanggalMulai || $tanggalSelesai || ($tipe !== 'all');
         
-        if (!$hasFilter) {
-            // Jika tidak ada filter, tampilkan tabel kosong
-            $reports = collect();
-        } else {
-            $query = SalaryReport::periode($tahun, $bulan)
-                ->tipeKaryawan($tipe)
-                ->tanggalRange($tanggalMulai, $tanggalSelesai);
+        // Selalu tampilkan data berdasarkan periode yang dipilih
+        $query = SalaryReport::periode($tahun, $bulan)
+            ->tipeKaryawan($tipe)
+            ->tanggalRange($tanggalMulai, $tanggalSelesai);
                 
             // Filter lokasi dan kandang berdasarkan pembibitan yang dipilih
             if ($pembibitanId) {
@@ -77,12 +74,11 @@ class SalaryReportController extends Controller
                 }
             }
             
-            $reports = $query->orderBy('nama_karyawan')->get();
-            
-            // Admin can only see salary reports for karyawan (not mandor)
-            if ($this->getCurrentUser()?->isAdmin()) {
-                $reports = $reports->where('tipe_karyawan', 'karyawan');
-            }
+        $reports = $query->orderBy('nama_karyawan')->get();
+        
+        // Admin can only see salary reports for karyawan (not mandor)
+        if ($this->getCurrentUser()?->isAdmin()) {
+            $reports = $reports->where('tipe_karyawan', 'karyawan');
         }
 
         // Get filter options
@@ -204,6 +200,22 @@ class SalaryReportController extends Controller
         foreach ($employees as $employee) {
             $this->createSalaryReport($employee, $employee->jabatan, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
         }
+
+        // Generate reports for gudang employees (karyawan_gudang)
+        if ($this->getCurrentUser()?->isManager()) {
+            $gudangs = \App\Models\Gudang::all();
+            foreach ($gudangs as $gudang) {
+                $this->createSalaryReportForGudang($gudang, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
+            }
+        }
+
+        // Generate reports for mandor employees
+        if ($this->getCurrentUser()?->isManager()) {
+            $mandors = \App\Models\Mandor::all();
+            foreach ($mandors as $mandor) {
+                $this->createSalaryReportForMandor($mandor, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
+            }
+        }
     }
 
     private function createSalaryReport($employee, $tipe, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai)
@@ -276,6 +288,146 @@ class SalaryReportController extends Controller
             'pembibitan_id' => $pembibitan?->id,
             'nama_karyawan' => $employee->nama,
             'tipe_karyawan' => $tipe,
+            'gaji_pokok' => $gajiSaatIni, // Gaji saat ini (berdasarkan hari kerja)
+            'gaji_pokok_bulanan' => $gajiPokokBulanan, // Gaji pokok bulanan dari master data
+            'jml_hari_kerja' => $jmlHariKerja,
+            'total_gaji' => $totalGaji,
+            'tanggal_mulai' => $startDate,
+            'tanggal_selesai' => $endDate,
+            'tahun' => $tahun,
+            'bulan' => $bulan,
+        ]);
+    }
+
+    private function createSalaryReportForGudang($gudang, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai)
+    {
+        // Calculate working days from attendance
+        $startDate = $tanggalMulai ?? Carbon::create($tahun, $bulan, 1);
+        $endDate = $tanggalSelesai ?? Carbon::create($tahun, $bulan)->endOfMonth();
+
+        $attendanceQuery = Absensi::where('nama_karyawan', $gudang->nama)
+            ->whereBetween('tanggal', [$startDate, $endDate]);
+
+        $attendances = $attendanceQuery->get();
+        $jmlHariKerja = $attendances->where('status', 'full')->count() + 
+                       ($attendances->where('status', 'setengah_hari')->count() * 0.5);
+
+        // Calculate salary components
+        $gajiPokokBulanan = $gudang->gaji; // Gaji pokok bulanan dari master data gudang
+        
+        // LOGIKA YANG BENAR: Gaji harian tetap (bukan dibagi hari kerja dalam bulan)
+        $gajiHarianFull = $gajiPokokBulanan / 30; // Gaji harian full day (30 hari per bulan)
+        $gajiHarianSetengah = $gajiHarianFull / 2; // Gaji harian setengah hari
+        
+        // Hitung gaji saat ini berdasarkan status absensi
+        $gajiSaatIni = 0;
+        foreach ($attendances as $attendance) {
+            if ($attendance->status === 'full') {
+                $gajiSaatIni += $gajiHarianFull;
+            } elseif ($attendance->status === 'setengah_hari') {
+                $gajiSaatIni += $gajiHarianSetengah;
+            }
+        }
+        
+        $totalGaji = $gajiSaatIni; // Total gaji = gaji saat ini
+
+        // Get pembibitan from gudang's recent attendance records
+        $pembibitan = null;
+        $lokasi = null;
+        $kandang = null;
+        
+        $recentAttendance = Absensi::where('nama_karyawan', $gudang->nama)
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->orderBy('tanggal', 'desc')
+            ->first();
+            
+        if ($recentAttendance && $recentAttendance->pembibitan_id) {
+            $pembibitan = \App\Models\Pembibitan::find($recentAttendance->pembibitan_id);
+            
+            // SELALU ambil lokasi dan kandang dari pembibitan jika ada
+            if ($pembibitan) {
+                $lokasi = $pembibitan->lokasi;
+                $kandang = $pembibitan->kandang;
+            }
+        }
+
+        SalaryReport::create([
+            'employee_id' => null, // Gudang tidak ada employee_id
+            'lokasi_id' => $lokasi?->id,
+            'kandang_id' => $kandang?->id,
+            'pembibitan_id' => $pembibitan?->id,
+            'nama_karyawan' => $gudang->nama,
+            'tipe_karyawan' => 'karyawan_gudang',
+            'gaji_pokok' => $gajiSaatIni, // Gaji saat ini (berdasarkan hari kerja)
+            'gaji_pokok_bulanan' => $gajiPokokBulanan, // Gaji pokok bulanan dari master data
+            'jml_hari_kerja' => $jmlHariKerja,
+            'total_gaji' => $totalGaji,
+            'tanggal_mulai' => $startDate,
+            'tanggal_selesai' => $endDate,
+            'tahun' => $tahun,
+            'bulan' => $bulan,
+        ]);
+    }
+
+    private function createSalaryReportForMandor($mandor, $tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai)
+    {
+        // Calculate working days from attendance
+        $startDate = $tanggalMulai ?? Carbon::create($tahun, $bulan, 1);
+        $endDate = $tanggalSelesai ?? Carbon::create($tahun, $bulan)->endOfMonth();
+
+        $attendanceQuery = Absensi::where('nama_karyawan', $mandor->nama)
+            ->whereBetween('tanggal', [$startDate, $endDate]);
+
+        $attendances = $attendanceQuery->get();
+        $jmlHariKerja = $attendances->where('status', 'full')->count() + 
+                       ($attendances->where('status', 'setengah_hari')->count() * 0.5);
+
+        // Calculate salary components
+        $gajiPokokBulanan = $mandor->gaji; // Gaji pokok bulanan dari master data mandor
+        
+        // LOGIKA YANG BENAR: Gaji harian tetap (bukan dibagi hari kerja dalam bulan)
+        $gajiHarianFull = $gajiPokokBulanan / 30; // Gaji harian full day (30 hari per bulan)
+        $gajiHarianSetengah = $gajiHarianFull / 2; // Gaji harian setengah hari
+        
+        // Hitung gaji saat ini berdasarkan status absensi
+        $gajiSaatIni = 0;
+        foreach ($attendances as $attendance) {
+            if ($attendance->status === 'full') {
+                $gajiSaatIni += $gajiHarianFull;
+            } elseif ($attendance->status === 'setengah_hari') {
+                $gajiSaatIni += $gajiHarianSetengah;
+            }
+        }
+        
+        $totalGaji = $gajiSaatIni; // Total gaji = gaji saat ini
+
+        // Get pembibitan from mandor's recent attendance records
+        $pembibitan = null;
+        $lokasi = null;
+        $kandang = null;
+        
+        $recentAttendance = Absensi::where('nama_karyawan', $mandor->nama)
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->orderBy('tanggal', 'desc')
+            ->first();
+            
+        if ($recentAttendance && $recentAttendance->pembibitan_id) {
+            $pembibitan = \App\Models\Pembibitan::find($recentAttendance->pembibitan_id);
+            
+            // SELALU ambil lokasi dan kandang dari pembibitan jika ada
+            if ($pembibitan) {
+                $lokasi = $pembibitan->lokasi;
+                $kandang = $pembibitan->kandang;
+            }
+        }
+
+        SalaryReport::create([
+            'employee_id' => null, // Mandor tidak ada employee_id
+            'lokasi_id' => $lokasi?->id,
+            'kandang_id' => $kandang?->id,
+            'pembibitan_id' => $pembibitan?->id,
+            'nama_karyawan' => $mandor->nama,
+            'tipe_karyawan' => 'mandor',
             'gaji_pokok' => $gajiSaatIni, // Gaji saat ini (berdasarkan hari kerja)
             'gaji_pokok_bulanan' => $gajiPokokBulanan, // Gaji pokok bulanan dari master data
             'jml_hari_kerja' => $jmlHariKerja,
