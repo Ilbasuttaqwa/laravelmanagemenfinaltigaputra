@@ -637,64 +637,7 @@ $(document).ready(function() {
                 previous: "Sebelumnya"
             }
         },
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'excel',
-                text: '<i class="bi bi-file-excel"></i> Excel',
-                className: 'btn btn-success',
-                title: 'Master Absensi & Kalender',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
-                    format: {
-                        body: function (data, row, column, node) {
-                            return data.replace(/<[^>]*>/g, '');
-                        }
-                    }
-                }
-            },
-            {
-                extend: 'pdf',
-                text: '<i class="bi bi-file-pdf"></i> PDF',
-                className: 'btn btn-danger',
-                title: 'Master Absensi & Kalender',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
-                    format: {
-                        body: function (data, row, column, node) {
-                            return data.replace(/<[^>]*>/g, '');
-                        }
-                    }
-                }
-            },
-            {
-                extend: 'print',
-                text: '<i class="bi bi-printer"></i> Print',
-                className: 'btn btn-info',
-                title: 'Master Absensi & Kalender',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
-                    format: {
-                        body: function (data, row, column, node) {
-                            return data.replace(/<[^>]*>/g, '');
-                        }
-                    }
-                }
-            },
-            {
-                extend: 'copy',
-                text: '<i class="bi bi-clipboard"></i> Copy',
-                className: 'btn btn-secondary',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
-                    format: {
-                        body: function (data, row, column, node) {
-                            return data.replace(/<[^>]*>/g, '');
-                        }
-                    }
-                }
-            }
-        ],
+        dom: 'frtip',
         responsive: true,
         scrollX: true,
         autoWidth: false,
@@ -717,9 +660,19 @@ $(document).ready(function() {
     
     // Reset functionality
     $('#resetBtn').on('click', function() {
+        // Clear all filter inputs
         $('#tanggal_filter').val('');
         $('#bibit_filter').val('');
-        $('#absensiTable').DataTable().ajax.reload();
+        
+        // Clear DataTables and show empty state
+        const table = $('#absensiTable').DataTable();
+        table.clear().draw();
+        
+        // Force reload with empty parameters to clear server-side data
+        table.ajax.url('{{ route(auth()->user()->isManager() ? "manager.absensis.index" : "admin.absensis.index") }}?clear=1').load();
+        
+        // Show message that data is cleared
+        console.log('✅ Filters cleared, data table emptied');
     });
     
     // Real-time refresh master data

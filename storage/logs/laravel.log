@@ -638,3 +638,7 @@
 #11 C:\\laragon\\www\\Managemen\\check_employee_gaji.php(11): Illuminate\\Database\\Eloquent\\Model::all(Array)
 #12 {main}
 "} 
+[2025-10-26 13:15:05] local.INFO: Employee data loaded in create method {"count":0,"employees":[]} 
+[2025-10-26 13:15:05] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":1} 
+[2025-10-26 13:15:05] local.INFO: Gudang employees created {"count":1,"employees":["ani"]} 
+[2025-10-26 13:15:05] local.INFO: Final allEmployees data {"total_count":1,"gudang_count":1,"employee_count":0,"mandor_count":0,"all_employees":["ani"]} 

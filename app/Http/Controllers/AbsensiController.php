@@ -433,15 +433,8 @@ class AbsensiController extends Controller
         // Force fresh database connection
         DB::purge();
         
-        // Get employees from employees table with fresh query - NO CACHE
-        $query = Employee::orderBy('nama');
-        
-        // Admin can only see karyawan (not mandor)
-        if ($this->getCurrentUser()?->isAdmin()) {
-            $query->where('jabatan', 'karyawan');
-        }
-        
-        $employees = $query->get();
+        // Start with empty employees - data will be loaded via AJAX when pembibitan is selected
+        $employees = collect();
         
         // Log for debugging
         Log::info('Employee data loaded in create method', [
@@ -921,13 +914,25 @@ class AbsensiController extends Controller
         Cache::forget('employees_data');
         Cache::forget('gudangs_data');
         
-        $query = Employee::select('id', 'nama', 'jabatan');
+        $pembibitanId = $request->get('pembibitan_id');
+        
+        // If no pembibitan selected, return empty collection
+        if (!$pembibitanId) {
+            return response()->json([
+                'success' => true,
+                'employees' => []
+            ]);
+        }
+        
+        $query = Employee::select('id', 'nama', 'jabatan', 'gaji_pokok');
         
         // Admin can only see karyawan (not mandor)
         if ($this->getCurrentUser()?->isAdmin()) {
             $query->where('jabatan', 'karyawan');
         }
         
+        // Filter employees based on pembibitan (if needed)
+        // For now, we'll return all employees since pembibitan is more about location
         $employees = $query->get();
         
         // Get fresh gudang data for manager
@@ -948,7 +953,10 @@ class AbsensiController extends Controller
         // Combine employees and gudang employees
         $allEmployees = $employees->concat($gudangEmployees);
         
-        return response()->json($allEmployees);
+        return response()->json([
+            'success' => true,
+            'employees' => $allEmployees
+        ]);
     }
 
     /**
