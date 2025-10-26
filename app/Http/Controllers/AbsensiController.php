@@ -8,6 +8,7 @@ use App\Models\Gudang;
 use App\Models\Kandang;
 use App\Models\Lokasi;
 use App\Models\Pembibitan;
+use App\Models\User;
 use App\Http\Requests\StoreAbsensiRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,21 +18,41 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AbsensiController extends Controller
 {
+    /**
+     * @var \App\Models\User
+     */
+    protected $user;
+
     public function __construct()
     {
         // Constructor kosong untuk menghindari dependency injection issues
     }
+
+    /**
+     * Get current authenticated user
+     * @return User|null
+     */
+    private function getCurrentUser(): ?User
+    {
+        return auth()->user();
+    }
+    /**
+     * Display a listing of the resource.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
         // Clear ALL caches untuk memastikan data fresh
-        \Cache::flush();
+        Cache::flush();
         
         // Clear specific caches
-        \Cache::forget('lokasis_data');
-        \Cache::forget('kandangs_data');
-        \Cache::forget('pembibitans_data');
-        \Cache::forget('gudangs_data');
-        \Cache::forget('employees_data');
+        Cache::forget('lokasis_data');
+        Cache::forget('kandangs_data');
+        Cache::forget('pembibitans_data');
+        Cache::forget('gudangs_data');
+        Cache::forget('employees_data');
         
         // Force fresh data - disable query caching
         $employees = Employee::where('jabatan', 'karyawan')
@@ -47,7 +68,7 @@ class AbsensiController extends Controller
             $query = Absensi::with(['employee']);
         
         // Admin can only see absensi for karyawan (not mandor)
-        if (auth()->user()->isAdmin()) {
+        if ($this->getCurrentUser()?->isAdmin()) {
             $query->whereHas('employee', function($employeeQuery) {
                 $employeeQuery->whereIn('jabatan', ['karyawan', 'karyawan_gudang']);
             });
@@ -87,7 +108,7 @@ class AbsensiController extends Controller
             }
             
             // Jika tidak ada filter yang dipilih, return empty result (kecuali untuk admin)
-            if (!$hasFilter && !auth()->user()->isAdmin()) {
+            if (!$hasFilter && !$this->getCurrentUser()?->isAdmin()) {
                 $query->whereRaw('1 = 0'); // Force empty result
             }
             
@@ -178,12 +199,12 @@ class AbsensiController extends Controller
                     return '<span class="text-muted">-</span>';
                 })
                 ->addColumn('action', function($absensi) {
-                    $editUrl = auth()->user()->isAdmin() 
+                    $editUrl = $this->getCurrentUser()?->isAdmin() 
                         ? route('admin.absensis.edit', $absensi->id)
                         : route('manager.absensis.edit', $absensi->id);
                     
                     // Admin tidak bisa hapus absensi, hanya manager
-                    if (auth()->user()->isManager()) {
+                    if ($this->getCurrentUser()?->isManager()) {
                         $deleteUrl = route('manager.absensis.destroy', $absensi->id);
                         return '
                             <div class="btn-group" role="group">
@@ -215,10 +236,10 @@ class AbsensiController extends Controller
         }
         
         // Force fresh data - clear all caches first
-        \Cache::forget('lokasis_data');
-        \Cache::forget('kandangs_data');
-        \Cache::forget('pembibitans_data');
-        \Cache::forget('gudangs_data');
+        Cache::forget('lokasis_data');
+        Cache::forget('kandangs_data');
+        Cache::forget('pembibitans_data');
+        Cache::forget('gudangs_data');
         
         // Load master data for filters with fresh query
         $lokasis = Lokasi::orderBy('nama_lokasi')->get();
@@ -235,11 +256,11 @@ class AbsensiController extends Controller
     public function refreshMasterData()
     {
         // Clear all caches
-        \Cache::forget('lokasis_data');
-        \Cache::forget('kandangs_data');
-        \Cache::forget('pembibitans_data');
-        \Cache::forget('gudangs_data');
-        \Cache::forget('employees_data');
+        Cache::forget('lokasis_data');
+        Cache::forget('kandangs_data');
+        Cache::forget('pembibitans_data');
+        Cache::forget('gudangs_data');
+        Cache::forget('employees_data');
         
         // Get fresh data
         $lokasis = Lokasi::orderBy('nama_lokasi')->get();
@@ -302,37 +323,37 @@ class AbsensiController extends Controller
     public function create()
     {
         // Clear ALL caches untuk memastikan data fresh
-        \Cache::flush();
+        Cache::flush();
         
         // Force fresh database connection
-        \DB::purge();
+        DB::purge();
         
         // Get employees from employees table with fresh query - NO CACHE
         $query = Employee::orderBy('nama');
         
         // Admin can only see karyawan (not mandor)
-        if (auth()->user()->isAdmin()) {
+        if ($this->getCurrentUser()?->isAdmin()) {
             $query->where('jabatan', 'karyawan');
         }
         
         $employees = $query->get();
         
         // Log for debugging
-        \Log::info('Employee data loaded in create method', [
+        Log::info('Employee data loaded in create method', [
             'count' => $employees->count(),
             'employees' => $employees->pluck('nama')->toArray()
         ]);
         
         // Get gudang employees (karyawan gudang) - ALWAYS FRESH DATA
         $gudangEmployees = collect();
-        if (auth()->user()->isManager()) {
+        if ($this->getCurrentUser()?->isManager()) {
             // Force fresh query without cache - DEBUG MODE
-            \DB::enableQueryLog();
+            DB::enableQueryLog();
             $gudangs = \App\Models\Gudang::orderBy('nama')->get();
-            $queries = \DB::getQueryLog();
+            $queries = DB::getQueryLog();
             
             // Log the query for debugging
-            \Log::info('Gudang query executed', [
+            Log::info('Gudang query executed', [
                 'query' => $queries[0]['query'] ?? 'No query',
                 'bindings' => $queries[0]['bindings'] ?? [],
                 'result_count' => $gudangs->count()
@@ -349,7 +370,7 @@ class AbsensiController extends Controller
             });
             
             // Log the result
-            \Log::info('Gudang employees created', [
+            Log::info('Gudang employees created', [
                 'count' => $gudangEmployees->count(),
                 'employees' => $gudangEmployees->pluck('nama')->toArray()
             ]);
@@ -357,7 +378,7 @@ class AbsensiController extends Controller
         
         // Get mandor employees
         $mandorEmployees = collect();
-        if (auth()->user()->isManager()) {
+        if ($this->getCurrentUser()?->isManager()) {
             $mandorEmployees = \App\Models\Mandor::orderBy('nama')->get()->map(function($mandor) {
                 return (object) [
                     'id' => 'mandor_' . $mandor->id,
@@ -384,7 +405,7 @@ class AbsensiController extends Controller
         ->sortBy('nama');
         
         // Log final result for debugging
-        \Log::info('Final allEmployees data', [
+        Log::info('Final allEmployees data', [
             'total_count' => $allEmployees->count(),
             'gudang_count' => $gudangEmployees->count(),
             'employee_count' => $employees->count(),
@@ -400,7 +421,9 @@ class AbsensiController extends Controller
     public function getSalary($employeeId)
     {
         try {
-            $gaji = $this->absensiService->getLatestSalary($employeeId);
+            // Get latest salary from employee
+            $employee = Employee::find($employeeId);
+            $gaji = $employee ? $employee->gaji : 0;
             
             Log::info('Salary requested', [
                 'employee_id' => $employeeId,
@@ -471,7 +494,7 @@ class AbsensiController extends Controller
         }
 
         // Admin cannot create absensi for mandor employees
-        if (auth()->user()->isAdmin() && $employee->jabatan === 'mandor') {
+        if ($this->getCurrentUser()?->isAdmin() && $employee->jabatan === 'mandor') {
             return response()->json([
                 'success' => false,
                 'message' => 'Admin tidak dapat membuat absensi untuk karyawan mandor.'
@@ -524,8 +547,8 @@ class AbsensiController extends Controller
         }
 
         // Clear cache before creating record
-        \Cache::forget('employees_data');
-        \Cache::forget('absensis_data');
+        Cache::forget('employees_data');
+        Cache::forget('absensis_data');
         
         // Create absensi record (sesuai ERD)
         $data = [
@@ -553,7 +576,7 @@ class AbsensiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data absensi berhasil ditambahkan.',
-            'redirect' => route(auth()->user()->isManager() ? 'manager.absensis.index' : 'admin.absensis.index')
+            'redirect' => route($this->getCurrentUser()?->isManager() ? 'manager.absensis.index' : 'admin.absensis.index')
         ]);
         } catch (\Exception $e) {
             Log::error('Error storing absensi: ' . $e->getMessage());
@@ -569,7 +592,7 @@ class AbsensiController extends Controller
         $absensi->load(['employee']);
         
         // Admin cannot view absensi for mandor employees
-        if (auth()->user()->isAdmin() && $absensi->employee && $absensi->employee->jabatan === 'mandor') {
+        if ($this->getCurrentUser()?->isAdmin() && $absensi->employee && $absensi->employee->jabatan === 'mandor') {
             abort(403, 'Admin tidak dapat melihat data absensi karyawan mandor.');
         }
         
@@ -579,7 +602,7 @@ class AbsensiController extends Controller
     public function edit(Absensi $absensi)
     {
         // Admin cannot edit absensi for mandor employees
-        if (auth()->user()->isAdmin() && $absensi->employee && $absensi->employee->jabatan === 'mandor') {
+        if ($this->getCurrentUser()?->isAdmin() && $absensi->employee && $absensi->employee->jabatan === 'mandor') {
             abort(403, 'Admin tidak dapat mengedit data absensi karyawan mandor.');
         }
         
@@ -587,7 +610,7 @@ class AbsensiController extends Controller
         $query = Employee::orderBy('nama');
         
         // Admin can only see karyawan (not mandor)
-        if (auth()->user()->isAdmin()) {
+        if ($this->getCurrentUser()?->isAdmin()) {
             $query->where('jabatan', 'karyawan');
         }
         
@@ -595,7 +618,7 @@ class AbsensiController extends Controller
         
         // Get gudang employees (karyawan gudang)
         $gudangEmployees = collect();
-        if (auth()->user()->isManager()) {
+        if ($this->getCurrentUser()?->isManager()) {
             $gudangEmployees = \App\Models\Gudang::orderBy('nama')->get()->map(function($gudang) {
                 return (object) [
                     'id' => 'gudang_' . $gudang->id,
@@ -609,7 +632,7 @@ class AbsensiController extends Controller
         
         // Get mandor employees
         $mandorEmployees = collect();
-        if (auth()->user()->isManager()) {
+        if ($this->getCurrentUser()?->isManager()) {
             $mandorEmployees = \App\Models\Mandor::orderBy('nama')->get()->map(function($mandor) {
                 return (object) [
                     'id' => 'mandor_' . $mandor->id,
@@ -694,7 +717,7 @@ class AbsensiController extends Controller
         }
 
         // Admin cannot update absensi for mandor employees
-        if (auth()->user()->isAdmin() && $employeeRole === 'mandor') {
+        if ($this->getCurrentUser()?->isAdmin() && $employeeRole === 'mandor') {
             return redirect()->back()
                 ->with('error', 'Admin tidak dapat mengupdate absensi untuk karyawan mandor.')
                 ->withInput();
@@ -720,21 +743,21 @@ class AbsensiController extends Controller
 
         $absensi->update($data);
 
-        return redirect()->route(auth()->user()->isManager() ? 'manager.absensis.index' : 'admin.absensis.index')
+        return redirect()->route($this->getCurrentUser()?->isManager() ? 'manager.absensis.index' : 'admin.absensis.index')
                         ->with('success', 'Data absensi berhasil diperbarui.');
     }
 
     public function destroy(Absensi $absensi)
     {
         // Admin cannot delete absensi for mandor employees
-        if (auth()->user()->isAdmin() && $absensi->employee && $absensi->employee->jabatan === 'mandor') {
+        if ($this->getCurrentUser()?->isAdmin() && $absensi->employee && $absensi->employee->jabatan === 'mandor') {
             return redirect()->back()
                 ->with('error', 'Admin tidak dapat menghapus data absensi karyawan mandor.');
         }
 
         $absensi->delete();
 
-        return redirect()->route(auth()->user()->isManager() ? 'manager.absensis.index' : 'admin.absensis.index')
+        return redirect()->route($this->getCurrentUser()?->isManager() ? 'manager.absensis.index' : 'admin.absensis.index')
                         ->with('success', 'Data absensi berhasil dihapus.');
     }
 
@@ -781,13 +804,13 @@ class AbsensiController extends Controller
     public function getEmployees(Request $request)
     {
         // Clear cache untuk memastikan data fresh
-        \Cache::forget('employees_data');
-        \Cache::forget('gudangs_data');
+        Cache::forget('employees_data');
+        Cache::forget('gudangs_data');
         
         $query = Employee::select('id', 'nama', 'jabatan');
         
         // Admin can only see karyawan (not mandor)
-        if (auth()->user()->isAdmin()) {
+        if ($this->getCurrentUser()?->isAdmin()) {
             $query->where('jabatan', 'karyawan');
         }
         
@@ -795,7 +818,7 @@ class AbsensiController extends Controller
         
         // Get fresh gudang data for manager
         $gudangEmployees = collect();
-        if (auth()->user()->isManager()) {
+        if ($this->getCurrentUser()?->isManager()) {
             $gudangs = \App\Models\Gudang::select('id', 'nama', 'gaji')->orderBy('nama')->get();
             $gudangEmployees = $gudangs->map(function($gudang) {
                 return (object) [
@@ -835,7 +858,7 @@ class AbsensiController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Bulk delete absensi error: ' . $e->getMessage());
+            Log::error('Bulk delete absensi error: ' . $e->getMessage());
             
             return response()->json([
                 'success' => false,

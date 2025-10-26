@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 
 class KaryawanKandangController extends Controller
 {
+    /**
+     * Get current authenticated user
+     * @return User|null
+     */
+    private function getCurrentUser(): ?User
+    {
+        return auth()->user();
+    }
     public function index()
     {
         $karyawans = Employee::with(['kandang', 'kandang.lokasi'])
@@ -44,7 +52,7 @@ class KaryawanKandangController extends Controller
             'kandang_id' => $pembibitan->kandang_id,
         ]);
 
-        return redirect()->route(auth()->user()->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
+        return redirect()->route($this->getCurrentUser()?->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
                         ->with('success', 'Data karyawan kandang berhasil ditambahkan.');
     }
 
@@ -77,14 +85,14 @@ class KaryawanKandangController extends Controller
             'kandang_id' => $pembibitan->kandang_id,
         ]);
 
-        return redirect()->route(auth()->user()->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
+        return redirect()->route($this->getCurrentUser()?->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
                         ->with('success', 'Data karyawan kandang berhasil diperbarui.');
     }
 
     public function destroy(Employee $karyawanKandang)
     {
         $karyawanKandang->delete();
-        return redirect()->route(auth()->user()->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
+        return redirect()->route($this->getCurrentUser()?->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
                         ->with('success', 'Data karyawan kandang berhasil dihapus.');
     }
 }

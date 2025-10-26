@@ -4,10 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Kandang;
 use App\Models\Lokasi;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class KandangController extends Controller
 {
+    /**
+     * Get current authenticated user
+     * @return User|null
+     */
+    private function getCurrentUser(): ?User
+    {
+        return auth()->user();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -55,10 +65,10 @@ class KandangController extends Controller
         ]);
         
         // Clear cache to ensure real-time updates
-        \Cache::forget('kandangs_data');
-        \Cache::forget('pembibitans_data');
+        Cache::forget('kandangs_data');
+        Cache::forget('pembibitans_data');
 
-        return redirect()->route(auth()->user()->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
+        return redirect()->route($this->getCurrentUser()?->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
                         ->with('success', 'Data kandang berhasil ditambahkan.');
     }
 
@@ -96,7 +106,7 @@ class KandangController extends Controller
             'lokasi_id' => $validated['lokasi_id'],
         ]);
 
-        return redirect()->route(auth()->user()->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
+        return redirect()->route($this->getCurrentUser()?->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
                         ->with('success', 'Data kandang berhasil diperbarui.');
     }
 
@@ -107,7 +117,7 @@ class KandangController extends Controller
     {
         $kandang->delete();
 
-        return redirect()->route(auth()->user()->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
+        return redirect()->route($this->getCurrentUser()?->isManager() ? 'manager.kandangs.index' : 'admin.kandangs.index')
                         ->with('success', 'Data kandang berhasil dihapus.');
     }
 }

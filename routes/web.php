@@ -10,6 +10,7 @@ use App\Http\Controllers\KandangController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\SalaryReportController;
 use App\Http\Controllers\KaryawanKandangController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,10 +31,11 @@ Route::get('/', function () {
 
 // Dashboard/Home route
 Route::get('/home', function () {
+    /** @var User $user */
     $user = auth()->user();
-    if ($user->isManager()) {
+    if ($user?->isManager()) {
         return redirect()->route('manager.absensis.index');
-    } elseif ($user->isAdmin()) {
+    } elseif ($user?->isAdmin()) {
         return redirect()->route('admin.manage');
     }
     return redirect()->route('login');

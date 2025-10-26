@@ -14,6 +14,14 @@ use Carbon\Carbon;
 
 class SalaryReportController extends Controller
 {
+    /**
+     * Get current authenticated user
+     * @return User|null
+     */
+    private function getCurrentUser(): ?User
+    {
+        return auth()->user();
+    }
     public function index(Request $request)
     {
         $tahun = $request->get('tahun', Carbon::now()->year);
@@ -67,7 +75,7 @@ class SalaryReportController extends Controller
             $reports = $query->orderBy('nama_karyawan')->get();
             
             // Admin can only see salary reports for karyawan (not mandor)
-            if (auth()->user()->isAdmin()) {
+            if ($this->getCurrentUser()?->isAdmin()) {
                 $reports = $reports->where('tipe_karyawan', 'karyawan');
             }
         }
@@ -93,7 +101,7 @@ class SalaryReportController extends Controller
     public function show(SalaryReport $salaryReport)
     {
         // Admin cannot view salary reports for mandor employees
-        if (auth()->user()->isAdmin() && $salaryReport->tipe_karyawan === 'mandor') {
+        if ($this->getCurrentUser()?->isAdmin() && $salaryReport->tipe_karyawan === 'mandor') {
             abort(403, 'Admin tidak dapat melihat laporan gaji karyawan mandor.');
         }
 
@@ -123,7 +131,7 @@ class SalaryReportController extends Controller
         // Generate salary reports for all employees
         $this->generateSalaryReports($tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
 
-        return redirect()->route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index', [
+        return redirect()->route($this->getCurrentUser()?->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index', [
             'tahun' => $tahun,
             'bulan' => $bulan,
             'lokasi_id' => $lokasiId,
@@ -154,7 +162,7 @@ class SalaryReportController extends Controller
             ->tanggalRange($tanggalMulai, $tanggalSelesai);
 
         // Admin can only see salary reports for karyawan (not mandor)
-        if (auth()->user()->isAdmin()) {
+        if ($this->getCurrentUser()?->isAdmin()) {
             $query->where('tipe_karyawan', 'karyawan');
         }
 
@@ -181,7 +189,7 @@ class SalaryReportController extends Controller
         $query = Employee::query();
         
         // Admin can only generate reports for karyawan (not mandor)
-        if (auth()->user()->isAdmin()) {
+        if ($this->getCurrentUser()?->isAdmin()) {
             $query->where('jabatan', 'karyawan');
         }
         
