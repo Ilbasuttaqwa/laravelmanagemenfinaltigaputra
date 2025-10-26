@@ -107,8 +107,10 @@ class AbsensiController extends Controller
                 $hasFilter = true;
             }
             
-            // Show all data by default - no need to force empty result
-            // This ensures consistency between local and hosting environments
+            // Jika tidak ada filter, tampilkan tabel kosong
+            if (!$hasFilter) {
+                $query->whereRaw('1 = 0'); // Force empty result
+            }
             
             return DataTables::of($query)
                 ->addIndexColumn()
@@ -921,13 +923,25 @@ class AbsensiController extends Controller
         Cache::forget('employees_data');
         Cache::forget('gudangs_data');
         
-        $query = Employee::select('id', 'nama', 'jabatan');
+        $pembibitanId = $request->get('pembibitan_id');
+        
+        // If no pembibitan selected, return empty collection
+        if (!$pembibitanId) {
+            return response()->json([
+                'success' => true,
+                'employees' => []
+            ]);
+        }
+        
+        $query = Employee::select('id', 'nama', 'jabatan', 'gaji_pokok');
         
         // Admin can only see karyawan (not mandor)
         if ($this->getCurrentUser()?->isAdmin()) {
             $query->where('jabatan', 'karyawan');
         }
         
+        // Filter employees based on pembibitan (if needed)
+        // For now, we'll return all employees since pembibitan is more about location
         $employees = $query->get();
         
         // Get fresh gudang data for manager
@@ -948,7 +962,10 @@ class AbsensiController extends Controller
         // Combine employees and gudang employees
         $allEmployees = $employees->concat($gudangEmployees);
         
-        return response()->json($allEmployees);
+        return response()->json([
+            'success' => true,
+            'employees' => $allEmployees
+        ]);
     }
 
     /**
