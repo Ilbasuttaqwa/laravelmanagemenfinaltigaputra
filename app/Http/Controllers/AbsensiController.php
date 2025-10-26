@@ -686,11 +686,18 @@ class AbsensiController extends Controller
         
         // VALIDASI: Pastikan data employee valid sebelum menyimpan
         if (!$employee || empty($employee->nama)) {
+            Log::error('Employee validation failed', [
+                'employee' => $employee,
+                'employee_id' => $employeeId,
+                'source' => $source,
+                'actual_employee_id' => $actualEmployeeId
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Data karyawan tidak valid. Silakan pilih karyawan yang benar.'
             ], 400);
         }
+        
 
         // Create absensi record (sesuai ERD)
         $data = [
