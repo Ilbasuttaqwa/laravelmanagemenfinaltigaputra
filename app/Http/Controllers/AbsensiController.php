@@ -139,7 +139,7 @@ class AbsensiController extends Controller
                     return 'Data Karyawan Hilang';
                 })
                 ->addColumn('role_karyawan', function($absensi) {
-                    // Get role from employee relationship safely
+                    // PRIORITAS 1: Ambil dari employee relationship jika ada
                     if ($absensi->employee && $absensi->employee->jabatan) {
                         $jabatan = $absensi->employee->jabatan;
                         // Transform role names for display
@@ -150,7 +150,24 @@ class AbsensiController extends Controller
                             default => $jabatan
                         };
                     }
-                    return 'karyawan kandang'; // Default fallback
+                    
+                    // PRIORITAS 2: Untuk gudang/mandor, tentukan role berdasarkan nama_karyawan
+                    if (!empty($absensi->nama_karyawan)) {
+                        // Cek apakah ini gudang employee
+                        $gudang = \App\Models\Gudang::where('nama', $absensi->nama_karyawan)->first();
+                        if ($gudang) {
+                            return 'karyawan gudang';
+                        }
+                        
+                        // Cek apakah ini mandor employee
+                        $mandor = \App\Models\Mandor::where('nama', $absensi->nama_karyawan)->first();
+                        if ($mandor) {
+                            return 'mandor';
+                        }
+                    }
+                    
+                    // FALLBACK: Default untuk karyawan kandang
+                    return 'karyawan kandang';
                 })
                 ->addColumn('status_badge', function($absensi) {
                     $badgeClass = match($absensi->status) {

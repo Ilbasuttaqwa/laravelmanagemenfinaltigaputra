@@ -1437,3 +1437,64 @@
 [2025-10-26 17:27:20] local.INFO: Gudang employees created {"count":1,"employees":["ani"]} 
 [2025-10-26 17:27:20] local.INFO: Final allEmployees data {"total_count":3,"gudang_count":1,"employee_count":2,"mandor_count":1,"all_employees":["ani","budi","sakri"]} 
 [2025-10-26 17:27:46] local.INFO: Absensi created successfully {"absensi_id":14,"employee_name":"budi","date":"2025-10-29 00:00:00"} 
+[2025-10-26 17:30:01] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nama' in 'field list' (Connection: mysql, SQL: update `pembibitans` set `nama` = kasuh, `pembibitans`.`updated_at` = 2025-10-26 17:30:01 where `id` = 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nama' in 'field list' (Connection: mysql, SQL: update `pembibitans` set `nama` = kasuh, `pembibitans`.`updated_at` = 2025-10-26 17:30:01 where `id` = 1) at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('update `pembibi...', Array, Object(Closure))
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(619): Illuminate\\Database\\Connection->run('update `pembibi...', Array, Object(Closure))
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(552): Illuminate\\Database\\Connection->affectingStatement('update `pembibi...', Array)
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3603): Illuminate\\Database\\Connection->update('update `pembibi...', Array)
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1061): Illuminate\\Database\\Query\\Builder->update(Array)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1214): Illuminate\\Database\\Eloquent\\Builder->update(Array)
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1131): Illuminate\\Database\\Eloquent\\Model->performUpdate(Object(Illuminate\\Database\\Eloquent\\Builder))
+#7 C:\\laragon\\www\\Managemen\\add_test_data.php(18): Illuminate\\Database\\Eloquent\\Model->save()
+#8 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nama' in 'field list' at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:608)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(608): PDO->prepare('update `pembibi...')
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('update `pembibi...', Array)
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('update `pembibi...', Array, Object(Closure))
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(619): Illuminate\\Database\\Connection->run('update `pembibi...', Array, Object(Closure))
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(552): Illuminate\\Database\\Connection->affectingStatement('update `pembibi...', Array)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3603): Illuminate\\Database\\Connection->update('update `pembibi...', Array)
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1061): Illuminate\\Database\\Query\\Builder->update(Array)
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1214): Illuminate\\Database\\Eloquent\\Builder->update(Array)
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1131): Illuminate\\Database\\Eloquent\\Model->performUpdate(Object(Illuminate\\Database\\Eloquent\\Builder))
+#9 C:\\laragon\\www\\Managemen\\add_test_data.php(18): Illuminate\\Database\\Eloquent\\Model->save()
+#10 {main}
+"} 
+[2025-10-26 17:30:41] local.INFO: Fresh employee query executed {"query_sql":"select * from `employees` order by `nama` asc","query_bindings":[],"result_count":4,"latest_employee":"dani"} 
+[2025-10-26 17:30:41] local.INFO: Employee data loaded in create method {"count":4,"employees":["ani","dani","eka","sakri"]} 
+[2025-10-26 17:30:41] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":2} 
+[2025-10-26 17:30:41] local.INFO: Gudang employees created {"count":2,"employees":["ani","fira"]} 
+[2025-10-26 17:30:41] local.INFO: Final allEmployees data {"total_count":7,"gudang_count":2,"employee_count":4,"mandor_count":2,"all_employees":["ani","budi","dani","eka","fira","gita","sakri"]} 
+[2025-10-26 17:31:05] local.INFO: Absensi created successfully {"absensi_id":15,"employee_name":"dani","date":"2025-10-30 00:00:00"} 
+[2025-10-26 17:31:13] local.INFO: Fresh employee query executed {"query_sql":"select * from `employees` order by `nama` asc","query_bindings":[],"result_count":4,"latest_employee":"dani"} 
+[2025-10-26 17:31:13] local.INFO: Employee data loaded in create method {"count":4,"employees":["ani","dani","eka","sakri"]} 
+[2025-10-26 17:31:13] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":2} 
+[2025-10-26 17:31:13] local.INFO: Gudang employees created {"count":2,"employees":["ani","fira"]} 
+[2025-10-26 17:31:13] local.INFO: Final allEmployees data {"total_count":7,"gudang_count":2,"employee_count":4,"mandor_count":2,"all_employees":["ani","budi","dani","eka","fira","gita","sakri"]} 
+[2025-10-26 17:31:37] local.INFO: Absensi created successfully {"absensi_id":16,"employee_name":"fira","date":"2025-10-31 00:00:00"} 
+[2025-10-26 17:31:45] local.INFO: Fresh employee query executed {"query_sql":"select * from `employees` order by `nama` asc","query_bindings":[],"result_count":4,"latest_employee":"dani"} 
+[2025-10-26 17:31:45] local.INFO: Employee data loaded in create method {"count":4,"employees":["ani","dani","eka","sakri"]} 
+[2025-10-26 17:31:45] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":2} 
+[2025-10-26 17:31:45] local.INFO: Gudang employees created {"count":2,"employees":["ani","fira"]} 
+[2025-10-26 17:31:45] local.INFO: Final allEmployees data {"total_count":7,"gudang_count":2,"employee_count":4,"mandor_count":2,"all_employees":["ani","budi","dani","eka","fira","gita","sakri"]} 
+[2025-10-26 17:33:09] local.INFO: Absensi created successfully {"absensi_id":17,"employee_name":"gita","date":"2025-11-01 00:00:00"} 
+[2025-10-26 17:34:26] local.INFO: Fresh employee query executed {"query_sql":"select * from `employees` order by `nama` asc","query_bindings":[],"result_count":4,"latest_employee":"dani"} 
+[2025-10-26 17:34:26] local.INFO: Employee data loaded in create method {"count":4,"employees":["ani","dani","eka","sakri"]} 
+[2025-10-26 17:34:26] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":2} 
+[2025-10-26 17:34:26] local.INFO: Gudang employees created {"count":2,"employees":["ani","fira"]} 
+[2025-10-26 17:34:26] local.INFO: Final allEmployees data {"total_count":7,"gudang_count":2,"employee_count":4,"mandor_count":2,"all_employees":["ani","budi","dani","eka","fira","gita","sakri"]} 
+[2025-10-26 17:35:55] local.INFO: Fresh employee query executed {"query_sql":"select * from `employees` order by `nama` asc","query_bindings":[],"result_count":4,"latest_employee":"dani"} 
+[2025-10-26 17:35:55] local.INFO: Employee data loaded in create method {"count":4,"employees":["ani","dani","eka","sakri"]} 
+[2025-10-26 17:35:55] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":3} 
+[2025-10-26 17:35:55] local.INFO: Gudang employees created {"count":3,"employees":["ani","fira","hadi"]} 
+[2025-10-26 17:35:55] local.INFO: Final allEmployees data {"total_count":9,"gudang_count":3,"employee_count":4,"mandor_count":3,"all_employees":["ani","budi","dani","eka","fira","gita","hadi","indra","sakri"]} 
+[2025-10-26 17:36:16] local.INFO: Absensi created successfully {"absensi_id":18,"employee_name":"indra","date":"2025-11-02 00:00:00"} 
+[2025-10-26 17:36:23] local.INFO: Fresh employee query executed {"query_sql":"select * from `employees` order by `nama` asc","query_bindings":[],"result_count":4,"latest_employee":"dani"} 
+[2025-10-26 17:36:23] local.INFO: Employee data loaded in create method {"count":4,"employees":["ani","dani","eka","sakri"]} 
+[2025-10-26 17:36:23] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":3} 
+[2025-10-26 17:36:23] local.INFO: Gudang employees created {"count":3,"employees":["ani","fira","hadi"]} 
+[2025-10-26 17:36:23] local.INFO: Final allEmployees data {"total_count":9,"gudang_count":3,"employee_count":4,"mandor_count":3,"all_employees":["ani","budi","dani","eka","fira","gita","hadi","indra","sakri"]} 
+[2025-10-26 17:36:43] local.INFO: Absensi created successfully {"absensi_id":19,"employee_name":"hadi","date":"2025-11-03 00:00:00"} 
