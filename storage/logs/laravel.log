@@ -1346,3 +1346,9 @@
 [2025-10-26 17:01:02] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":1} 
 [2025-10-26 17:01:02] local.INFO: Gudang employees created {"count":1,"employees":["ani"]} 
 [2025-10-26 17:01:02] local.INFO: Final allEmployees data {"total_count":3,"gudang_count":1,"employee_count":2,"mandor_count":1,"all_employees":["ani","budi","sakri"]} 
+[2025-10-26 17:01:42] local.INFO: Absensi created successfully {"absensi_id":5,"employee_name":"Karyawan Tidak Ditemukan","date":"2025-10-01 00:00:00"} 
+[2025-10-26 17:06:00] local.INFO: Fresh employee query executed {"query_sql":"select * from `employees` order by `nama` asc","query_bindings":[],"result_count":2,"latest_employee":"ani"} 
+[2025-10-26 17:06:00] local.INFO: Employee data loaded in create method {"count":2,"employees":["ani","sakri"]} 
+[2025-10-26 17:06:00] local.INFO: Gudang query executed {"query":"select * from `gudangs` order by `nama` asc","bindings":[],"result_count":1} 
+[2025-10-26 17:06:00] local.INFO: Gudang employees created {"count":1,"employees":["ani"]} 
+[2025-10-26 17:06:00] local.INFO: Final allEmployees data {"total_count":3,"gudang_count":1,"employee_count":2,"mandor_count":1,"all_employees":["ani","budi","sakri"]} 

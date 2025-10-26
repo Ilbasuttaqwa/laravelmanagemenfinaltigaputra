@@ -129,12 +129,14 @@ class AbsensiController extends Controller
                     }
                     
                     // PRIORITAS 3: Untuk gudang/mandor employees, gunakan stored nama_karyawan
-                    if (!empty($absensi->nama_karyawan) && $absensi->nama_karyawan !== 'Karyawan Tidak Ditemukan') {
+                    if (!empty($absensi->nama_karyawan) && 
+                        $absensi->nama_karyawan !== 'Karyawan Tidak Ditemukan' && 
+                        $absensi->nama_karyawan !== 'Absensi #' . $absensi->id) {
                         return $absensi->nama_karyawan;
                     }
                     
-                    // FALLBACK: Jika semua gagal, tampilkan ID absensi sebagai identifier
-                    return 'Absensi #' . $absensi->id;
+                    // FALLBACK: Jika semua gagal, tampilkan pesan error yang jelas
+                    return 'Data Karyawan Hilang';
                 })
                 ->addColumn('role_karyawan', function($absensi) {
                     // Get role from employee relationship safely
@@ -682,17 +684,33 @@ class AbsensiController extends Controller
         Cache::forget('employees_data');
         Cache::forget('absensis_data');
         
+        // VALIDASI: Pastikan data employee valid sebelum menyimpan
+        if (!$employee || empty($employee->nama)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data karyawan tidak valid. Silakan pilih karyawan yang benar.'
+            ], 400);
+        }
+
         // Create absensi record (sesuai ERD)
         $data = [
             'employee_id' => $source === 'employee' ? $actualEmployeeId : null,
             'pembibitan_id' => $validated['pembibitan_id'],
-            'nama_karyawan' => $employee->nama, // SELALU simpan nama karyawan
+            'nama_karyawan' => $employee->nama, // SELALU simpan nama karyawan yang valid
             'gaji_pokok_saat_itu' => $validated['gaji_pokok_saat_itu'],
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
             'gaji_hari_itu' => $validated['gaji_hari_itu'],
             'lokasi_kerja' => $lokasiKerja,
         ];
+
+        // VALIDASI: Pastikan nama_karyawan tidak kosong
+        if (empty($data['nama_karyawan'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nama karyawan tidak boleh kosong.'
+            ], 400);
+        }
 
         $absensi = Absensi::create($data);
 
