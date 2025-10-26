@@ -310,83 +310,83 @@
 /* Kolom NO - kecil */
 .table th:nth-child(1),
 .table td:nth-child(1) {
-    width: 5%;
+    width: 4%;
     text-align: center;
 }
 
 /* Kolom Nama Karyawan - sedang */
 .table th:nth-child(2),
 .table td:nth-child(2) {
-    width: 15%;
+    width: 14%;
 }
 
 /* Kolom Tipe - kecil */
 .table th:nth-child(3),
 .table td:nth-child(3) {
-    width: 12%;
+    width: 9%;
     text-align: center;
 }
 
 /* Kolom Lokasi - kecil */
 .table th:nth-child(4),
 .table td:nth-child(4) {
-    width: 10%;
+    width: 7%;
     text-align: center;
 }
 
 /* Kolom Kandang - kecil */
 .table th:nth-child(5),
 .table td:nth-child(5) {
-    width: 10%;
+    width: 7%;
     text-align: center;
 }
 
 /* Kolom Pembibitan - kecil */
 .table th:nth-child(6),
 .table td:nth-child(6) {
-    width: 10%;
+    width: 8%;
     text-align: center;
 }
 
 /* Kolom Jml Hari Kerja - sedang */
 .table th:nth-child(7),
 .table td:nth-child(7) {
-    width: 10%;
+    width: 11%;
     text-align: center;
 }
 
 /* Kolom Gaji Saat Ini - sedang */
 .table th:nth-child(8),
 .table td:nth-child(8) {
-    width: 12%;
+    width: 10%;
     text-align: right;
 }
 
 /* Kolom Gaji Pokok - sedang */
 .table th:nth-child(9),
 .table td:nth-child(9) {
-    width: 12%;
+    width: 10%;
     text-align: right;
 }
 
 /* Kolom Total Gaji - sedang */
 .table th:nth-child(10),
 .table td:nth-child(10) {
-    width: 12%;
+    width: 10%;
     text-align: right;
 }
 
 /* Kolom Periode - kecil */
 .table th:nth-child(11),
 .table td:nth-child(11) {
-    width: 10%;
+    width: 8%;
     text-align: center;
 }
 
 /* Kolom Aksi - kecil */
 .table th:nth-child(12),
 .table td:nth-child(12) {
-    width: 6%;
+    width: 2%;
     text-align: center;
 }
 
