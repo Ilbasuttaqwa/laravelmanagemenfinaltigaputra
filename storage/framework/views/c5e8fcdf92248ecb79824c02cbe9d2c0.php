@@ -636,7 +636,7 @@ $(document).ready(function() {
                 previous: "Sebelumnya"
             }
         },
-        dom: 'frtip',
+        dom: 'rtip',
         responsive: true,
         scrollX: true,
         autoWidth: false,
@@ -662,13 +662,7 @@ $(document).ready(function() {
         // Clear all filter inputs
         $('#tanggal_filter').val('');
         $('#bibit_filter').val('');
-        
-        // Clear DataTables and show empty state
-        const table = $('#absensiTable').DataTable();
-        table.clear().draw();
-        
-        // Show message that data is cleared
-        console.log('✅ Filters cleared, data table emptied');
+        $('#absensiTable').DataTable().ajax.reload();
     });
     
     // Real-time refresh master data

@@ -637,7 +637,7 @@ $(document).ready(function() {
                 previous: "Sebelumnya"
             }
         },
-        dom: 'frtip',
+        dom: 'rtip',
         responsive: true,
         scrollX: true,
         autoWidth: false,
