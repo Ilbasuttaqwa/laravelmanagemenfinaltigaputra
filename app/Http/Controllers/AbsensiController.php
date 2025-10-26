@@ -933,16 +933,7 @@ class AbsensiController extends Controller
         Cache::forget('employees_data');
         Cache::forget('gudangs_data');
         
-        $pembibitanId = $request->get('pembibitan_id');
-        
-        // If no pembibitan selected, return empty collection
-        if (!$pembibitanId) {
-            return response()->json([
-                'success' => true,
-                'employees' => []
-            ]);
-        }
-        
+        // Always return all employees regardless of pembibitan
         $query = Employee::select('id', 'nama', 'jabatan', 'gaji_pokok');
         
         // Admin can only see karyawan (not mandor)
@@ -950,8 +941,6 @@ class AbsensiController extends Controller
             $query->where('jabatan', 'karyawan');
         }
         
-        // Filter employees based on pembibitan (if needed)
-        // For now, we'll return all employees since pembibitan is more about location
         $employees = $query->get();
         
         // Get fresh gudang data for manager
@@ -969,8 +958,23 @@ class AbsensiController extends Controller
             });
         }
         
-        // Combine employees and gudang employees
-        $allEmployees = $employees->concat($gudangEmployees);
+        // Get mandor data for manager
+        $mandorEmployees = collect();
+        if ($this->getCurrentUser()?->isManager()) {
+            $mandors = \App\Models\Mandor::select('id', 'nama', 'gaji')->orderBy('nama')->get();
+            $mandorEmployees = $mandors->map(function($mandor) {
+                return (object) [
+                    'id' => 'mandor_' . $mandor->id,
+                    'nama' => $mandor->nama,
+                    'jabatan' => 'mandor',
+                    'gaji_pokok' => $mandor->gaji,
+                    'source' => 'mandor'
+                ];
+            });
+        }
+        
+        // Combine all employees
+        $allEmployees = $employees->concat($gudangEmployees)->concat($mandorEmployees);
         
         return response()->json([
             'success' => true,
