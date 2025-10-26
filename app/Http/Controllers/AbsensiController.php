@@ -115,7 +115,12 @@ class AbsensiController extends Controller
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('nama_karyawan', function($absensi) {
-                    // Always get fresh employee data first
+                    // PRIORITAS 1: Ambil dari employee relationship jika ada
+                    if ($absensi->employee_id && $absensi->employee) {
+                        return $absensi->employee->nama;
+                    }
+                    
+                    // PRIORITAS 2: Ambil dari fresh query jika relationship gagal
                     if ($absensi->employee_id) {
                         $employee = Employee::find($absensi->employee_id);
                         if ($employee) {
@@ -123,12 +128,13 @@ class AbsensiController extends Controller
                         }
                     }
                     
-                    // For gudang/mandor employees, use stored nama_karyawan
-                    if (!empty($absensi->nama_karyawan)) {
+                    // PRIORITAS 3: Untuk gudang/mandor employees, gunakan stored nama_karyawan
+                    if (!empty($absensi->nama_karyawan) && $absensi->nama_karyawan !== 'Karyawan Tidak Ditemukan') {
                         return $absensi->nama_karyawan;
                     }
                     
-                    return 'Karyawan Tidak Ditemukan';
+                    // FALLBACK: Jika semua gagal, tampilkan ID absensi sebagai identifier
+                    return 'Absensi #' . $absensi->id;
                 })
                 ->addColumn('role_karyawan', function($absensi) {
                     // Get role from employee relationship safely
@@ -680,7 +686,7 @@ class AbsensiController extends Controller
         $data = [
             'employee_id' => $source === 'employee' ? $actualEmployeeId : null,
             'pembibitan_id' => $validated['pembibitan_id'],
-            'nama_karyawan' => $employee->nama,
+            'nama_karyawan' => $employee->nama, // SELALU simpan nama karyawan
             'gaji_pokok_saat_itu' => $validated['gaji_pokok_saat_itu'],
             'tanggal' => $validated['tanggal'],
             'status' => $validated['status'],
