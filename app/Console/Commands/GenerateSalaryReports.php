@@ -66,15 +66,24 @@ class GenerateSalaryReports extends Command
         $kandang = null;
         $pembibitan = null;
         
-        if ($employee->kandang) {
-            $kandang = $employee->kandang;
-            $lokasi = $employee->kandang->lokasi;
-        }
-        
         // Get pembibitan from recent attendance
         $recentAttendance = $attendances->sortByDesc('tanggal')->first();
         if ($recentAttendance && $recentAttendance->pembibitan_id) {
             $pembibitan = \App\Models\Pembibitan::find($recentAttendance->pembibitan_id);
+            
+            // SELALU ambil lokasi dan kandang dari pembibitan jika ada
+            if ($pembibitan) {
+                $lokasi = $pembibitan->lokasi;
+                $kandang = $pembibitan->kandang;
+            }
+        }
+        
+        // Fallback: jika tidak ada pembibitan, ambil dari employee
+        if (!$lokasi && $employee->kandang && $employee->kandang->lokasi) {
+            $lokasi = $employee->kandang->lokasi;
+        }
+        if (!$kandang && $employee->kandang) {
+            $kandang = $employee->kandang;
         }
         
         // Create salary report
