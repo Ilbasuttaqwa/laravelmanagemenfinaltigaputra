@@ -18,6 +18,7 @@ class SalaryReport extends Model
         'nama_karyawan',
         'tipe_karyawan',
         'gaji_pokok',
+        'gaji_pokok_bulanan',
         'jml_hari_kerja',
         'total_gaji',
         'tanggal_mulai',
@@ -30,6 +31,7 @@ class SalaryReport extends Model
         'tanggal_mulai' => 'date',
         'tanggal_selesai' => 'date',
         'gaji_pokok' => 'decimal:2',
+        'gaji_pokok_bulanan' => 'decimal:2',
         'total_gaji' => 'decimal:2',
     ];
 
@@ -62,15 +64,10 @@ class SalaryReport extends Model
 
     public function getGajiPokokAsliFormattedAttribute()
     {
-        // Ambil gaji pokok asli dari master data employee
-        $gajiPokokAsli = 0;
+        // Ambil gaji pokok bulanan dari kolom gaji_pokok_bulanan
+        $gajiPokokBulanan = $this->gaji_pokok_bulanan ?? 0;
         
-        if ($this->employee) {
-            // Employee menggunakan kolom 'gaji_pokok'
-            $gajiPokokAsli = $this->employee->gaji_pokok ?? 0;
-        }
-        
-        return 'Rp ' . number_format($gajiPokokAsli, 0, ',', '.');
+        return 'Rp ' . number_format($gajiPokokBulanan, 0, ',', '.');
     }
 
     public function getTotalGajiFormattedAttribute()

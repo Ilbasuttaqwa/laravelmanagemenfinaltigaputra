@@ -1498,3 +1498,5 @@
 [2025-10-26 17:36:23] local.INFO: Gudang employees created {"count":3,"employees":["ani","fira","hadi"]} 
 [2025-10-26 17:36:23] local.INFO: Final allEmployees data {"total_count":9,"gudang_count":3,"employee_count":4,"mandor_count":3,"all_employees":["ani","budi","dani","eka","fira","gita","hadi","indra","sakri"]} 
 [2025-10-26 17:36:43] local.INFO: Absensi created successfully {"absensi_id":19,"employee_name":"hadi","date":"2025-11-03 00:00:00"} 
+[2025-10-26 17:44:45] local.INFO: AutoSync: Salary reports logic synced successfully  
+[2025-10-26 17:44:45] local.INFO: AutoSync: All caches cleared  

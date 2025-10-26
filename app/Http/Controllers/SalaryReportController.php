@@ -219,9 +219,11 @@ class SalaryReportController extends Controller
         $jmlHariKerja = $attendances->where('status', 'full')->count() + 
                        ($attendances->where('status', 'setengah_hari')->count() * 0.5);
 
-        // Calculate total salary
-        $gajiPokok = $employee->gaji_pokok;
-        $totalGaji = $gajiPokok * ($jmlHariKerja / 22); // Assuming 22 working days per month
+        // Calculate salary components
+        $gajiPokokBulanan = $employee->gaji_pokok; // Gaji pokok bulanan dari master data
+        $gajiHarian = $gajiPokokBulanan / 22; // Gaji harian (22 hari kerja per bulan)
+        $gajiSaatIni = $gajiHarian * $jmlHariKerja; // Gaji saat ini berdasarkan hari kerja
+        $totalGaji = $gajiSaatIni; // Total gaji = gaji saat ini
 
         // Get pembibitan from employee's recent attendance records
         $pembibitan = null;
@@ -259,7 +261,8 @@ class SalaryReportController extends Controller
             'pembibitan_id' => $pembibitan?->id,
             'nama_karyawan' => $employee->nama,
             'tipe_karyawan' => $tipe,
-            'gaji_pokok' => $gajiPokok,
+            'gaji_pokok' => $gajiSaatIni, // Gaji saat ini (berdasarkan hari kerja)
+            'gaji_pokok_bulanan' => $gajiPokokBulanan, // Gaji pokok bulanan dari master data
             'jml_hari_kerja' => $jmlHariKerja,
             'total_gaji' => $totalGaji,
             'tanggal_mulai' => $startDate,
