@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <title>Tiga Putra Management System</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="<?php echo e(asset('favicon.ico')); ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo e(asset('favicon.ico')); ?>">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,6 +18,8 @@
     <style>
         body {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -25,6 +27,11 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
         .login-card {
             background: rgba(255, 255, 255, 0.98);
@@ -37,6 +44,7 @@
         }
         
         .login-card:hover {
+            transform: translateY(-5px);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
         }
         
@@ -48,6 +56,22 @@
             overflow: hidden;
         }
         
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
         
         .logo-container {
             display: flex;
@@ -94,6 +118,7 @@
         
         .btn-login:hover {
             background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
         }
         
@@ -110,6 +135,7 @@
             border-color: #2c3e50;
             box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.25);
             background: white;
+            transform: translateY(-1px);
         }
         
         .input-group-text {
@@ -180,7 +206,7 @@
                     <div class="login-header text-center">
                         <div class="logo-container">
                             <div class="logo-round">
-                                <img src="{{ asset('logo.jpg') }}" alt="Tiga Putra Management">
+                                <img src="<?php echo e(asset('logo.jpg')); ?>" alt="Tiga Putra Management">
                             </div>
                         </div>
                         <h3 class="company-title mb-0">
@@ -190,16 +216,16 @@
                     </div>
                     
                     <div class="card-body p-4">
-                        @if ($errors->any())
+                        <?php if($errors->any()): ?>
                             <div class="alert alert-danger">
-                                @foreach ($errors->all() as $error)
-                                    <div>{{ $error }}</div>
-                                @endforeach
+                                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <div><?php echo e($error); ?></div>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
-                        @endif
+                        <?php endif; ?>
 
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('login')); ?>">
+                            <?php echo csrf_field(); ?>
                             
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
@@ -208,16 +234,30 @@
                                         <i class="bi bi-envelope"></i>
                                     </span>
                                     <input type="email" 
-                                           class="form-control @error('email') is-invalid @enderror" 
+                                           class="form-control <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
                                            id="email" 
                                            name="email" 
-                                           value="{{ old('email') }}" 
+                                           value="<?php echo e(old('email')); ?>" 
                                            required 
                                            autofocus>
                                 </div>
-                                @error('email')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                                <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="mb-3">
@@ -227,14 +267,28 @@
                                         <i class="bi bi-lock"></i>
                                     </span>
                                     <input type="password" 
-                                           class="form-control @error('password') is-invalid @enderror" 
+                                           class="form-control <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
                                            id="password" 
                                            name="password" 
                                            required>
                                 </div>
-                                @error('password')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                                <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="mb-3 form-check">
@@ -258,4 +312,4 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html><?php /**PATH C:\laragon\www\Managemen\resources\views/auth/login.blade.php ENDPATH**/ ?>

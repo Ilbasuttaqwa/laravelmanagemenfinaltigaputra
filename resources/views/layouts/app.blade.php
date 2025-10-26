@@ -48,7 +48,6 @@
         }
         
         .card:hover {
-            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
         
@@ -64,7 +63,6 @@
         }
         .btn-primary:hover {
             background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
         }
         
@@ -167,7 +165,6 @@
         }
         
         .stats-card:hover {
-            transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
         
@@ -202,7 +199,6 @@
         
         .btn-success:hover {
             background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
         }
         
@@ -214,7 +210,6 @@
         
         .btn-danger:hover {
             background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
         }
         
@@ -226,7 +221,6 @@
         
         .btn-warning:hover {
             background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%);
-            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
         }
         

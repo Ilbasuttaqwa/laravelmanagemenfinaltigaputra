@@ -1,0 +1,196 @@
+
+
+<?php $__env->startSection('title', 'Master Lokasi'); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">
+            <i class="bi bi-geo-alt"></i>
+            Master Lokasi
+        </h1>
+        <a href="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.lokasis.create' : 'manager.lokasis.create')); ?>"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            Tambah Lokasi
+        </a>
+    </div>
+
+    <!-- Search Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="<?php echo e(route(auth()->user()->isAdmin() ? 'admin.lokasis.index' : 'manager.lokasis.index')); ?>">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label for="search" class="form-label">Cari Lokasi</label>
+                        <input type="text" class="form-control" id="search" name="search"
+                               value="<?php echo e(request('search')); ?>" placeholder="Masukkan nama lokasi">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i>
+                                Cari
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lokasis Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Daftar Lokasi</h5>
+        </div>
+        <div class="card-body">
+            <?php if($lokasis->count() > 0): ?>
+                <div class="table-responsive" style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Lokasi</th>
+                                <th>Jumlah Kandang</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $__currentLoopData = $lokasis; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $lokasi): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <tr>
+                                    <td><?php echo e($lokasis->firstItem() + $index); ?></td>
+                                    <td>
+                                        <strong><?php echo e($lokasi->nama_lokasi); ?></strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary"><?php echo e($lokasi->kandangs_count); ?></span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="<?php echo e(route(auth()->user()->isManager() ? 'manager.lokasis.show' : 'admin.lokasis.show', $lokasi)); ?>"
+                                               class="btn btn-info btn-sm" title="Lihat">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="<?php echo e(route(auth()->user()->isManager() ? 'manager.lokasis.edit' : 'admin.lokasis.edit', $lokasi)); ?>"
+                                               class="btn btn-warning btn-sm" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <?php if(auth()->user()->isManager()): ?>
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                        data-lokasi-id="<?php echo e($lokasi->id); ?>"
+                                                        data-lokasi-name="<?php echo e($lokasi->nama_lokasi); ?>"
+                                                        onclick="confirmDelete(this)" title="Hapus">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center">
+                    <?php echo e($lokasis->links()); ?>
+
+                </div>
+            <?php else: ?>
+                <div class="alert alert-info" role="alert">
+                    Tidak ada data lokasi yang ditemukan.
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Lokasi</h6>
+                            <h4 class="mb-0"><?php echo e(\App\Models\Lokasi::count()); ?></h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-geo-alt-fill fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Lokasi Terpakai</h6>
+                            <h4 class="mb-0"><?php echo e(\App\Models\Lokasi::has('kandangs')->count()); ?></h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-geo-alt-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Kandang</h6>
+                            <h4 class="mb-0"><?php echo e(\App\Models\Kandang::count()); ?></h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-house-door fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Konfirmasi Hapus</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus lokasi <strong id="lokasiNameToDelete"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <form id="deleteForm" method="POST" action="">
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('DELETE'); ?>
+                        <button type="submit" class="btn btn-danger">Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete(button) {
+            const lokasiId = button.getAttribute('data-lokasi-id');
+            const lokasiName = button.getAttribute('data-lokasi-name');
+            const deleteForm = document.getElementById('deleteForm');
+            const lokasiNameToDelete = document.getElementById('lokasiNameToDelete');
+            const baseUrl = "<?php echo e(url('/')); ?>";
+            const rolePrefix = "<?php echo e(auth()->user()->isAdmin() ? 'admin' : 'manager'); ?>";
+            deleteForm.action = `${baseUrl}/${rolePrefix}/lokasis/${lokasiId}`;
+            lokasiNameToDelete.textContent = lokasiName;
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            deleteModal.show();
+        }
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\Managemen\resources\views/lokasis/index.blade.php ENDPATH**/ ?>

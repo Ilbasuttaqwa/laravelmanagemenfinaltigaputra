@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Master Absensi & Kalender'); ?>
 
-@section('title', 'Master Absensi & Kalender')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
 /* Excel-like DataTables Styling */
 .dataTables_wrapper {
@@ -151,6 +149,7 @@
 /* Ensure action buttons are visible */
 .btn-group .btn:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 /* Fix any text visibility issues in action column */
@@ -261,9 +260,9 @@ table.dataTable thead th.sorting_desc {
     font-weight: 600 !important;
 }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -278,17 +277,17 @@ table.dataTable thead th.sorting_desc {
                             <i class="bi bi-people-fill me-1"></i>
                             Tambah Cepat Absensi
                         </button>
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.absensis.create') }}" class="btn btn-primary">
+                        <?php if(auth()->user()->isAdmin()): ?>
+                            <a href="<?php echo e(route('admin.absensis.create')); ?>" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i>
                                 Tambah Absensi
                             </a>
-                        @else
-                            <a href="{{ route('manager.absensis.create') }}" class="btn btn-primary">
+                        <?php else: ?>
+                            <a href="<?php echo e(route('manager.absensis.create')); ?>" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i>
                                 Tambah Absensi
                             </a>
-                        @endif
+                        <?php endif; ?>
                         <button type="button" class="btn btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedAbsensi()" disabled>
                             <i class="bi bi-trash me-1"></i>
                             Hapus
@@ -364,14 +363,14 @@ table.dataTable thead th.sorting_desc {
                         <label class="form-label fw-bold">Filter Pembibitan</label>
                         <select class="form-select" id="filterPembibitanBulk" onchange="filterEmployeesBulk()">
                             <option value="">Semua Pembibitan</option>
-                            @foreach($pembibitans as $pembibitan)
-                                <option value="{{ $pembibitan->id }}">{{ $pembibitan->judul }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $pembibitans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pembibitan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($pembibitan->id); ?>"><?php echo e($pembibitan->judul); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Tanggal Absensi</label>
-                        <input type="date" class="form-control" id="tanggalBulk" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                        <input type="date" class="form-control" id="tanggalBulk" value="<?php echo e(date('Y-m-d')); ?>" max="<?php echo e(date('Y-m-d')); ?>">
                     </div>
                 </div>
 
@@ -408,46 +407,47 @@ table.dataTable thead th.sorting_desc {
                             </tr>
                         </thead>
                         <tbody id="employeesTableBodyBulk">
-                            @foreach($employees as $employee)
-                            <tr data-employee-id="{{ $employee->id }}">
+                            <?php $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <tr data-employee-id="<?php echo e($employee->id); ?>">
                                 <td>
                                     <input type="checkbox" class="form-check-input employee-checkbox-bulk" 
-                                           value="{{ $employee->id }}" 
-                                           data-employee='{{ json_encode($employee) }}'>
+                                           value="<?php echo e($employee->id); ?>" 
+                                           data-employee='<?php echo e(json_encode($employee)); ?>'>
                                 </td>
                                 <td>
-                                    <strong>{{ $employee->nama }}</strong>
-                                    <br><small class="text-muted">{{ $employee->jabatan === 'karyawan' ? 'karyawan kandang' : $employee->jabatan }}</small>
+                                    <strong><?php echo e($employee->nama); ?></strong>
+                                    <br><small class="text-muted"><?php echo e($employee->jabatan === 'karyawan' ? 'karyawan kandang' : $employee->jabatan); ?></small>
                                 </td>
-                                <td>{{ $employee->lokasi->nama_lokasi ?? 'N/A' }}</td>
-                                <td>{{ $employee->kandang->nama_kandang ?? 'N/A' }}</td>
+                                <td><?php echo e($employee->lokasi->nama_lokasi ?? 'N/A'); ?></td>
+                                <td><?php echo e($employee->kandang->nama_kandang ?? 'N/A'); ?></td>
                                 <td>
-                                    <span class="badge bg-info">Rp {{ number_format($employee->gaji_pokok, 0, ',', '.') }}</span>
+                                    <span class="badge bg-info">Rp <?php echo e(number_format($employee->gaji_pokok, 0, ',', '.')); ?></span>
                                 </td>
                                 <td>
-                                    <select class="form-select form-select-sm status-select-bulk" data-employee-id="{{ $employee->id }}">
+                                    <select class="form-select form-select-sm status-select-bulk" data-employee-id="<?php echo e($employee->id); ?>">
                                         <option value="full">Full Day</option>
                                         <option value="setengah_hari">½ Hari</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <select class="form-select form-select-sm pembibitan-select-bulk" data-employee-id="{{ $employee->id }}">
+                                    <select class="form-select form-select-sm pembibitan-select-bulk" data-employee-id="<?php echo e($employee->id); ?>">
                                         <option value="">Pilih Pembibitan</option>
-                                        @foreach($pembibitans as $pembibitan)
-                                            <option value="{{ $pembibitan->id }}">
-                                                {{ $pembibitan->judul }}
+                                        <?php $__currentLoopData = $pembibitans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pembibitan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($pembibitan->id); ?>">
+                                                <?php echo e($pembibitan->judul); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" 
-                                            onclick="quickAbsenBulk('{{ $employee->id }}')">
+                                            onclick="quickAbsenBulk('<?php echo e($employee->id); ?>')">
                                         <i class="bi bi-lightning"></i>
                                     </button>
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
@@ -468,7 +468,7 @@ table.dataTable thead th.sorting_desc {
             </div>
             <div class="modal-body">
                 <form id="quickAttendanceFormBulk">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     <input type="hidden" id="quickEmployeeIdBulk">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Nama Karyawan</label>
@@ -476,7 +476,7 @@ table.dataTable thead th.sorting_desc {
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Tanggal</label>
-                        <input type="date" class="form-control" id="quickTanggalBulk" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                        <input type="date" class="form-control" id="quickTanggalBulk" value="<?php echo e(date('Y-m-d')); ?>" max="<?php echo e(date('Y-m-d')); ?>">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Status</label>
@@ -503,11 +503,11 @@ table.dataTable thead th.sorting_desc {
                         <label class="form-label fw-bold">Pembibitan (Opsional)</label>
                         <select class="form-select" id="quickPembibitanBulk">
                             <option value="">Pilih Pembibitan</option>
-                            @foreach($pembibitans as $pembibitan)
-                                <option value="{{ $pembibitan->id }}">
-                                    {{ $pembibitan->judul }} - {{ $pembibitan->kandang->nama_kandang ?? 'N/A' }} ({{ $pembibitan->lokasi->nama_lokasi ?? 'N/A' }})
+                            <?php $__currentLoopData = $pembibitans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pembibitan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($pembibitan->id); ?>">
+                                    <?php echo e($pembibitan->judul); ?> - <?php echo e($pembibitan->kandang->nama_kandang ?? 'N/A'); ?> (<?php echo e($pembibitan->lokasi->nama_lokasi ?? 'N/A'); ?>)
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                 </form>
@@ -521,16 +521,16 @@ table.dataTable thead th.sorting_desc {
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 $(document).ready(function() {
     $('#absensiTable').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ auth()->user()->isAdmin() ? route('admin.absensis.index') : route('manager.absensis.index') }}",
+            url: "<?php echo e(auth()->user()->isAdmin() ? route('admin.absensis.index') : route('manager.absensis.index')); ?>",
             type: 'GET',
             cache: false, // Disable caching for real-time updates
             data: function(d) {
@@ -667,7 +667,7 @@ $(document).ready(function() {
     
     // Real-time refresh master data
     function refreshMasterData() {
-        fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+        fetch('<?php echo e(route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data")); ?>')
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -692,7 +692,7 @@ $(document).ready(function() {
     
     // Function to update absensi lokasi
     function updateAbsensiLokasi() {
-        fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.update-lokasi" : "admin.absensis.update-lokasi") }}', {
+        fetch('<?php echo e(route(auth()->user()->isManager() ? "manager.absensis.update-lokasi" : "admin.absensis.update-lokasi")); ?>', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -717,7 +717,7 @@ $(document).ready(function() {
         // Only refresh if bulk modal is open
         const bulkModal = document.getElementById('bulkAttendanceModal');
         if (bulkModal && bulkModal.classList.contains('show')) {
-            fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+            fetch('<?php echo e(route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data")); ?>')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -809,7 +809,7 @@ function showBulkAttendance() {
 
 // Load employees for bulk attendance
 function loadBulkEmployees() {
-    fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+    fetch('<?php echo e(route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data")); ?>')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -826,7 +826,7 @@ function loadBulkEmployees() {
 function filterEmployeesBulk() {
     const pembibitanId = document.getElementById('filterPembibitanBulk').value;
     
-    fetch('{{ route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data") }}')
+    fetch('<?php echo e(route(auth()->user()->isManager() ? "manager.absensis.refresh-master-data" : "admin.absensis.refresh-master-data")); ?>')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -892,7 +892,7 @@ function submitBulkAttendance() {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i>Menyimpan...';
 
-    fetch('{{ route("manager.absensis.bulk-store") }}', {
+    fetch('<?php echo e(route("manager.absensis.bulk-store")); ?>', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -950,7 +950,7 @@ function submitQuickAttendanceBulk() {
         return;
     }
 
-    fetch('{{ route("manager.absensis.store") }}', {
+    fetch('<?php echo e(route("manager.absensis.store")); ?>', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1022,7 +1022,7 @@ function deleteSelectedAbsensi() {
         deleteBtn.disabled = true;
         
         // Send delete request
-        fetch('{{ route(auth()->user()->isAdmin() ? "admin.absensis.bulk-delete" : "manager.absensis.bulk-delete") }}', {
+        fetch('<?php echo e(route(auth()->user()->isAdmin() ? "admin.absensis.bulk-delete" : "manager.absensis.bulk-delete")); ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1084,4 +1084,5 @@ function deleteSelectedAbsensi() {
     color: #333 !important;
 }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\Managemen\resources\views/absensis/index.blade.php ENDPATH**/ ?>
