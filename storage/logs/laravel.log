@@ -1945,3 +1945,9 @@
 [2025-10-26 18:47:31] local.INFO: Cache miss for key: gudangs_data  
 [2025-10-26 18:47:31] local.INFO: Cache miss for key: mandors_data  
 [2025-10-26 18:47:31] local.INFO: Cache warm-up completed  
+[2025-10-26 18:51:02] local.INFO: Smart cleanup completed. Cleared: 0 items  
+[2025-10-26 18:51:03] local.INFO: Cache miss for key: lokasis_data  
+[2025-10-26 18:51:03] local.INFO: Cache miss for key: kandangs_data  
+[2025-10-26 18:51:03] local.INFO: Cache miss for key: gudangs_data  
+[2025-10-26 18:51:03] local.INFO: Cache miss for key: mandors_data  
+[2025-10-26 18:51:03] local.INFO: Cache warm-up completed  

@@ -13,7 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         // Add indexes to absensis table for better performance
-        Schema::table('absensis', function (Blueprint $table) {
+        if (Schema::hasTable('absensis')) {
+            Schema::table('absensis', function (Blueprint $table) {
             // Index for employee_id and tanggal (most common query)
             $table->index(['employee_id', 'tanggal'], 'idx_absensi_employee_date');
             
@@ -31,10 +32,12 @@ return new class extends Migration
             
             // Index for created_at (for recent records)
             $table->index('created_at', 'idx_absensi_created');
-        });
+            });
+        }
         
         // Add indexes to employees table
-        Schema::table('employees', function (Blueprint $table) {
+        if (Schema::hasTable('employees')) {
+            Schema::table('employees', function (Blueprint $table) {
             // Index for jabatan (for role filtering)
             $table->index('jabatan', 'idx_employees_jabatan');
             
@@ -43,10 +46,12 @@ return new class extends Migration
             
             // Index for nama (for name searches)
             $table->index('nama', 'idx_employees_nama');
-        });
+            });
+        }
         
         // Add indexes to salary_reports table
-        Schema::table('salary_reports', function (Blueprint $table) {
+        if (Schema::hasTable('salary_reports')) {
+            Schema::table('salary_reports', function (Blueprint $table) {
             // Index for employee_id, tahun, bulan (most common query)
             $table->index(['employee_id', 'tahun', 'bulan'], 'idx_salary_employee_period');
             
@@ -58,10 +63,12 @@ return new class extends Migration
             
             // Index for pembibitan_id (for pembibitan filtering)
             $table->index('pembibitan_id', 'idx_salary_pembibitan');
-        });
+            });
+        }
         
         // Add indexes to pembibitans table
-        Schema::table('pembibitans', function (Blueprint $table) {
+        if (Schema::hasTable('pembibitans')) {
+            Schema::table('pembibitans', function (Blueprint $table) {
             // Index for kandang_id (for kandang filtering)
             $table->index('kandang_id', 'idx_pembibitan_kandang');
             
@@ -70,28 +77,35 @@ return new class extends Migration
             
             // Index for judul (for title searches)
             $table->index('judul', 'idx_pembibitan_judul');
-        });
+            });
+        }
         
         // Add indexes to kandangs table
-        Schema::table('kandangs', function (Blueprint $table) {
+        if (Schema::hasTable('kandangs')) {
+            Schema::table('kandangs', function (Blueprint $table) {
             // Index for lokasi_id (for location filtering)
             $table->index('lokasi_id', 'idx_kandang_lokasi');
             
             // Index for nama_kandang (for name searches)
             $table->index('nama_kandang', 'idx_kandang_nama');
-        });
+            });
+        }
         
         // Add indexes to gudangs table
-        Schema::table('gudangs', function (Blueprint $table) {
+        if (Schema::hasTable('gudangs')) {
+            Schema::table('gudangs', function (Blueprint $table) {
             // Index for nama (for name searches)
             $table->index('nama', 'idx_gudang_nama');
-        });
+            });
+        }
         
         // Add indexes to mandors table
-        Schema::table('mandors', function (Blueprint $table) {
+        if (Schema::hasTable('mandors')) {
+            Schema::table('mandors', function (Blueprint $table) {
             // Index for nama (for name searches)
             $table->index('nama', 'idx_mandor_nama');
-        });
+            });
+        }
     }
 
     /**
