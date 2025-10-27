@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Tiga Putra Management System')</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title><?php echo $__env->yieldContent('title', 'Tiga Putra Management System'); ?></title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="<?php echo e(asset('favicon.ico')); ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo e(asset('favicon.ico')); ?>">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -554,7 +554,7 @@
         }
     </style>
     
-    @stack('styles')
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body>
     <div class="container-fluid">
@@ -565,7 +565,7 @@
         <div class="text-center mb-4">
             <div class="logo-container">
                 <div class="logo-round">
-                    <img src="{{ asset('logo.jpg') }}" alt="Tiga Putra Management">
+                    <img src="<?php echo e(asset('logo.jpg')); ?>" alt="Tiga Putra Management">
                 </div>
             </div>
             <h4 class="text-white fw-bold" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
@@ -575,135 +575,135 @@
         </div>
                     
                     <ul class="nav flex-column">
-                            @if(auth()->user()->isAdmin())
+                            <?php if(auth()->user()->isAdmin()): ?>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.gudangs.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.gudangs.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.gudangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.gudangs.index')); ?>">
                                     <i class="bi bi-building"></i>
                                         Master Gudang
                                     </a>
                                 </li>
-                                {{-- Admin tidak bisa akses Master Mandor --}}
+                                
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.karyawan-kandangs.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.karyawan-kandangs.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.karyawan-kandangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.karyawan-kandangs.index')); ?>">
                                         <i class="bi bi-people-fill"></i>
                                         Master Karyawan Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.lokasis.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.lokasis.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.lokasis.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.lokasis.index')); ?>">
                                         <i class="bi bi-geo-alt"></i>
                                         Master Lokasi
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.kandangs.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.kandangs.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.kandangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.kandangs.index')); ?>">
                                         <i class="bi bi-house"></i>
                                         Master Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.pembibitans.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.pembibitans.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.pembibitans.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.pembibitans.index')); ?>">
                                         <i class="bi bi-egg"></i>
                                         Master Pembibitan
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.absensis.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.absensis.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.absensis.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.absensis.index')); ?>">
                                         <i class="bi bi-table"></i>
                                         Transaksi Absensi
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}"
-                                       href="{{ route('admin.employees.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.employees.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.employees.index')); ?>">
                                         <i class="bi bi-people"></i>
                                         Master Karyawan
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('admin.manage') ? 'active' : '' }}"
-                                       href="{{ route('admin.manage') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('admin.manage') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('admin.manage')); ?>">
                                         <i class="bi bi-gear"></i>
                                         Manage
                                     </a>
                                 </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.salary-reports.*') ? 'active' : '' }}"
-                   href="{{ route('admin.salary-reports.index') }}">
+                <a class="nav-link <?php echo e(request()->routeIs('admin.salary-reports.*') ? 'active' : ''); ?>"
+                   href="<?php echo e(route('admin.salary-reports.index')); ?>">
                     <i class="bi bi-cash-stack"></i>
                     Laporan Gaji
                                     </a>
                                 </li>
-                            @elseif(auth()->user()->isManager())
+                            <?php elseif(auth()->user()->isManager()): ?>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.gudangs.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.gudangs.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.gudangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.gudangs.index')); ?>">
                                     <i class="bi bi-building"></i>
                                         Master Gudang
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.mandors.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.mandors.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.mandors.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.mandors.index')); ?>">
                                         <i class="bi bi-person-badge"></i>
                                         Master Mandor
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.karyawan-kandangs.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.karyawan-kandangs.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.karyawan-kandangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.karyawan-kandangs.index')); ?>">
                                         <i class="bi bi-people-fill"></i>
                                         Master Karyawan Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.lokasis.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.lokasis.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.lokasis.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.lokasis.index')); ?>">
                                         <i class="bi bi-geo-alt"></i>
                                         Master Lokasi
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.kandangs.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.kandangs.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.kandangs.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.kandangs.index')); ?>">
                                         <i class="bi bi-house"></i>
                                         Master Kandang
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.pembibitans.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.pembibitans.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.pembibitans.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.pembibitans.index')); ?>">
                                         <i class="bi bi-egg"></i>
                                         Master Pembibitan
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->routeIs('manager.absensis.*') ? 'active' : '' }}"
-                                       href="{{ route('manager.absensis.index') }}">
+                                    <a class="nav-link <?php echo e(request()->routeIs('manager.absensis.*') ? 'active' : ''); ?>"
+                                       href="<?php echo e(route('manager.absensis.index')); ?>">
                                         <i class="bi bi-table"></i>
                                         Transaksi Absensi
                                     </a>
                                 </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('manager.salary-reports.*') ? 'active' : '' }}"
-                   href="{{ route('manager.salary-reports.index') }}">
+                <a class="nav-link <?php echo e(request()->routeIs('manager.salary-reports.*') ? 'active' : ''); ?>"
+                   href="<?php echo e(route('manager.salary-reports.index')); ?>">
                     <i class="bi bi-cash-stack"></i>
                     Laporan Gaji
                                     </a>
                                 </li>
-                            @endif
+                            <?php endif; ?>
                             
                         <hr class="my-3" style="border-color: rgba(255, 255, 255, 0.2);">
                             
                             <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                                    @csrf
+                            <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline;">
+                                    <?php echo csrf_field(); ?>
                                 <button type="submit" class="nav-link btn btn-link text-start w-100" style="border: none; background: none; color: rgba(255, 255, 255, 0.8);">
                                         <i class="bi bi-box-arrow-right"></i>
                                         Logout
@@ -717,7 +717,7 @@
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <div class="pt-3 pb-2 mb-3">
-                    @yield('content')
+                    <?php echo $__env->yieldContent('content'); ?>
                     </div>
                 </main>
         </div>
@@ -743,8 +743,8 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     
     <!-- App JavaScript -->
-    @vite(['resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/js/app.js']); ?>
     
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
     </body>
-    </html>
+    </html><?php /**PATH C:\laragon\www\Managemen\resources\views/layouts/app.blade.php ENDPATH**/ ?>

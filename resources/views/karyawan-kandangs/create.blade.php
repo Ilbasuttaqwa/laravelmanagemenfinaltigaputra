@@ -40,21 +40,6 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label for="pembibitan_id" class="form-label">Pembibitan <span class="text-danger">*</span></label>
-                    <select class="form-control @error('pembibitan_id') is-invalid @enderror"
-                            id="pembibitan_id" name="pembibitan_id" required>
-                        <option value="">Pilih Pembibitan</option>
-                        @foreach($pembibitans as $pembibitan)
-                            <option value="{{ $pembibitan->id }}" {{ old('pembibitan_id') == $pembibitan->id ? 'selected' : '' }}>
-                                {{ $pembibitan->judul }} - {{ $pembibitan->kandang->nama_kandang }} ({{ $pembibitan->kandang->lokasi->nama_lokasi }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('pembibitan_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
 
                 <div class="d-flex justify-content-end gap-2">
                     <a href="{{ route(auth()->user()->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index') }}"

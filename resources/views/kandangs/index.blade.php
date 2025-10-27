@@ -15,29 +15,6 @@
     </a>
 </div>
 
-<!-- Search Form -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="GET" action="{{ route(auth()->user()->isAdmin() ? 'admin.kandangs.index' : 'manager.kandangs.index') }}">
-            <div class="row g-3">
-                <div class="col-md-8">
-                    <label for="search" class="form-label">Cari Kandang</label>
-                    <input type="text" class="form-control" id="search" name="search"
-                           value="{{ request('search') }}" placeholder="Masukkan nama kandang atau lokasi">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">&nbsp;</label>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search"></i>
-                            Cari
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 
 <!-- Kandangs Table -->
 <div class="card">
@@ -104,54 +81,6 @@
     </div>
 </div>
 
-<!-- Statistics Cards -->
-<div class="row mt-4">
-    <div class="col-md-4 mb-3">
-        <div class="card bg-primary text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Total Kandang</h6>
-                        <h4 class="mb-0">{{ \App\Models\Kandang::count() }}</h4>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-house-fill fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-success text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Total Lokasi</h6>
-                        <h4 class="mb-0">{{ \App\Models\Lokasi::count() }}</h4>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-geo-alt-fill fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-info text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Kandang Aktif</h6>
-                        <h4 class="mb-0">{{ \App\Models\Kandang::whereNotNull('lokasi_id')->count() }}</h4>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-house-check-fill fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">

@@ -43,7 +43,7 @@
                     <label for="lokasi_id" class="form-label">Lokasi</label>
                     <select class="form-control @error('lokasi_id') is-invalid @enderror"
                             id="lokasi_id" name="lokasi_id">
-                        <option value="">Pilih Lokasi (Opsional)</option>
+                        <option value="">Pilih Lokasi</option>
                         @foreach($lokasis as $lokasi)
                             <option value="{{ $lokasi->id }}" {{ old('lokasi_id') == $lokasi->id ? 'selected' : '' }}>
                                 {{ $lokasi->nama_lokasi }}
@@ -59,7 +59,7 @@
                     <label for="kandang_id" class="form-label">Kandang</label>
                     <select class="form-control @error('kandang_id') is-invalid @enderror"
                             id="kandang_id" name="kandang_id">
-                        <option value="">Pilih Kandang (Opsional)</option>
+                        <option value="">Pilih Kandang</option>
                         @foreach($kandangs as $kandang)
                             <option value="{{ $kandang->id }}" {{ old('kandang_id') == $kandang->id ? 'selected' : '' }}>
                                 {{ $kandang->nama_kandang }}

@@ -392,8 +392,67 @@ class AbsensiController extends Controller
         $lokasis = Lokasi::orderBy('nama_lokasi')->get();
         $kandangs = Kandang::with('lokasi')->orderBy('nama_kandang')->get();
         $pembibitans = Pembibitan::with(['lokasi', 'kandang'])->orderBy('judul')->get();
-        $gudangs = Gudang::orderBy('nama')->get();
-        $employees = Employee::where('jabatan', 'karyawan')->with(['lokasi', 'kandang'])->get();
+        
+        // Get employees from employees table
+        $query = Employee::orderBy('nama');
+        
+        // Admin can only see karyawan (not mandor)
+        if ($this->getCurrentUser()?->isAdmin()) {
+            $query->where('jabatan', 'karyawan');
+        }
+        
+        $employees = $query->get();
+        
+        // Get gudang employees (karyawan gudang) - ALWAYS FRESH DATA
+        $gudangEmployees = collect();
+        if ($this->getCurrentUser()?->isManager()) {
+            $gudangs = \App\Models\Gudang::orderBy('nama')->get();
+            
+            $gudangEmployees = $gudangs->map(function($gudang) {
+                return (object) [
+                    'id' => 'gudang_' . $gudang->id,
+                    'nama' => $gudang->nama,
+                    'jabatan' => 'karyawan_gudang',
+                    'gaji_pokok' => $gudang->gaji,
+                    'source' => 'gudang',
+                    'lokasi' => null,
+                    'kandang' => null
+                ];
+            });
+        }
+        
+        // Get mandor employees
+        $mandorEmployees = collect();
+        if ($this->getCurrentUser()?->isManager()) {
+            $mandors = \App\Models\Mandor::orderBy('nama')->get();
+            
+            $mandorEmployees = $mandors->map(function($mandor) {
+                return (object) [
+                    'id' => 'mandor_' . $mandor->id,
+                    'nama' => $mandor->nama,
+                    'jabatan' => 'mandor',
+                    'gaji_pokok' => $mandor->gaji,
+                    'source' => 'mandor',
+                    'lokasi' => null,
+                    'kandang' => null
+                ];
+            });
+        }
+        
+        // Combine all employees and remove duplicates by name
+        $allEmployees = $gudangEmployees->concat($employees->map(function($employee) {
+            return (object) [
+                'id' => 'employee_' . $employee->id,
+                'nama' => $employee->nama,
+                'jabatan' => $employee->jabatan,
+                'gaji_pokok' => $employee->gaji_pokok,
+                'source' => 'employee',
+                'lokasi' => $employee->lokasi,
+                'kandang' => $employee->kandang
+            ];
+        }))->concat($mandorEmployees)
+        ->unique('nama') // Remove duplicates by name
+        ->sortBy('nama');
         
         return response()->json([
             'success' => true,
@@ -401,8 +460,8 @@ class AbsensiController extends Controller
                 'lokasis' => $lokasis,
                 'kandangs' => $kandangs,
                 'pembibitans' => $pembibitans,
-                'gudangs' => $gudangs,
-                'employees' => $employees
+                'gudangs' => $gudangEmployees,
+                'employees' => $allEmployees
             ]
         ]);
     }

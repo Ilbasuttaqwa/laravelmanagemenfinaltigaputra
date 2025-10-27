@@ -16,29 +16,6 @@
         </a>
     </div>
 
-    <!-- Search Form -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="GET" action="{{ route(auth()->user()->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index') }}">
-                <div class="row g-3">
-                    <div class="col-md-8">
-                        <label for="search" class="form-label">Cari Karyawan</label>
-                        <input type="text" class="form-control" id="search" name="search"
-                               value="{{ request('search') }}" placeholder="Masukkan nama karyawan">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-search"></i>
-                                Cari
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Karyawan Kandang Table -->
     <div class="card">
@@ -54,8 +31,6 @@
                                 <th>No</th>
                                 <th>Nama Karyawan</th>
                                 <th>Gaji Pokok</th>
-                                <th>Kandang</th>
-                                <th>Lokasi</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -68,20 +43,6 @@
                                     </td>
                                     <td>
                                         <span class="badge bg-success">Rp {{ number_format($karyawan->gaji_pokok, 0, ',', '.') }}</span>
-                                    </td>
-                                    <td>
-                                        @if($karyawan->kandang)
-                                            <span class="badge bg-info">{{ $karyawan->kandang->nama_kandang }}</span>
-                                        @else
-                                            <span class="badge bg-secondary">Belum ada</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($karyawan->kandang && $karyawan->kandang->lokasi)
-                                            <span class="badge bg-primary">{{ $karyawan->kandang->lokasi->nama_lokasi }}</span>
-                                        @else
-                                            <span class="badge bg-secondary">Belum ada</span>
-                                        @endif
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
@@ -121,13 +82,13 @@
                     </div>
                 </div>
             @else
-                <div class="text-center py-4">
-                    <i class="bi bi-people display-1 text-muted"></i>
-                    <h5 class="text-muted mt-3">Belum ada data karyawan kandang</h5>
-                    <p class="text-muted">Silakan tambah data karyawan kandang terlebih dahulu.</p>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    Tidak ada data karyawan kandang yang ditemukan.
                 </div>
             @endif
         </div>
     </div>
+
 </div>
 @endsection

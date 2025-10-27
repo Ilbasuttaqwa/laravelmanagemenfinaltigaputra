@@ -54,7 +54,8 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::resource('gudangs', GudangController::class);
     Route::resource('mandors', MandorController::class);
     Route::resource('employees', EmployeeController::class);
-    Route::resource('absensis', AbsensiController::class);
+    
+    // Absensi specific routes (must be before resource route)
     Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
     Route::get('absensis/get-salary/{employeeId}', [AbsensiController::class, 'getSalary'])->name('absensis.get-salary');
     Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
@@ -62,6 +63,8 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
     Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
     Route::get('absensis/check-duplicates', [AbsensiController::class, 'checkDuplicateAbsensi'])->name('absensis.check-duplicates');
+    
+    Route::resource('absensis', AbsensiController::class);
     Route::post('absensis/clean-duplicates', [AbsensiController::class, 'cleanDuplicateAbsensi'])->name('absensis.clean-duplicates');
     
     Route::get('system/monitor', [App\Http\Controllers\SystemMonitorController::class, 'dashboard'])->name('system.monitor');
@@ -110,6 +113,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Admin tidak bisa hapus karyawan
     
     // Admin bisa akses absensi tapi hanya untuk karyawan (bukan mandor)
+    // Absensi specific routes (must be before individual routes)
+    Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
+    Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
+    Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
+    Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
+    Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
+    
     Route::get('absensis', [AbsensiController::class, 'index'])->name('absensis.index');
     Route::get('absensis/create', [AbsensiController::class, 'create'])->name('absensis.create');
     Route::post('absensis', [AbsensiController::class, 'store'])->name('absensis.store');
@@ -117,11 +127,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('absensis/{absensi}/edit', [AbsensiController::class, 'edit'])->name('absensis.edit');
     Route::put('absensis/{absensi}', [AbsensiController::class, 'update'])->name('absensis.update');
     Route::delete('absensis/{absensi}', [AbsensiController::class, 'destroy'])->name('absensis.destroy');
-    Route::get('absensis/get-employees', [AbsensiController::class, 'getEmployees'])->name('absensis.get-employees');
-    Route::get('absensis/refresh-master-data', [AbsensiController::class, 'refreshMasterData'])->name('absensis.refresh-master-data');
-    Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
-    Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
-    Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
     
     
     Route::resource('pembibitans', PembibitanController::class)->except(['destroy']);

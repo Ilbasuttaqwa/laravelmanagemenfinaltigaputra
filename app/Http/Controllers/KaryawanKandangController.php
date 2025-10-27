@@ -30,8 +30,7 @@ class KaryawanKandangController extends Controller
 
     public function create()
     {
-        $pembibitans = Pembibitan::with(['kandang', 'kandang.lokasi'])->orderBy('judul')->get();
-        return view('karyawan-kandangs.create', compact('pembibitans'));
+        return view('karyawan-kandangs.create');
     }
 
     public function store(Request $request)
@@ -39,17 +38,12 @@ class KaryawanKandangController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji_pokok' => 'required|numeric|min:0',
-            'pembibitan_id' => 'required|exists:pembibitans,id',
         ]);
-
-        // Get kandang_id from pembibitan
-        $pembibitan = Pembibitan::find($validated['pembibitan_id']);
 
         Employee::create([
             'nama' => $validated['nama'],
             'gaji_pokok' => $validated['gaji_pokok'],
             'jabatan' => 'karyawan',
-            'kandang_id' => $pembibitan->kandang_id,
         ]);
 
         return redirect()->route($this->getCurrentUser()?->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')
@@ -64,8 +58,7 @@ class KaryawanKandangController extends Controller
 
     public function edit(Employee $karyawanKandang)
     {
-        $pembibitans = Pembibitan::with(['kandang', 'kandang.lokasi'])->orderBy('judul')->get();
-        return view('karyawan-kandangs.edit', compact('karyawanKandang', 'pembibitans'));
+        return view('karyawan-kandangs.edit', compact('karyawanKandang'));
     }
 
     public function update(Request $request, Employee $karyawanKandang)
@@ -73,16 +66,11 @@ class KaryawanKandangController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'gaji_pokok' => 'required|numeric|min:0',
-            'pembibitan_id' => 'required|exists:pembibitans,id',
         ]);
-
-        // Get kandang_id from pembibitan
-        $pembibitan = Pembibitan::find($validated['pembibitan_id']);
 
         $karyawanKandang->update([
             'nama' => $validated['nama'],
             'gaji_pokok' => $validated['gaji_pokok'],
-            'kandang_id' => $pembibitan->kandang_id,
         ]);
 
         return redirect()->route($this->getCurrentUser()?->isAdmin() ? 'admin.karyawan-kandangs.index' : 'manager.karyawan-kandangs.index')

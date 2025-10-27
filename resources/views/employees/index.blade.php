@@ -67,9 +67,8 @@
                     <thead class="table-dark">
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
-                            <th>Role</th>
-                            <th>Gaji</th>
+                            <th>Nama Karyawan</th>
+                            <th>Gaji Pokok</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -77,14 +76,7 @@
                         @foreach($employees as $index => $employee)
                             <tr>
                                 <td>{{ $employees->firstItem() + $index }}</td>
-                                <td>{{ $employee->nama }}</td>
-                                <td>
-                                    @if($employee->role === 'mandor')
-                                        <span class="badge bg-warning">Mandor</span>
-                                    @else
-                                        <span class="badge bg-primary">Karyawan</span>
-                                    @endif
-                                </td>
+                                <td><strong>{{ $employee->nama }}</strong></td>
                                 <td>Rp {{ number_format($employee->gaji_pokok, 0, ',', '.') }}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
