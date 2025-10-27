@@ -2130,3 +2130,934 @@
 [2025-10-27 17:49:47] local.INFO: Cleared cache pattern (fallback): absensis_*  
 [2025-10-27 17:50:27] local.INFO: Cleared cache pattern (fallback): absensis_*  
 [2025-10-27 17:50:29] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:09:42] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:09:45] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:12:31] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:12:33] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:12:43] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:12:46] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:14:07] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:14:10] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:15:24] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:15:27] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:15:38] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:15:41] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:16:18] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:18:48] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:18:51] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:20:11] local.ERROR: SQLSTATE[HY000] [1049] Unknown database 'laravel' (Connection: mysql, SQL: select * from `users` where `email` = manager@tigaputra.com limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 1049): SQLSTATE[HY000] [1049] Unknown database 'laravel' (Connection: mysql, SQL: select * from `users` where `email` = manager@tigaputra.com limit 1) at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(431): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2914): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2903): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(333): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\EloquentUserProvider.php(139): Illuminate\\Database\\Eloquent\\Builder->first()
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\SessionGuard.php(381): Illuminate\\Auth\\EloquentUserProvider->retrieveByCredentials(Array)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\AuthManager.php(340): Illuminate\\Auth\\SessionGuard->attempt(Array, false)
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Auth\\AuthManager->__call('attempt', Array)
+#13 C:\\laragon\\www\\Managemen\\app\\Http\\Controllers\\Auth\\LoginController.php(29): Illuminate\\Support\\Facades\\Facade::__callStatic('attempt', Array)
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Auth\\LoginController->login(Object(Illuminate\\Http\\Request))
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('login', Array)
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(260): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Auth\\LoginController), 'login')
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\laragon\\www\\Managemen\\app\\Http\\Middleware\\RedirectIfAuthenticated.php(28): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\RedirectIfAuthenticated->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#30 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(807): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#37 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#38 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#39 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#40 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#41 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#58 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#59 C:\\laragon\\www\\Managemen\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#60 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
+#61 {main}
+
+[previous exception] [object] (PDOException(code: 1049): SQLSTATE[HY000] [1049] Unknown database 'laravel' at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:65)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(65): PDO->__construct('mysql:host=127....', 'root', '', Array)
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(45): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=127....', 'root', '', Array)
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=127....', Array, Array)
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1339): call_user_func(Object(Closure))
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1375): Illuminate\\Database\\Connection->getPdo()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(528): Illuminate\\Database\\Connection->getReadPdo()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(423): Illuminate\\Database\\Connection->getPdoForSelect(true)
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(431): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2914): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2903): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(333): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\EloquentUserProvider.php(139): Illuminate\\Database\\Eloquent\\Builder->first()
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\SessionGuard.php(381): Illuminate\\Auth\\EloquentUserProvider->retrieveByCredentials(Array)
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\AuthManager.php(340): Illuminate\\Auth\\SessionGuard->attempt(Array, false)
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Auth\\AuthManager->__call('attempt', Array)
+#23 C:\\laragon\\www\\Managemen\\app\\Http\\Controllers\\Auth\\LoginController.php(29): Illuminate\\Support\\Facades\\Facade::__callStatic('attempt', Array)
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Auth\\LoginController->login(Object(Illuminate\\Http\\Request))
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('login', Array)
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(260): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Auth\\LoginController), 'login')
+#27 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#29 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\Managemen\\app\\Http\\Middleware\\RedirectIfAuthenticated.php(28): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\RedirectIfAuthenticated->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#40 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(807): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#47 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#48 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#49 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#50 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#51 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#60 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#61 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#62 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#63 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#64 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#65 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#66 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#67 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#68 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#69 C:\\laragon\\www\\Managemen\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#70 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
+#71 {main}
+"} 
+[2025-10-27 18:20:37] local.ERROR: SQLSTATE[HY000] [1049] Unknown database 'laravel' (Connection: mysql, SQL: select * from `users` where `email` = manager@tigaputra.com limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 1049): SQLSTATE[HY000] [1049] Unknown database 'laravel' (Connection: mysql, SQL: select * from `users` where `email` = manager@tigaputra.com limit 1) at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(431): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2914): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2903): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(333): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\EloquentUserProvider.php(139): Illuminate\\Database\\Eloquent\\Builder->first()
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\SessionGuard.php(381): Illuminate\\Auth\\EloquentUserProvider->retrieveByCredentials(Array)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\AuthManager.php(340): Illuminate\\Auth\\SessionGuard->attempt(Array, false)
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Auth\\AuthManager->__call('attempt', Array)
+#13 C:\\laragon\\www\\Managemen\\app\\Http\\Controllers\\Auth\\LoginController.php(29): Illuminate\\Support\\Facades\\Facade::__callStatic('attempt', Array)
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Auth\\LoginController->login(Object(Illuminate\\Http\\Request))
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('login', Array)
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(260): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Auth\\LoginController), 'login')
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\laragon\\www\\Managemen\\app\\Http\\Middleware\\RedirectIfAuthenticated.php(28): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\RedirectIfAuthenticated->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#30 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(807): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#37 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#38 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#39 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#40 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#41 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#58 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#59 C:\\laragon\\www\\Managemen\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#60 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
+#61 {main}
+
+[previous exception] [object] (PDOException(code: 1049): SQLSTATE[HY000] [1049] Unknown database 'laravel' at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:65)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(65): PDO->__construct('mysql:host=127....', 'root', '', Array)
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(45): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=127....', 'root', '', Array)
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=127....', Array, Array)
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1339): call_user_func(Object(Closure))
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1375): Illuminate\\Database\\Connection->getPdo()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(528): Illuminate\\Database\\Connection->getReadPdo()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(423): Illuminate\\Database\\Connection->getPdoForSelect(true)
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(431): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2914): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2903): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(333): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\EloquentUserProvider.php(139): Illuminate\\Database\\Eloquent\\Builder->first()
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\SessionGuard.php(381): Illuminate\\Auth\\EloquentUserProvider->retrieveByCredentials(Array)
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\AuthManager.php(340): Illuminate\\Auth\\SessionGuard->attempt(Array, false)
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Auth\\AuthManager->__call('attempt', Array)
+#23 C:\\laragon\\www\\Managemen\\app\\Http\\Controllers\\Auth\\LoginController.php(29): Illuminate\\Support\\Facades\\Facade::__callStatic('attempt', Array)
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Auth\\LoginController->login(Object(Illuminate\\Http\\Request))
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction('login', Array)
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(260): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\Auth\\LoginController), 'login')
+#27 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#29 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\laragon\\www\\Managemen\\app\\Http\\Middleware\\RedirectIfAuthenticated.php(28): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\RedirectIfAuthenticated->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#40 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(807): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#47 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#48 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#49 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#50 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#51 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#52 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#60 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#61 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#62 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#63 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#64 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#65 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#66 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#67 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#68 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#69 C:\\laragon\\www\\Managemen\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#70 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
+#71 {main}
+"} 
+[2025-10-27 18:23:06] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:23:09] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:23:30] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:23:31] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:30:07] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:30:08] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:30:46] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:30:57] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:32:16] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:32:28] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:32:30] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:32:59] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:33:07] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:33:23] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:33:51] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:34:06] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:34:11] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:34:14] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:34:17] local.INFO: AutoSync: Generated 0 salary reports for 2025-10  
+[2025-10-27 18:34:17] local.INFO: AutoSync: Salary reports synced successfully  
+[2025-10-27 18:34:17] local.INFO: AutoSync: All caches cleared  
+[2025-10-27 18:34:54] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:34:55] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:37:54] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:37:54] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:39:52] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:39:52] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:40:27] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:40:27] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:41:15] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:41:15] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:41:26] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Abs...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Absensi c...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Absensi c...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Absensi c...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 18:41:36] local.ERROR: The "--month" option does not exist. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): The \"--month\" option does not exist. at C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Input\\ArgvInput.php:223)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Input\\ArgvInput.php(150): Symfony\\Component\\Console\\Input\\ArgvInput->addLongOption('month', '10')
+#1 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Input\\ArgvInput.php(85): Symfony\\Component\\Console\\Input\\ArgvInput->parseLongOption('--month=10')
+#2 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Input\\ArgvInput.php(74): Symfony\\Component\\Console\\Input\\ArgvInput->parseToken('--month=10', true)
+#3 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Input\\Input.php(56): Symfony\\Component\\Console\\Input\\ArgvInput->parse()
+#4 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(285): Symfony\\Component\\Console\\Input\\Input->bind(Object(Symfony\\Component\\Console\\Input\\InputDefinition))
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#6 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#7 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\GenerateSalaryReports), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#10 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#11 {main}
+"} 
+[2025-10-27 18:41:46] local.INFO: AutoSync: Salary reports synced successfully  
+[2025-10-27 18:41:55] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:41:56] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:43:07] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:43:08] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:43:18] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Abs...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Absensi c...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Absensi c...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Absensi c...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 18:43:44] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:43:45] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:47:37] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:47:38] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:49:09] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:49:25] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:49:41] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:49:41] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:49:46] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:50:01] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:50:23] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:50:23] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:51:19] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:51:25] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:51:35] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:51:46] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:54:21] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:54:21] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:56:21] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:56:22] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:58:25] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:59:56] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 18:59:56] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:01:55] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:01:55] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:02:06] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Abs...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Absensi c...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Absensi c...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Absensi c...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:02:11] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:02:15] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php App\\\\Model...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('App\\\\Models\\\\Abse...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('App\\\\Models\\\\Abse...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('App\\\\Models\\\\Abse...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:02:18] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Pem...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Pembibita...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Pembibita...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Pembibita...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:02:37] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:02:37] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:02:54] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:02:57] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:02:58] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:03:03] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:26:28] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:26:56] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:26:56] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:27:29] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:27:39] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:27:48] local.INFO: AutoSync: Salary reports synced successfully  
+[2025-10-27 19:27:48] local.INFO: AutoSync: All caches cleared  
+[2025-10-27 19:32:18] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Tot...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Total pem...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Total pem...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Total pem...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:36:43] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Tot...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Total pem...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Total pem...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Total pem...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:36:49] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php App\\\\Model...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('App\\\\Models\\\\Pemb...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('App\\\\Models\\\\Pemb...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('App\\\\Models\\\\Pemb...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:37:10] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php App\\\\Model...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('App\\\\Models\\\\Sala...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('App\\\\Models\\\\Sala...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('App\\\\Models\\\\Sala...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:37:29] local.INFO: AutoSync: Salary reports synced successfully  
+[2025-10-27 19:38:05] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:38:06] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:38:10] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:38:40] local.ERROR: AutoSync: Failed to generate salary reports: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tahun' cannot be null (Connection: mysql, SQL: insert into `salary_reports` (`employee_id`, `lokasi_id`, `kandang_id`, `pembibitan_id`, `nama_karyawan`, `tipe_karyawan`, `gaji_pokok`, `gaji_pokok_bulanan`, `jml_hari_kerja`, `total_gaji`, `tanggal_mulai`, `tanggal_selesai`, `tahun`, `bulan`, `updated_at`, `created_at`) values (1, 1, 1, 3, Sabil, karyawan, 66666.666666667, 2000000.00, 1, 66666.666666667, 2025-10-01 00:00:00, 2025-10-31 23:59:59, ?, 10, 2025-10-27 19:38:40, 2025-10-27 19:38:40))  
+[2025-10-27 19:38:40] local.INFO: AutoSync: Force generated salary reports for -10  
+[2025-10-27 19:38:50] local.ERROR: AutoSync: Failed to generate salary reports: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tahun' cannot be null (Connection: mysql, SQL: insert into `salary_reports` (`employee_id`, `lokasi_id`, `kandang_id`, `pembibitan_id`, `nama_karyawan`, `tipe_karyawan`, `gaji_pokok`, `gaji_pokok_bulanan`, `jml_hari_kerja`, `total_gaji`, `tanggal_mulai`, `tanggal_selesai`, `tahun`, `bulan`, `updated_at`, `created_at`) values (1, 1, 1, 3, Sabil, karyawan, 66666.666666667, 2000000.00, 1, 66666.666666667, 2025-10-01 00:00:00, 2025-10-31 23:59:59, ?, 10, 2025-10-27 19:38:50, 2025-10-27 19:38:50))  
+[2025-10-27 19:38:50] local.INFO: AutoSync: Force generated salary reports for -10  
+[2025-10-27 19:38:51] local.ERROR: AutoSync: Failed to generate salary reports: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tahun' cannot be null (Connection: mysql, SQL: insert into `salary_reports` (`employee_id`, `lokasi_id`, `kandang_id`, `pembibitan_id`, `nama_karyawan`, `tipe_karyawan`, `gaji_pokok`, `gaji_pokok_bulanan`, `jml_hari_kerja`, `total_gaji`, `tanggal_mulai`, `tanggal_selesai`, `tahun`, `bulan`, `updated_at`, `created_at`) values (1, 1, 1, 3, Sabil, karyawan, 66666.666666667, 2000000.00, 1, 66666.666666667, 2025-10-01 00:00:00, 2025-10-31 23:59:59, ?, 10, 2025-10-27 19:38:51, 2025-10-27 19:38:51))  
+[2025-10-27 19:38:51] local.INFO: AutoSync: Force generated salary reports for -10  
+[2025-10-27 19:38:51] local.ERROR: AutoSync: Failed to generate salary reports: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tahun' cannot be null (Connection: mysql, SQL: insert into `salary_reports` (`employee_id`, `lokasi_id`, `kandang_id`, `pembibitan_id`, `nama_karyawan`, `tipe_karyawan`, `gaji_pokok`, `gaji_pokok_bulanan`, `jml_hari_kerja`, `total_gaji`, `tanggal_mulai`, `tanggal_selesai`, `tahun`, `bulan`, `updated_at`, `created_at`) values (1, 1, 1, 3, Sabil, karyawan, 66666.666666667, 2000000.00, 1, 66666.666666667, 2025-10-01 00:00:00, 2025-10-31 23:59:59, ?, 10, 2025-10-27 19:38:51, 2025-10-27 19:38:51))  
+[2025-10-27 19:38:51] local.INFO: AutoSync: Force generated salary reports for -10  
+[2025-10-27 19:38:52] local.ERROR: AutoSync: Failed to generate salary reports: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tahun' cannot be null (Connection: mysql, SQL: insert into `salary_reports` (`employee_id`, `lokasi_id`, `kandang_id`, `pembibitan_id`, `nama_karyawan`, `tipe_karyawan`, `gaji_pokok`, `gaji_pokok_bulanan`, `jml_hari_kerja`, `total_gaji`, `tanggal_mulai`, `tanggal_selesai`, `tahun`, `bulan`, `updated_at`, `created_at`) values (1, 1, 1, 3, Sabil, karyawan, 66666.666666667, 2000000.00, 1, 66666.666666667, 2025-10-01 00:00:00, 2025-10-31 23:59:59, ?, 10, 2025-10-27 19:38:52, 2025-10-27 19:38:52))  
+[2025-10-27 19:38:52] local.INFO: AutoSync: Force generated salary reports for -10  
+[2025-10-27 19:38:52] local.ERROR: AutoSync: Failed to generate salary reports: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tahun' cannot be null (Connection: mysql, SQL: insert into `salary_reports` (`employee_id`, `lokasi_id`, `kandang_id`, `pembibitan_id`, `nama_karyawan`, `tipe_karyawan`, `gaji_pokok`, `gaji_pokok_bulanan`, `jml_hari_kerja`, `total_gaji`, `tanggal_mulai`, `tanggal_selesai`, `tahun`, `bulan`, `updated_at`, `created_at`) values (1, 1, 1, 3, Sabil, karyawan, 66666.666666667, 2000000.00, 1, 66666.666666667, 2025-10-01 00:00:00, 2025-10-31 23:59:59, ?, 10, 2025-10-27 19:38:52, 2025-10-27 19:38:52))  
+[2025-10-27 19:38:52] local.INFO: AutoSync: Force generated salary reports for -10  
+[2025-10-27 19:39:00] local.ERROR: AutoSync: Failed to generate salary reports: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tahun' cannot be null (Connection: mysql, SQL: insert into `salary_reports` (`employee_id`, `lokasi_id`, `kandang_id`, `pembibitan_id`, `nama_karyawan`, `tipe_karyawan`, `gaji_pokok`, `gaji_pokok_bulanan`, `jml_hari_kerja`, `total_gaji`, `tanggal_mulai`, `tanggal_selesai`, `tahun`, `bulan`, `updated_at`, `created_at`) values (1, 1, 1, 3, Sabil, karyawan, 66666.666666667, 2000000.00, 1, 66666.666666667, 2025-10-01 00:00:00, 2025-10-31 23:59:59, ?, 10, 2025-10-27 19:39:00, 2025-10-27 19:39:00))  
+[2025-10-27 19:39:00] local.INFO: AutoSync: Force generated salary reports for -10  
+[2025-10-27 19:39:05] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:39:06] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:39:12] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:39:40] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:39:40] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:42:44] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Cek...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Cek struk...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Cek struk...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Cek struk...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:42:47] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting T_VARIABLE on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Cek...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Cek data ...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Cek data ...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Cek data ...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:42:56] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 at C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
+#1 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php echo 'Cek...', false)
+#2 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
+#3 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(881): Psy\\Shell->addCode('echo 'Cek data ...', true)
+#4 C:\\laragon\\www\\Managemen\\vendor\\psy\\psysh\\src\\Shell.php(1394): Psy\\Shell->setCode('echo 'Cek data ...', true)
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\tinker\\src\\Console\\TinkerCommand.php(76): Psy\\Shell->execute('echo 'Cek data ...')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 {main}
+"} 
+[2025-10-27 19:43:26] local.INFO: AutoSync: Salary reports synced successfully  
+[2025-10-27 19:44:07] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:44:08] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:44:52] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:44:52] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:45:00] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:48:09] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:48:09] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:48:29] local.INFO: AutoSync: Salary reports synced successfully  
+[2025-10-27 19:55:59] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 19:56:00] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 20:02:02] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 20:02:03] local.INFO: Cleared cache pattern (fallback): absensis_*  
+[2025-10-27 20:02:32] local.ERROR: SQLSTATE[42000]: Syntax error or access violation: 1061 Duplicate key name 'idx_absensi_employee_date' (Connection: mysql, SQL: alter table `absensis` add index `idx_absensi_employee_date`(`employee_id`, `tanggal`)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1061 Duplicate key name 'idx_absensi_employee_date' (Connection: mysql, SQL: alter table `absensis` add index `idx_absensi_employee_date`(`employee_id`, `tanggal`)) at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `ab...', Array, Object(Closure))
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(588): Illuminate\\Database\\Connection->run('alter table `ab...', Array, Object(Closure))
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `ab...')
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('absensis', Object(Closure))
+#6 C:\\laragon\\www\\Managemen\\database\\migrations\\2025_10_27_000000_add_performance_indexes.php(35): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(501): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(418): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(427): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(783): Illuminate\\Console\\View\\Components\\Task->render('2025_10_27_0000...', Object(Closure))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_10_27_0000...', Object(Closure))
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\laragon\\\\www\\\\...', 6, false)
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(92): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(104): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1061 Duplicate key name 'idx_absensi_employee_date' at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:587)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(587): PDOStatement->execute()
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('alter table `ab...', Array)
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `ab...', Array, Object(Closure))
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(588): Illuminate\\Database\\Connection->run('alter table `ab...', Array, Object(Closure))
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `ab...')
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('absensis', Object(Closure))
+#8 C:\\laragon\\www\\Managemen\\database\\migrations\\2025_10_27_000000_add_performance_indexes.php(35): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(501): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(418): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(427): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(783): Illuminate\\Console\\View\\Components\\Task->render('2025_10_27_0000...', Object(Closure))
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_10_27_0000...', Object(Closure))
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\laragon\\\\www\\\\...', 6, false)
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(92): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(104): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#27 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#29 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#33 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 {main}
+"} 
+[2025-10-27 20:03:04] local.ERROR: SQLSTATE[42000]: Syntax error or access violation: 1061 Duplicate key name 'idx_employees_jabatan' (Connection: mysql, SQL: alter table `employees` add index `idx_employees_jabatan`(`jabatan`)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1061 Duplicate key name 'idx_employees_jabatan' (Connection: mysql, SQL: alter table `employees` add index `idx_employees_jabatan`(`jabatan`)) at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `em...', Array, Object(Closure))
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(588): Illuminate\\Database\\Connection->run('alter table `em...', Array, Object(Closure))
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `em...')
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('employees', Object(Closure))
+#6 C:\\laragon\\www\\Managemen\\database\\migrations\\2025_10_27_000000_add_performance_indexes.php(70): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(501): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(418): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(427): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(783): Illuminate\\Console\\View\\Components\\Task->render('2025_10_27_0000...', Object(Closure))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_10_27_0000...', Object(Closure))
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\laragon\\\\www\\\\...', 6, false)
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(92): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(104): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1061 Duplicate key name 'idx_employees_jabatan' at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:587)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(587): PDOStatement->execute()
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('alter table `em...', Array)
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `em...', Array, Object(Closure))
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(588): Illuminate\\Database\\Connection->run('alter table `em...', Array, Object(Closure))
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Blueprint.php(110): Illuminate\\Database\\Connection->statement('alter table `em...')
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(602): Illuminate\\Database\\Schema\\Blueprint->build(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Schema\\Grammars\\MySqlGrammar))
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Schema\\Builder.php(444): Illuminate\\Database\\Schema\\Builder->build(Object(Illuminate\\Database\\Schema\\Blueprint))
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\Schema\\Builder->table('employees', Object(Closure))
+#8 C:\\laragon\\www\\Managemen\\database\\migrations\\2025_10_27_000000_add_performance_indexes.php(70): Illuminate\\Support\\Facades\\Facade::__callStatic('table', Array)
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(501): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(418): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(427): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(783): Illuminate\\Console\\View\\Components\\Task->render('2025_10_27_0000...', Object(Closure))
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2025_10_27_0000...', Object(Closure))
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\laragon\\\\www\\\\...', 6, false)
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(92): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(641): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(104): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#27 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#29 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#33 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 {main}
+"} 
+[2025-10-27 20:04:02] local.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'admin@tigaputra.com' for key 'users.users_email_unique' (Connection: mysql, SQL: insert into `users` (`name`, `email`, `password`, `email_verified_at`, `role`, `updated_at`, `created_at`) values (Administrator, admin@tigaputra.com, $2y$12$6rOVbF./gNHnH55B.KifY.6DSzVcB3.DkPxQfhHZC4UGugY5i17Jy, 2025-10-27 20:04:01, admin, 2025-10-27 20:04:02, 2025-10-27 20:04:02)) {"exception":"[object] (Illuminate\\Database\\UniqueConstraintViolationException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'admin@tigaputra.com' for key 'users.users_email_unique' (Connection: mysql, SQL: insert into `users` (`name`, `email`, `password`, `email_verified_at`, `role`, `updated_at`, `created_at`) values (Administrator, admin@tigaputra.com, $2y$12$6rOVbF./gNHnH55B.KifY.6DSzVcB3.DkPxQfhHZC4UGugY5i17Jy, 2025-10-27 20:04:01, admin, 2025-10-27 20:04:02, 2025-10-27 20:04:02)) at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(50): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Illuminate\\Database\\Eloquent\\Builder), Array)
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Illuminate\\Database\\Eloquent\\Builder))
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1025): Illuminate\\Database\\Eloquent\\Model->save()
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\helpers.php(320): Illuminate\\Database\\Eloquent\\Builder->Illuminate\\Database\\Eloquent\\{closure}(Object(App\\Models\\User))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1026): tap(Object(App\\Models\\User), Object(Closure))
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->create(Array)
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2335): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'create', Array)
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2347): Illuminate\\Database\\Eloquent\\Model->__call('create', Array)
+#14 C:\\laragon\\www\\Managemen\\database\\seeders\\UserSeeder.php(23): Illuminate\\Database\\Eloquent\\Model::__callStatic('create', Array)
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
+#16 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(71): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#27 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#29 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#30 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#31 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#33 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#34 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#35 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#36 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#37 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#38 {main}
+
+[previous exception] [object] (PDOException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'admin@tigaputra.com' for key 'users.users_email_unique' at C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php:45)
+[stacktrace]
+#0 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(45): PDOStatement->execute()
+#1 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\MySqlConnection->Illuminate\\Database\\{closure}('insert into `us...', Array)
+#2 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `us...', Array, Object(Closure))
+#3 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\MySqlConnection.php(50): Illuminate\\Database\\Connection->run('insert into `us...', Array, Object(Closure))
+#4 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Processors\\MySqlProcessor.php(35): Illuminate\\Database\\MySqlConnection->insert('insert into `us...', Array, 'id')
+#5 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3549): Illuminate\\Database\\Query\\Processors\\MySqlProcessor->processInsertGetId(Object(Illuminate\\Database\\Query\\Builder), 'insert into `us...', Array, 'id')
+#6 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1982): Illuminate\\Database\\Query\\Builder->insertGetId(Array, 'id')
+#7 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1334): Illuminate\\Database\\Eloquent\\Builder->__call('insertGetId', Array)
+#8 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1299): Illuminate\\Database\\Eloquent\\Model->insertAndSetId(Object(Illuminate\\Database\\Eloquent\\Builder), Array)
+#9 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert(Object(Illuminate\\Database\\Eloquent\\Builder))
+#10 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1025): Illuminate\\Database\\Eloquent\\Model->save()
+#11 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\helpers.php(320): Illuminate\\Database\\Eloquent\\Builder->Illuminate\\Database\\Eloquent\\{closure}(Object(App\\Models\\User))
+#12 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(1026): tap(Object(App\\Models\\User), Object(Closure))
+#13 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->create(Array)
+#14 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2335): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'create', Array)
+#15 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2347): Illuminate\\Database\\Eloquent\\Model->__call('create', Array)
+#16 C:\\laragon\\www\\Managemen\\database\\seeders\\UserSeeder.php(23): Illuminate\\Database\\Eloquent\\Model::__callStatic('create', Array)
+#17 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Database\\Seeders\\UserSeeder->run()
+#18 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#19 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#20 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#21 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#22 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(184): Illuminate\\Container\\Container->call(Array, Array)
+#23 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Seeder.php(193): Illuminate\\Database\\Seeder->Illuminate\\Database\\{closure}()
+#24 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(70): Illuminate\\Database\\Seeder->__invoke()
+#25 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Concerns\\GuardsAttributes.php(155): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
+#26 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Seeds\\SeedCommand.php(71): Illuminate\\Database\\Eloquent\\Model::unguarded(Object(Closure))
+#27 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
+#28 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#29 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#30 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#31 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#32 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#33 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#34 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(181): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#35 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#36 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Seeds\\SeedCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#37 C:\\laragon\\www\\Managemen\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#38 C:\\laragon\\www\\Managemen\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#39 C:\\laragon\\www\\Managemen\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#40 {main}
+"} 

@@ -23,6 +23,11 @@ class Kernel extends ConsoleKernel
             \App\Services\SmartCacheService::warmUpCache();
         })->everySixHours();
 
+        // Auto-sync salary reports setiap 6 jam
+        $schedule->call(function () {
+            \App\Services\AutoSyncService::syncSalaryReports();
+        })->everySixHours();
+
         // Database optimization setiap minggu
         $schedule->command('system:cleanup --force --memory')
                  ->weekly()

@@ -619,20 +619,6 @@
                                         Transaksi Absensi
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link <?php echo e(request()->routeIs('admin.employees.*') ? 'active' : ''); ?>"
-                                       href="<?php echo e(route('admin.employees.index')); ?>">
-                                        <i class="bi bi-people"></i>
-                                        Master Karyawan
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link <?php echo e(request()->routeIs('admin.manage') ? 'active' : ''); ?>"
-                                       href="<?php echo e(route('admin.manage')); ?>">
-                                        <i class="bi bi-gear"></i>
-                                        Manage
-                                    </a>
-                                </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo e(request()->routeIs('admin.salary-reports.*') ? 'active' : ''); ?>"
                    href="<?php echo e(route('admin.salary-reports.index')); ?>">

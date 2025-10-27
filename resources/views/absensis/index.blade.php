@@ -347,18 +347,9 @@ table.dataTable thead th.sorting_desc {
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Filter Section -->
+                <!-- Date Section -->
                 <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Filter Pembibitan</label>
-                        <select class="form-select" id="filterPembibitanBulk" onchange="filterEmployeesBulk()">
-                            <option value="">Semua Pembibitan</option>
-                            @foreach($pembibitans as $pembibitan)
-                                <option value="{{ $pembibitan->id }}">{{ $pembibitan->judul }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="form-label fw-bold">Tanggal Absensi</label>
                         <input type="date" class="form-control" id="tanggalBulk" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
                     </div>

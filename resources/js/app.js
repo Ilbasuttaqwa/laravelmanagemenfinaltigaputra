@@ -1,7 +1,7 @@
 // Modern Management System - Production Ready
 
 // Import absensi bulk functionality
-import './absensi-bulk.js';
+import absensiBulk from './absensi-bulk.js';
 
 // Modern JavaScript enhancements
 document.addEventListener('DOMContentLoaded', function() {
@@ -220,23 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Filter employees by pembibitan
-        filterEmployeesBulk() {
-            const pembibitanId = document.getElementById('filterPembibitanBulk').value;
-            
-            if (pembibitanId) {
-                // Filter by pembibitan
-                const filteredEmployees = this.allEmployees.filter(employee => {
-                    // For now, show all employees regardless of pembibitan
-                    // This can be enhanced later if needed
-                    return true;
-                });
-                this.updateBulkEmployeeList(filteredEmployees, this.allPembibitans);
-            } else {
-                // Show all employees
-                this.updateBulkEmployeeList(this.allEmployees, this.allPembibitans);
-            }
-        }
 
         // Toggle select all employees
         toggleSelectAll() {
@@ -382,18 +365,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })();
 
-    // Initialize absensi bulk
-    window.absensiBulk.init();
+    // Expose absensi bulk functions to global scope
+    window.absensiBulk = absensiBulk;
+    window.showBulkAttendance = () => absensiBulk.showBulkAttendance();
+    window.updateLokasiKandang = (selectElement) => absensiBulk.updateLokasiKandang(selectElement);
+    window.toggleSelectAll = () => absensiBulk.toggleSelectAll();
+    window.submitBulkAttendance = () => absensiBulk.submitBulkAttendance();
+    window.quickAbsenBulk = (employeeId) => absensiBulk.quickAbsenBulk(employeeId);
 
     console.log('✅ Modern utilities initialized');
+    console.log('✅ Absensi bulk functions exposed to global scope');
 });
-
-// Global functions for backward compatibility (outside DOMContentLoaded)
-window.loadBulkEmployees = () => window.absensiBulk?.loadBulkEmployees();
-window.updateBulkEmployeeList = (employees, pembibitans) => window.absensiBulk?.updateBulkEmployeeList(employees, pembibitans);
-window.updateLokasiKandang = (selectElement) => window.absensiBulk?.updateLokasiKandang(selectElement);
-window.filterEmployeesBulk = () => window.absensiBulk?.filterEmployeesBulk();
-window.toggleSelectAll = () => window.absensiBulk?.toggleSelectAll();
-window.submitBulkAttendance = () => window.absensiBulk?.submitBulkAttendance();
-window.quickAbsenBulk = (employeeId) => window.absensiBulk?.quickAbsenBulk(employeeId);
-window.showBulkAttendance = () => window.absensiBulk?.showBulkAttendance();

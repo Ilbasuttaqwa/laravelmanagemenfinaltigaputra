@@ -215,7 +215,12 @@ class AbsensiController extends Controller
                     if ($absensi->pembibitan_id) {
                         $pembibitan = \App\Models\Pembibitan::find($absensi->pembibitan_id);
                         if ($pembibitan) {
-                            return '<span class="badge bg-info">' . $pembibitan->judul . '</span>';
+                            // Generate warna berdasarkan ID pembibitan
+                            $colors = ['primary', 'success', 'info', 'warning', 'danger', 'secondary', 'dark', 'light'];
+                            $colorIndex = $pembibitan->id % count($colors);
+                            $colorClass = $colors[$colorIndex];
+                            
+                            return '<span class="badge bg-' . $colorClass . '">' . $pembibitan->judul . '</span>';
                         }
                     }
                     
@@ -228,7 +233,12 @@ class AbsensiController extends Controller
                                     ->where('lokasi_id', $employee->kandang->lokasi_id)
                                     ->first();
                                 if ($pembibitan) {
-                                    return '<span class="badge bg-info">' . $pembibitan->judul . '</span>';
+                                    // Generate warna berdasarkan ID pembibitan
+                                    $colors = ['primary', 'success', 'info', 'warning', 'danger', 'secondary', 'dark', 'light'];
+                                    $colorIndex = $pembibitan->id % count($colors);
+                                    $colorClass = $colors[$colorIndex];
+                                    
+                                    return '<span class="badge bg-' . $colorClass . '">' . $pembibitan->judul . '</span>';
                                 }
                             }
                         } catch (\Exception $e) {
@@ -461,7 +471,7 @@ class AbsensiController extends Controller
                 'kandangs' => $kandangs,
                 'pembibitans' => $pembibitans,
                 'gudangs' => $gudangEmployees,
-                'employees' => $allEmployees
+                'employees' => $allEmployees->values()->toArray() // Convert to array
             ]
         ]);
     }
@@ -702,8 +712,8 @@ class AbsensiController extends Controller
         
         if ($source === 'employee') {
             $existingAbsensi = Absensi::where('employee_id', $actualEmployeeId)
-                ->whereDate('tanggal', $validated['tanggal'])
-                ->first();
+            ->whereDate('tanggal', $validated['tanggal'])
+            ->first();
         } else {
             // For gudang/mandor, check by name and date
             $existingAbsensi = Absensi::where('nama_karyawan', $employee->nama)

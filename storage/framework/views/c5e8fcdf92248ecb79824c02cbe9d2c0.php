@@ -345,18 +345,9 @@ table.dataTable thead th.sorting_desc {
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Filter Section -->
+                <!-- Date Section -->
                 <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Filter Pembibitan</label>
-                        <select class="form-select" id="filterPembibitanBulk" onchange="filterEmployeesBulk()">
-                            <option value="">Semua Pembibitan</option>
-                            <?php $__currentLoopData = $pembibitans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pembibitan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($pembibitan->id); ?>"><?php echo e($pembibitan->judul); ?></option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="form-label fw-bold">Tanggal Absensi</label>
                         <input type="date" class="form-control" id="tanggalBulk" value="<?php echo e(date('Y-m-d')); ?>" max="<?php echo e(date('Y-m-d')); ?>">
                     </div>
@@ -820,6 +811,6 @@ function deleteSelectedAbsensi() {
 }
 </style>
 
-<!-- JavaScript for bulk attendance - now included in app.js -->
+<!-- JavaScript for bulk attendance - now included in app.js via Vite -->
 <?php $__env->stopPush(); ?>
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\Managemen\resources\views/absensis/index.blade.php ENDPATH**/ ?>

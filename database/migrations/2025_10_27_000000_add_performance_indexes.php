@@ -7,6 +7,20 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * Check if an index exists on a table
+     */
+    private function indexExists($table, $index)
+    {
+        $indexes = \DB::select("SHOW INDEX FROM {$table}");
+        foreach ($indexes as $idx) {
+            if ($idx->Key_name === $index) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Run the migrations.
      * Add performance indexes for large datasets
      */
@@ -15,95 +29,116 @@ return new class extends Migration
         // Add indexes to absensis table for better performance
         if (Schema::hasTable('absensis')) {
             Schema::table('absensis', function (Blueprint $table) {
-            // Index for employee_id and tanggal (most common query)
-            $table->index(['employee_id', 'tanggal'], 'idx_absensi_employee_date');
+            // Check if indexes don't exist before adding them
+            if (!$this->indexExists('absensis', 'idx_absensi_employee_date')) {
+                $table->index(['employee_id', 'tanggal'], 'idx_absensi_employee_date');
+            }
             
-            // Index for tanggal only (for date range queries)
-            $table->index('tanggal', 'idx_absensi_tanggal');
+            if (!$this->indexExists('absensis', 'idx_absensi_tanggal')) {
+                $table->index('tanggal', 'idx_absensi_tanggal');
+            }
             
-            // Index for status (for filtering by status)
-            $table->index('status', 'idx_absensi_status');
+            if (!$this->indexExists('absensis', 'idx_absensi_status')) {
+                $table->index('status', 'idx_absensi_status');
+            }
             
-            // Index for nama_karyawan (for name searches)
-            $table->index('nama_karyawan', 'idx_absensi_nama');
+            if (!$this->indexExists('absensis', 'idx_absensi_nama')) {
+                $table->index('nama_karyawan', 'idx_absensi_nama');
+            }
             
-            // Index for pembibitan_id (for pembibitan filtering)
-            $table->index('pembibitan_id', 'idx_absensi_pembibitan');
+            if (!$this->indexExists('absensis', 'idx_absensi_pembibitan')) {
+                $table->index('pembibitan_id', 'idx_absensi_pembibitan');
+            }
             
-            // Index for created_at (for recent records)
-            $table->index('created_at', 'idx_absensi_created');
+            if (!$this->indexExists('absensis', 'idx_absensi_created')) {
+                $table->index('created_at', 'idx_absensi_created');
+            }
             });
         }
         
         // Add indexes to employees table
         if (Schema::hasTable('employees')) {
             Schema::table('employees', function (Blueprint $table) {
-            // Index for jabatan (for role filtering)
-            $table->index('jabatan', 'idx_employees_jabatan');
+            if (!$this->indexExists('employees', 'idx_employees_jabatan')) {
+                $table->index('jabatan', 'idx_employees_jabatan');
+            }
             
-            // Index for kandang_id (for kandang filtering)
-            $table->index('kandang_id', 'idx_employees_kandang');
+            if (!$this->indexExists('employees', 'idx_employees_kandang')) {
+                $table->index('kandang_id', 'idx_employees_kandang');
+            }
             
-            // Index for nama (for name searches)
-            $table->index('nama', 'idx_employees_nama');
+            if (!$this->indexExists('employees', 'idx_employees_nama')) {
+                $table->index('nama', 'idx_employees_nama');
+            }
             });
         }
         
         // Add indexes to salary_reports table
         if (Schema::hasTable('salary_reports')) {
             Schema::table('salary_reports', function (Blueprint $table) {
-            // Index for employee_id, tahun, bulan (most common query)
-            $table->index(['employee_id', 'tahun', 'bulan'], 'idx_salary_employee_period');
+            if (!$this->indexExists('salary_reports', 'idx_salary_employee_period')) {
+                $table->index(['employee_id', 'tahun', 'bulan'], 'idx_salary_employee_period');
+            }
             
-            // Index for tahun, bulan (for period queries)
-            $table->index(['tahun', 'bulan'], 'idx_salary_period');
+            if (!$this->indexExists('salary_reports', 'idx_salary_period')) {
+                $table->index(['tahun', 'bulan'], 'idx_salary_period');
+            }
             
-            // Index for tipe_karyawan (for type filtering)
-            $table->index('tipe_karyawan', 'idx_salary_tipe');
+            if (!$this->indexExists('salary_reports', 'idx_salary_tipe')) {
+                $table->index('tipe_karyawan', 'idx_salary_tipe');
+            }
             
-            // Index for pembibitan_id (for pembibitan filtering)
-            $table->index('pembibitan_id', 'idx_salary_pembibitan');
+            if (!$this->indexExists('salary_reports', 'idx_salary_pembibitan')) {
+                $table->index('pembibitan_id', 'idx_salary_pembibitan');
+            }
             });
         }
         
         // Add indexes to pembibitans table
         if (Schema::hasTable('pembibitans')) {
             Schema::table('pembibitans', function (Blueprint $table) {
-            // Index for kandang_id (for kandang filtering)
-            $table->index('kandang_id', 'idx_pembibitan_kandang');
+            if (!$this->indexExists('pembibitans', 'idx_pembibitan_kandang')) {
+                $table->index('kandang_id', 'idx_pembibitan_kandang');
+            }
             
-            // Index for lokasi_id (for location filtering)
-            $table->index('lokasi_id', 'idx_pembibitan_lokasi');
+            if (!$this->indexExists('pembibitans', 'idx_pembibitan_lokasi')) {
+                $table->index('lokasi_id', 'idx_pembibitan_lokasi');
+            }
             
-            // Index for judul (for title searches)
-            $table->index('judul', 'idx_pembibitan_judul');
+            if (!$this->indexExists('pembibitans', 'idx_pembibitan_judul')) {
+                $table->index('judul', 'idx_pembibitan_judul');
+            }
             });
         }
         
         // Add indexes to kandangs table
         if (Schema::hasTable('kandangs')) {
             Schema::table('kandangs', function (Blueprint $table) {
-            // Index for lokasi_id (for location filtering)
-            $table->index('lokasi_id', 'idx_kandang_lokasi');
+            if (!$this->indexExists('kandangs', 'idx_kandang_lokasi')) {
+                $table->index('lokasi_id', 'idx_kandang_lokasi');
+            }
             
-            // Index for nama_kandang (for name searches)
-            $table->index('nama_kandang', 'idx_kandang_nama');
+            if (!$this->indexExists('kandangs', 'idx_kandang_nama')) {
+                $table->index('nama_kandang', 'idx_kandang_nama');
+            }
             });
         }
         
         // Add indexes to gudangs table
         if (Schema::hasTable('gudangs')) {
             Schema::table('gudangs', function (Blueprint $table) {
-            // Index for nama (for name searches)
-            $table->index('nama', 'idx_gudang_nama');
+            if (!$this->indexExists('gudangs', 'idx_gudang_nama')) {
+                $table->index('nama', 'idx_gudang_nama');
+            }
             });
         }
         
         // Add indexes to mandors table
         if (Schema::hasTable('mandors')) {
             Schema::table('mandors', function (Blueprint $table) {
-            // Index for nama (for name searches)
-            $table->index('nama', 'idx_mandor_nama');
+            if (!$this->indexExists('mandors', 'idx_mandor_nama')) {
+                $table->index('nama', 'idx_mandor_nama');
+            }
             });
         }
     }

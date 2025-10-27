@@ -51,6 +51,11 @@ class SalaryReportController extends Controller
         $query = SalaryReport::periode($tahun, $bulan)
             ->tipeKaryawan($tipe);
             
+        // Admin tidak boleh melihat mandor
+        if (auth()->user()->isAdmin()) {
+            $query->where('tipe_karyawan', '!=', 'mandor');
+        }
+            
         // Filter tanggal mulai dan selesai
         if ($tanggalMulai) {
             $query->where('tanggal_mulai', '>=', Carbon::parse($tanggalMulai));
@@ -99,14 +104,8 @@ class SalaryReportController extends Controller
                   ->whereNotNull('kandang_id');
         })->orderBy('nama_kandang')->get();
         
-        // Hanya ambil pembibitan yang memiliki data laporan gaji
-        $pembibitans = Pembibitan::whereIn('id', function($query) use ($tahun, $bulan) {
-            $query->select('pembibitan_id')
-                  ->from('salary_reports')
-                  ->where('tahun', $tahun)
-                  ->where('bulan', $bulan)
-                  ->whereNotNull('pembibitan_id');
-        })->orderBy('judul')->get();
+        // Tampilkan semua pembibitan yang tersedia
+        $pembibitans = Pembibitan::orderBy('judul')->get();
 
         $availableMonths = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',

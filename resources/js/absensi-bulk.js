@@ -1,7 +1,8 @@
 // Absensi Bulk Management - ES6 Module version
 console.log('Loading absensi-bulk.js...');
-    
-    window.absensiBulk = {
+
+// Create absensiBulk object
+const absensiBulk = {
         allEmployees: [],
         allPembibitans: [],
         
@@ -37,6 +38,16 @@ console.log('Loading absensi-bulk.js...');
                 console.error('Error loading bulk employees:', error);
             });
         },
+
+        // Function to generate color for pembibitan based on ID
+        generatePembibitanColor: function(pembibitanId) {
+            const colors = [
+                'primary', 'success', 'info', 'warning', 'danger', 
+                'secondary', 'dark', 'light', 'primary', 'success',
+                'info', 'warning', 'danger', 'secondary', 'dark'
+            ];
+            return colors[pembibitanId % colors.length];
+        },
         
         // Update bulk employee list
         updateBulkEmployeeList: function(employees, pembibitans) {
@@ -49,12 +60,14 @@ console.log('Loading absensi-bulk.js...');
                 const row = document.createElement('tr');
                 row.setAttribute('data-employee-id', employee.id);
                 
-                // Build pembibitan options
+                // Build pembibitan options with colors
                 let pembibitanOptions = '<option value="">Pilih Pembibitan</option>';
-                pembibitans.forEach(function(pembibitan) {
+                const colors = ['primary', 'success', 'info', 'warning', 'danger', 'secondary', 'dark', 'light'];
+                pembibitans.forEach(function(pembibitan, index) {
                     const lokasiName = pembibitan.lokasi ? pembibitan.lokasi.nama_lokasi : '';
                     const kandangName = pembibitan.kandang ? pembibitan.kandang.nama_kandang : '';
-                    pembibitanOptions += '<option value="' + pembibitan.id + '" data-lokasi="' + lokasiName + '" data-kandang="' + kandangName + '">' + pembibitan.judul + '</option>';
+                    const colorClass = colors[index % colors.length];
+                    pembibitanOptions += '<option value="' + pembibitan.id + '" data-lokasi="' + lokasiName + '" data-kandang="' + kandangName + '" data-color="' + colorClass + '">' + pembibitan.judul + '</option>';
                 });
                 
                 const jabatanDisplay = employee.jabatan === 'karyawan' ? 'karyawan kandang' : (employee.jabatan === 'karyawan_gudang' ? 'karyawan gudang' : employee.jabatan);
@@ -77,8 +90,12 @@ console.log('Loading absensi-bulk.js...');
         
         // Update lokasi and kandang when pembibitan is selected
         updateLokasiKandang: function(selectElement) {
+            console.log('updateLokasiKandang called');
             const employeeId = selectElement.getAttribute('data-employee-id');
             const selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            console.log('Employee ID:', employeeId);
+            console.log('Selected option:', selectedOption.value, selectedOption.textContent);
             
             const lokasiCell = document.querySelector('.lokasi-cell[data-employee-id="' + employeeId + '"]');
             const kandangCell = document.querySelector('.kandang-cell[data-employee-id="' + employeeId + '"]');
@@ -86,26 +103,34 @@ console.log('Loading absensi-bulk.js...');
             if (selectedOption.value) {
                 const lokasi = selectedOption.getAttribute('data-lokasi');
                 const kandang = selectedOption.getAttribute('data-kandang');
+                const colorClass = selectedOption.getAttribute('data-color');
+                const pembibitanTitle = selectedOption.textContent;
                 
+                console.log('Color class:', colorClass);
+                console.log('Pembibitan title:', pembibitanTitle);
+                
+                // Update lokasi and kandang
                 lokasiCell.textContent = lokasi || '-';
                 kandangCell.textContent = kandang || '-';
+                
+                // Update pembibitan display with color
+                const pembibitanCell = selectElement.parentElement;
+                pembibitanCell.innerHTML = '<span class="badge bg-' + colorClass + '">' + pembibitanTitle + '</span>';
+                console.log('Pembibitan cell updated with color');
             } else {
                 lokasiCell.textContent = '-';
                 kandangCell.textContent = '-';
+                
+                // Reset pembibitan display
+                const pembibitanCell = selectElement.parentElement;
+                pembibitanCell.innerHTML = '<select class="form-select form-select-sm pembibitan-select-bulk" data-employee-id="' + employeeId + '" onchange="updateLokasiKandang(this)">' + 
+                    Array.from(selectElement.options).map(option => 
+                        '<option value="' + option.value + '" data-lokasi="' + option.getAttribute('data-lokasi') + '" data-kandang="' + option.getAttribute('data-kandang') + '" data-color="' + option.getAttribute('data-color') + '">' + option.textContent + '</option>'
+                    ).join('') + 
+                '</select>';
             }
         },
         
-        // Filter employees by pembibitan
-        filterEmployeesBulk: function() {
-            const pembibitanId = document.getElementById('filterPembibitanBulk').value;
-            
-            if (pembibitanId) {
-                const filteredEmployees = this.allEmployees;
-                this.updateBulkEmployeeList(filteredEmployees, this.allPembibitans);
-            } else {
-                this.updateBulkEmployeeList(this.allEmployees, this.allPembibitans);
-            }
-        },
         
         // Toggle select all employees
         toggleSelectAll: function() {
@@ -210,9 +235,6 @@ console.log('Loading absensi-bulk.js...');
         window.absensiBulk.updateLokasiKandang(selectElement);
     };
     
-    window.filterEmployeesBulk = function() {
-        window.absensiBulk.filterEmployeesBulk();
-    };
     
     window.toggleSelectAll = function() {
         window.absensiBulk.toggleSelectAll();
@@ -236,4 +258,7 @@ console.log('Loading absensi-bulk.js...');
     });
     
     console.log('absensi-bulk.js loaded successfully');
+
+// Export for ES6 modules
+export default absensiBulk;
 
