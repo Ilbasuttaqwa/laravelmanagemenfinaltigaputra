@@ -821,6 +821,5 @@ function deleteSelectedAbsensi() {
 }
 </style>
 
-<!-- JavaScript for bulk attendance -->
-<script src="{{ asset('js/absensi-bulk.js') }}"></script>
+<!-- JavaScript for bulk attendance - now included in app.js via Vite -->
 @endpush

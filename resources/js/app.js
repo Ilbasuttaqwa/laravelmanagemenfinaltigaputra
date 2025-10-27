@@ -1,5 +1,8 @@
 // Modern Management System - Production Ready
 
+// Import absensi bulk functionality
+import './absensi-bulk.js';
+
 // Modern JavaScript enhancements
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Modern Management System loaded');
