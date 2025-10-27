@@ -43,36 +43,43 @@ class SalaryReportController extends Controller
         
         // Selalu tampilkan data berdasarkan periode yang dipilih
         $query = SalaryReport::periode($tahun, $bulan)
-            ->tipeKaryawan($tipe)
-            ->tanggalRange($tanggalMulai, $tanggalSelesai);
+            ->tipeKaryawan($tipe);
+            
+        // Filter tanggal mulai dan selesai
+        if ($tanggalMulai) {
+            $query->where('tanggal_mulai', '>=', Carbon::parse($tanggalMulai));
+        }
+        if ($tanggalSelesai) {
+            $query->where('tanggal_selesai', '<=', Carbon::parse($tanggalSelesai));
+        }
                 
-            // Filter lokasi dan kandang berdasarkan pembibitan yang dipilih
-            if ($pembibitanId) {
-                // Jika pembibitan dipilih, filter berdasarkan pembibitan tersebut
-                $query->where('pembibitan_id', $pembibitanId);
-            } else {
-                // Jika lokasi dipilih, cari pembibitan di lokasi tersebut
-                if ($lokasiId) {
-                    $pembibitansInLokasi = \App\Models\Pembibitan::where('lokasi_id', $lokasiId)->pluck('id');
-                    if ($pembibitansInLokasi->isNotEmpty()) {
-                        $query->whereIn('pembibitan_id', $pembibitansInLokasi);
-                    } else {
-                        // Jika tidak ada pembibitan di lokasi tersebut, tampilkan kosong
-                        $query->where('id', 0); // Force empty result
-                    }
-                }
-                
-                // Jika kandang dipilih, cari pembibitan di kandang tersebut
-                if ($kandangId) {
-                    $pembibitansInKandang = \App\Models\Pembibitan::where('kandang_id', $kandangId)->pluck('id');
-                    if ($pembibitansInKandang->isNotEmpty()) {
-                        $query->whereIn('pembibitan_id', $pembibitansInKandang);
-                    } else {
-                        // Jika tidak ada pembibitan di kandang tersebut, tampilkan kosong
-                        $query->where('id', 0); // Force empty result
-                    }
+        // Filter lokasi dan kandang berdasarkan pembibitan yang dipilih
+        if ($pembibitanId) {
+            // Jika pembibitan dipilih, filter berdasarkan pembibitan tersebut
+            $query->where('pembibitan_id', $pembibitanId);
+        } else {
+            // Jika lokasi dipilih, cari pembibitan di lokasi tersebut
+            if ($lokasiId) {
+                $pembibitansInLokasi = \App\Models\Pembibitan::where('lokasi_id', $lokasiId)->pluck('id');
+                if ($pembibitansInLokasi->isNotEmpty()) {
+                    $query->whereIn('pembibitan_id', $pembibitansInLokasi);
+                } else {
+                    // Jika tidak ada pembibitan di lokasi tersebut, tampilkan kosong
+                    $query->where('id', 0); // Force empty result
                 }
             }
+            
+            // Jika kandang dipilih, cari pembibitan di kandang tersebut
+            if ($kandangId) {
+                $pembibitansInKandang = \App\Models\Pembibitan::where('kandang_id', $kandangId)->pluck('id');
+                if ($pembibitansInKandang->isNotEmpty()) {
+                    $query->whereIn('pembibitan_id', $pembibitansInKandang);
+                } else {
+                    // Jika tidak ada pembibitan di kandang tersebut, tampilkan kosong
+                    $query->where('id', 0); // Force empty result
+                }
+            }
+        }
             
         $reports = $query->orderBy('nama_karyawan')->get();
         
@@ -109,39 +116,6 @@ class SalaryReportController extends Controller
         return view('salary-reports.show', compact('salaryReport'));
     }
 
-    public function generate(Request $request)
-    {
-        $request->validate([
-            'tahun' => 'required|integer|min:2020|max:2030',
-            'bulan' => 'required|integer|min:1|max:12',
-            'lokasi_id' => 'nullable|exists:lokasis,id',
-            'kandang_id' => 'nullable|exists:kandangs,id',
-            'pembibitan_id' => 'nullable|exists:pembibitans,id',
-            'tanggal_mulai' => 'nullable|date',
-            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
-        ]);
-
-        $tahun = $request->tahun;
-        $bulan = $request->bulan;
-        $lokasiId = $request->lokasi_id;
-        $kandangId = $request->kandang_id;
-        $pembibitanId = $request->pembibitan_id;
-        $tanggalMulai = $request->tanggal_mulai ? Carbon::parse($request->tanggal_mulai) : null;
-        $tanggalSelesai = $request->tanggal_selesai ? Carbon::parse($request->tanggal_selesai) : null;
-
-        // Generate salary reports for all employees
-        $this->generateSalaryReports($tahun, $bulan, $lokasiId, $kandangId, $pembibitanId, $tanggalMulai, $tanggalSelesai);
-
-        return redirect()->route($this->getCurrentUser()?->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index', [
-            'tahun' => $tahun,
-            'bulan' => $bulan,
-            'lokasi_id' => $lokasiId,
-            'kandang_id' => $kandangId,
-            'pembibitan_id' => $pembibitanId,
-            'tanggal_mulai' => $tanggalMulai?->format('Y-m-d'),
-            'tanggal_selesai' => $tanggalSelesai?->format('Y-m-d'),
-        ])->with('success', 'Laporan gaji berhasil dibuat!');
-    }
 
     public function export(Request $request)
     {

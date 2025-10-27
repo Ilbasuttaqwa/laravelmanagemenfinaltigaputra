@@ -77,7 +77,6 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     // Salary Reports
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
-    Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
     Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
     
     // Auto-sync gaji routes
@@ -136,7 +135,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Salary Reports (Read Only)
     Route::get('salary-reports', [SalaryReportController::class, 'index'])->name('salary-reports.index');
     Route::get('salary-reports/export', [SalaryReportController::class, 'export'])->name('salary-reports.export');
-    Route::post('salary-reports/generate', [SalaryReportController::class, 'generate'])->name('salary-reports.generate');
     Route::get('salary-reports/{salaryReport}', [SalaryReportController::class, 'show'])->name('salary-reports.show');
     
     // Manage Page for Admin

@@ -16,13 +16,7 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generateReportModal">
-                        <i class="bi bi-plus-circle"></i>
-                        Generate Laporan
-                    </button>
-                </div>
+            <div class="d-flex justify-content-end align-items-center mb-4">
                 <div>
                     <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.export' : 'manager.salary-reports.export', array_merge(request()->query(), ['report_type' => 'biaya_gaji'])) }}" 
                        class="btn btn-success" target="_blank">
@@ -121,10 +115,10 @@
                                 <i class="bi bi-search"></i>
                                 Filter
                             </button>
-                            <a href="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.index' : 'manager.salary-reports.index') }}" class="btn btn-secondary">
+                            <button type="button" class="btn btn-secondary" onclick="resetFilters()">
                                 <i class="bi bi-arrow-clockwise"></i>
                                 Reset
-                            </a>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -208,84 +202,6 @@
     </div>
 </div>
 
-<!-- Generate Report Modal -->
-<div class="modal fade" id="generateReportModal" tabindex="-1" aria-labelledby="generateReportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST" action="{{ route(auth()->user()->isAdmin() ? 'admin.salary-reports.generate' : 'manager.salary-reports.generate') }}">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="generateReportModalLabel">Generate Laporan Gaji</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="generate_tahun" class="form-label">Tahun</label>
-                            <input type="number" 
-                                   name="tahun" 
-                                   id="generate_tahun" 
-                                   class="form-control" 
-                                   value="{{ $tahun }}" 
-                                   min="2020" 
-                                   max="2030"
-                                   placeholder="Masukkan tahun"
-                                   required>
-                            <small class="text-muted">Range: 2020-2030</small>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="generate_bulan" class="form-label">Bulan</label>
-                            <select name="bulan" id="generate_bulan" class="form-select" required>
-                                @foreach($availableMonths as $monthNum => $monthName)
-                                    <option value="{{ $monthNum }}" {{ $bulan == $monthNum ? 'selected' : '' }}>{{ $monthName }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="generate_lokasi_id" class="form-label">Lokasi (Opsional)</label>
-                            <select name="lokasi_id" id="generate_lokasi_id" class="form-select">
-                                <option value="">Semua Lokasi</option>
-                                @foreach($lokasis as $lokasi)
-                                    <option value="{{ $lokasi->id }}">{{ $lokasi->nama_lokasi }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="generate_kandang_id" class="form-label">Kandang (Opsional)</label>
-                            <select name="kandang_id" id="generate_kandang_id" class="form-select">
-                                <option value="">Semua Kandang</option>
-                                @foreach($kandangs as $kandang)
-                                    <option value="{{ $kandang->id }}">{{ $kandang->nama_kandang }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="generate_pembibitan_id" class="form-label">Pembibitan (Opsional)</label>
-                            <select name="pembibitan_id" id="generate_pembibitan_id" class="form-select">
-                                <option value="">Semua Pembibitan</option>
-                                @foreach($pembibitans as $pembibitan)
-                                    <option value="{{ $pembibitan->id }}">{{ $pembibitan->judul }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="generate_tanggal_mulai" class="form-label">Tanggal Mulai (Opsional)</label>
-                            <input type="date" name="tanggal_mulai" id="generate_tanggal_mulai" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="generate_tanggal_selesai" class="form-label">Tanggal Selesai (Opsional)</label>
-                            <input type="date" name="tanggal_selesai" id="generate_tanggal_selesai" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Generate Laporan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('styles')
@@ -421,5 +337,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Salary Reports loaded successfully');
 });
+
+// Reset filters function
+function resetFilters() {
+    // Reset all form fields to default values
+    document.getElementById('tahun').value = new Date().getFullYear();
+    document.getElementById('bulan').value = new Date().getMonth() + 1;
+    document.getElementById('tipe').value = 'all';
+    document.getElementById('lokasi_id').value = '';
+    document.getElementById('kandang_id').value = '';
+    document.getElementById('pembibitan_id').value = '';
+    document.getElementById('tanggal_mulai').value = '';
+    document.getElementById('tanggal_selesai').value = '';
+    
+    // Submit form to reload page with default values
+    document.querySelector('.filter-form').submit();
+}
 </script>
 @endpush
