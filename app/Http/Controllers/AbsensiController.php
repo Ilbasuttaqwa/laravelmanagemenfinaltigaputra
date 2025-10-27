@@ -415,7 +415,8 @@ class AbsensiController extends Controller
         
         // Get gudang employees (karyawan gudang) - ALWAYS FRESH DATA
         $gudangEmployees = collect();
-        if ($this->getCurrentUser()?->isManager()) {
+        // Admin dan Manager bisa melihat data gudang
+        if ($this->getCurrentUser()?->isManager() || $this->getCurrentUser()?->isAdmin()) {
             $gudangs = \App\Models\Gudang::orderBy('nama')->get();
             
             $gudangEmployees = $gudangs->map(function($gudang) {

@@ -18,7 +18,10 @@ const absensiBulk = {
             const self = this;
             // Use dynamic base URL for cPanel compatibility
             const baseUrl = window.location.origin;
-            fetch(baseUrl + '/manager/absensis/refresh-master-data', {
+            // Determine if user is admin or manager based on current URL
+            const isAdmin = window.location.pathname.includes('/admin/');
+            const rolePrefix = isAdmin ? 'admin' : 'manager';
+            fetch(baseUrl + '/' + rolePrefix + '/absensis/refresh-master-data', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
