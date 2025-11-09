@@ -63,6 +63,8 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
     Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
     Route::get('absensis/check-duplicates', [AbsensiController::class, 'checkDuplicateAbsensi'])->name('absensis.check-duplicates');
+    Route::get('absensis/riwayat/{employeeId}', [AbsensiController::class, 'getRiwayatAbsensi'])->name('absensis.riwayat');
+    Route::post('absensis/validate', [AbsensiController::class, 'validateAbsensi'])->name('absensis.validate');
     
     Route::resource('absensis', AbsensiController::class);
     Route::post('absensis/clean-duplicates', [AbsensiController::class, 'cleanDuplicateAbsensi'])->name('absensis.clean-duplicates');
@@ -119,6 +121,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('absensis/update-lokasi', [AbsensiController::class, 'updateAbsensiLokasi'])->name('absensis.update-lokasi');
     Route::post('absensis/bulk-store', [AbsensiController::class, 'bulkStore'])->name('absensis.bulk-store');
     Route::post('absensis/bulk-delete', [AbsensiController::class, 'bulkDelete'])->name('absensis.bulk-delete');
+    Route::get('absensis/riwayat/{employeeId}', [AbsensiController::class, 'getRiwayatAbsensi'])->name('absensis.riwayat');
+    Route::post('absensis/validate', [AbsensiController::class, 'validateAbsensi'])->name('absensis.validate');
     
     Route::get('absensis', [AbsensiController::class, 'index'])->name('absensis.index');
     Route::get('absensis/create', [AbsensiController::class, 'create'])->name('absensis.create');

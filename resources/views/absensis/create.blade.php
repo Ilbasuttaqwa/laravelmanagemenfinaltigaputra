@@ -15,67 +15,87 @@
     </a>
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h5 class="card-title mb-0">Form Tambah Absensi</h5>
-    </div>
-    <div class="card-body">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <strong>Ada masalah:</strong>
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+<div class="row">
+    <!-- Form Absensi -->
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="card-title mb-0">Form Tambah Absensi</h5>
             </div>
-        @endif
-        
-        <form method="POST" action="{{ route(auth()->user()->isManager() ? 'manager.absensis.store' : 'admin.absensis.store') }}">
-            @csrf
-
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <label for="employee_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
-                    <select class="form-control @error('employee_id') is-invalid @enderror"
-                            id="employee_id" name="employee_id" required>
-                        <option value="">Pilih Karyawan</option>
-                        @if(isset($allEmployees) && $allEmployees->count() > 0)
-                            @foreach($allEmployees as $employee)
-                                <option value="{{ $employee->id }}" 
-                                        data-jabatan="{{ $employee->jabatan }}"
-                                        data-gaji="{{ $employee->gaji_pokok }}"
-                                        data-source="{{ $employee->source ?? 'unknown' }}"
-                                        {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
-                                    {{ $employee->nama }} ({{ $employee->jabatan === 'karyawan' ? 'karyawan kandang' : $employee->jabatan }})
-                                </option>
+            <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Ada masalah:</strong>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
                             @endforeach
-                        @else
-                            <option value="" disabled>Tidak ada data karyawan</option>
-                        @endif
-                    </select>
-                    
-                    <!-- Debug Info -->
-                    @error('employee_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                        </ul>
+                    </div>
+                @endif
 
-                    @if(config('app.debug') || true)
-                        <small class="text-muted d-block mt-1">
-                            <strong>Info:</strong> Total karyawan tersedia: {{ isset($allEmployees) ? $allEmployees->count() : 0 }}
-                            @if(isset($allEmployees) && $allEmployees->count() > 0)
-                                | Tipe:
-                                @php
-                                    $sources = $allEmployees->groupBy('source');
-                                @endphp
-                                @foreach($sources as $source => $items)
-                                    {{ $source }}: {{ $items->count() }}{{ !$loop->last ? ', ' : '' }}
-                                @endforeach
+                <form method="POST" action="{{ route(auth()->user()->isManager() ? 'manager.absensis.store' : 'admin.absensis.store') }}" id="absensiForm">
+                    @csrf
+
+                    <!-- Filter Tabs untuk Karyawan -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Filter Karyawan Berdasarkan Jabatan</label>
+                        <ul class="nav nav-pills mb-3" id="employeeFilterTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab" data-filter="all">
+                                    <i class="bi bi-people-fill"></i> Semua
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="kandang-tab" data-bs-toggle="pill" data-bs-target="#kandang" type="button" role="tab" data-filter="karyawan">
+                                    <i class="bi bi-house"></i> Karyawan Kandang
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="gudang-tab" data-bs-toggle="pill" data-bs-target="#gudang" type="button" role="tab" data-filter="karyawan_gudang">
+                                    <i class="bi bi-building"></i> Karyawan Gudang
+                                </button>
+                            </li>
+                            @if(auth()->user()->isManager())
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="mandor-tab" data-bs-toggle="pill" data-bs-target="#mandor" type="button" role="tab" data-filter="mandor">
+                                    <i class="bi bi-person-badge"></i> Mandor
+                                </button>
+                            </li>
                             @endif
-                        </small>
-                    @endif
-                </div>
-            </div>
+                        </ul>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="employee_id" class="form-label">Pilih Karyawan <span class="text-danger">*</span></label>
+                            <select class="form-control @error('employee_id') is-invalid @enderror"
+                                    id="employee_id" name="employee_id" required>
+                                <option value="">Pilih Karyawan</option>
+                                @if(isset($allEmployees) && $allEmployees->count() > 0)
+                                    @foreach($allEmployees as $employee)
+                                        <option value="{{ $employee->id }}"
+                                                data-jabatan="{{ $employee->jabatan }}"
+                                                data-gaji="{{ $employee->gaji_pokok }}"
+                                                data-source="{{ $employee->source ?? 'unknown' }}"
+                                                {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                                            {{ $employee->nama }} ({{ $employee->jabatan === 'karyawan' ? 'Kandang' : ($employee->jabatan === 'karyawan_gudang' ? 'Gudang' : ucfirst($employee->jabatan)) }})
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="" disabled>Tidak ada data karyawan</option>
+                                @endif
+                            </select>
+
+                            @error('employee_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
+                            <small class="text-muted d-block mt-1">
+                                <i class="bi bi-info-circle"></i> Filter jabatan di atas untuk memudahkan pencarian
+                            </small>
+                        </div>
+                    </div>
 
             <div class="row">
                 <div class="col-md-12 mb-3">
@@ -170,13 +190,59 @@
                    class="btn btn-secondary">
                     <i class="bi bi-x-circle"></i> Batal
                 </a>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitButton">
                     <i class="bi bi-save"></i> Simpan
                 </button>
             </div>
         </form>
     </div>
 </div>
+    </div> <!-- End col-md-8 -->
+
+    <!-- Riwayat Absensi Hari Ini -->
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-info text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history"></i> Riwayat Absensi Hari Ini
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="riwayatAbsensiContainer">
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-person-circle" style="font-size: 3rem;"></i>
+                        <p class="mt-2">Pilih karyawan untuk melihat riwayat absensi hari ini</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Rules Info -->
+        <div class="card shadow border-warning">
+            <div class="card-header py-2 bg-warning bg-opacity-10">
+                <h6 class="mb-0">
+                    <i class="bi bi-exclamation-triangle text-warning"></i> Aturan Absensi
+                </h6>
+            </div>
+            <div class="card-body p-3">
+                <ul class="mb-0 small">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success"></i>
+                        <strong>Boleh</strong> absen 2x di <strong>pembibitan berbeda</strong>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-x-circle text-danger"></i>
+                        <strong>Tidak boleh</strong> absen 2x di <strong>pembibitan yang sama</strong>
+                    </li>
+                    <li>
+                        <i class="bi bi-info-circle text-info"></i>
+                        Contoh: Full day di Pembibitan A, lalu ½ hari di Pembibitan B = <span class="text-success">OK</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div> <!-- End col-md-4 -->
+</div> <!-- End row -->
 @endsection
 
 @push('scripts')
@@ -217,9 +283,168 @@
         console.log('📋 Employee options:', Array.from(employeeSelect.options).slice(1).map(opt => ({
             id: opt.value,
             nama: opt.textContent,
+            jabatan: opt.getAttribute('data-jabatan'),
             gaji: opt.getAttribute('data-gaji'),
             source: opt.getAttribute('data-source')
         })));
+    }
+
+    // ===== FILTER TABS FUNCTIONALITY =====
+    const filterTabs = document.querySelectorAll('#employeeFilterTabs button');
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            const filter = this.getAttribute('data-filter');
+            console.log('🔍 Filter changed to:', filter);
+            filterEmployeeDropdown(filter);
+        });
+    });
+
+    function filterEmployeeDropdown(jabatan) {
+        if (!employeeSelect) return;
+
+        const options = Array.from(employeeSelect.options);
+        let visibleCount = 0;
+
+        options.forEach(opt => {
+            if (opt.value === '') {
+                // Always show "Pilih Karyawan" option
+                opt.style.display = '';
+                return;
+            }
+
+            const optJabatan = opt.getAttribute('data-jabatan');
+            if (jabatan === 'all' || optJabatan === jabatan) {
+                opt.style.display = '';
+                visibleCount++;
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+
+        console.log(`✅ Filter applied: ${jabatan}, visible: ${visibleCount} employees`);
+
+        // Reset selection if current selection is hidden
+        if (employeeSelect.value && employeeSelect.options[employeeSelect.selectedIndex].style.display === 'none') {
+            employeeSelect.value = '';
+            // Clear gaji fields
+            if (gajiPokokDisplay) gajiPokokDisplay.value = '';
+            if (gajiPokokInput) gajiPokokInput.value = '';
+            if (gajiPerhariMentahDisplay) gajiPerhariMentahDisplay.value = '';
+            if (gajiHariItuDisplay) gajiHariItuDisplay.value = '';
+            if (gajiHariItuInput) gajiHariItuInput.value = '';
+            // Clear riwayat
+            clearRiwayatAbsensi();
+        }
+    }
+
+    // ===== RIWAYAT ABSENSI FUNCTIONALITY =====
+    function loadRiwayatAbsensi(employeeId) {
+        if (!employeeId) {
+            clearRiwayatAbsensi();
+            return;
+        }
+
+        const container = document.getElementById('riwayatAbsensiContainer');
+        if (!container) return;
+
+        // Show loading
+        container.innerHTML = `
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2 text-muted">Memuat riwayat...</p>
+            </div>
+        `;
+
+        const today = document.getElementById('tanggal').value || new Date().toISOString().split('T')[0];
+        const rolePrefix = '{{ auth()->user()->isManager() ? "manager" : "admin" }}';
+        const url = `/${rolePrefix}/absensis/riwayat/${employeeId}?tanggal=${today}`;
+
+        console.log('📋 Loading riwayat for employee:', employeeId, 'date:', today);
+
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('✅ Riwayat loaded:', data);
+            displayRiwayatAbsensi(data);
+        })
+        .catch(error => {
+            console.error('❌ Error loading riwayat:', error);
+            container.innerHTML = `
+                <div class="alert alert-warning mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Gagal memuat riwayat absensi
+                </div>
+            `;
+        });
+    }
+
+    function displayRiwayatAbsensi(data) {
+        const container = document.getElementById('riwayatAbsensiContainer');
+        if (!container) return;
+
+        if (!data.riwayat || data.riwayat.length === 0) {
+            container.innerHTML = `
+                <div class="text-center text-muted py-3">
+                    <i class="bi bi-calendar-check" style="font-size: 2rem;"></i>
+                    <p class="mt-2 mb-0">Belum ada absensi hari ini</p>
+                    <small class="text-success">Aman untuk tambah absensi baru</small>
+                </div>
+            `;
+            return;
+        }
+
+        let html = `
+            <div class="alert alert-info mb-3 py-2 px-3">
+                <strong><i class="bi bi-info-circle"></i> ${data.riwayat.length} absensi hari ini</strong>
+            </div>
+        `;
+
+        data.riwayat.forEach((absensi, index) => {
+            const statusBadge = absensi.status === 'full' ?
+                '<span class="badge bg-primary">Full Day</span>' :
+                '<span class="badge bg-warning">½ Hari</span>';
+
+            html += `
+                <div class="card mb-2 border-start border-3 ${absensi.status === 'full' ? 'border-primary' : 'border-warning'}">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-1">Absensi #${index + 1}</h6>
+                            ${statusBadge}
+                        </div>
+                        <p class="mb-1 small"><strong>Pembibitan:</strong> ${absensi.pembibitan || '-'}</p>
+                        <p class="mb-1 small"><strong>Lokasi:</strong> ${absensi.lokasi || '-'}</p>
+                        <p class="mb-0 small"><strong>Gaji:</strong> <span class="text-success fw-bold">Rp ${formatNumber(absensi.gaji_hari_itu)}</span></p>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+
+        // Store riwayat for validation
+        window.currentEmployeeRiwayat = data.riwayat;
+    }
+
+    function clearRiwayatAbsensi() {
+        const container = document.getElementById('riwayatAbsensiContainer');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="text-center text-muted py-4">
+                <i class="bi bi-person-circle" style="font-size: 3rem;"></i>
+                <p class="mt-2">Pilih karyawan untuk melihat riwayat absensi hari ini</p>
+            </div>
+        `;
+
+        window.currentEmployeeRiwayat = null;
     }
 
     // Trigger auto-fill on page load if employee is already selected
@@ -250,15 +475,18 @@
                 // Ambil gaji dari data attribute (lebih cepat dan reliable)
                 const gaji = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
                 console.log('Gaji from data attribute:', gaji);
-                
+
                 if (gajiPokokDisplay && gajiPokokInput) {
                     gajiPokokDisplay.value = formatCurrency(gaji);
                     gajiPokokInput.value = gaji;
                     console.log('Gaji pokok filled:', gaji);
                 }
-                
+
                 // Hitung gaji hari itu
                 calculateGajiHariItu();
+
+                // LOAD RIWAYAT ABSENSI
+                loadRiwayatAbsensi(selectedOption.value);
             } else {
                 if (gajiPokokDisplay && gajiPokokInput) {
                     gajiPokokDisplay.value = '';
@@ -268,6 +496,8 @@
                     gajiHariItuDisplay.value = '';
                     gajiHariItuInput.value = '';
                 }
+                // Clear riwayat
+                clearRiwayatAbsensi();
             }
         });
     }
@@ -411,7 +641,83 @@
                 alert('Mohon lengkapi semua field yang diperlukan:\n- Pilih Karyawan\n- Pilih Tanggal\n- Pilih Status (Full Day / Setengah Hari)\n- Gaji otomatis akan terisi');
                 return false;
             }
-            
+
+            // ===== BUSINESS LOGIC VALIDATION =====
+            // Cek apakah karyawan sudah absen di pembibitan yang sama hari ini
+            const pembibitanId = document.getElementById('pembibitan_id').value;
+
+            if (window.currentEmployeeRiwayat && pembibitanId) {
+                const sudahAbsenDiPembibitanSama = window.currentEmployeeRiwayat.some(riwayat => {
+                    return riwayat.pembibitan_id == pembibitanId;
+                });
+
+                if (sudahAbsenDiPembibitanSama) {
+                    console.error('❌ BUSINESS LOGIC VIOLATION: Karyawan sudah absen di pembibitan yang sama');
+
+                    if (typeof Swal !== 'undefined') {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Tidak Bisa Absen!',
+                            html: `
+                                <p><strong>Karyawan ini sudah absen di pembibitan yang sama hari ini.</strong></p>
+                                <hr>
+                                <p class="text-start mb-2"><strong>Aturan Bisnis:</strong></p>
+                                <ul class="text-start">
+                                    <li><i class="bi bi-x-circle text-danger"></i> <strong>TIDAK BOLEH</strong> absen 2x di pembibitan yang sama</li>
+                                    <li><i class="bi bi-check-circle text-success"></i> <strong>BOLEH</strong> absen di pembibitan yang berbeda</li>
+                                </ul>
+                                <hr>
+                                <p class="small text-muted">Silakan pilih pembibitan yang berbeda atau batalkan absensi.</p>
+                            `,
+                            confirmButtonText: 'OK, Saya Mengerti',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    } else {
+                        alert('❌ TIDAK BISA ABSEN!\n\nKaryawan ini sudah absen di pembibitan yang sama hari ini.\n\nATURAN BISNIS:\n✗ TIDAK BOLEH absen 2x di pembibitan yang SAMA\n✓ BOLEH absen di pembibitan yang BERBEDA\n\nSilakan pilih pembibitan yang berbeda.');
+                    }
+
+                    return false;
+                }
+
+                // Informative message: Allowed to add 2nd attendance at different pembibitan
+                if (window.currentEmployeeRiwayat.length > 0 && pembibitanId) {
+                    const pembibitanSelectOption = document.querySelector(`#pembibitan_id option[value="${pembibitanId}"]`);
+                    const pembibitanName = pembibitanSelectOption ? pembibitanSelectOption.textContent : 'pembibitan berbeda';
+
+                    console.log('✅ BUSINESS LOGIC OK: Absen kedua di pembibitan berbeda diperbolehkan');
+
+                    if (typeof Swal !== 'undefined') {
+                        const confirmResult = await Swal.fire({
+                            icon: 'info',
+                            title: 'Konfirmasi Absensi Kedua',
+                            html: `
+                                <p>Karyawan ini sudah absen <strong>${window.currentEmployeeRiwayat.length}x</strong> hari ini.</p>
+                                <p>Akan menambah absensi di: <strong>${pembibitanName}</strong></p>
+                                <hr>
+                                <p class="small text-muted">
+                                    <i class="bi bi-info-circle"></i>
+                                    Ini diperbolehkan karena di pembibitan yang berbeda.
+                                </p>
+                            `,
+                            showCancelButton: true,
+                            confirmButtonText: '<i class="bi bi-check-circle"></i> Ya, Lanjutkan',
+                            cancelButtonText: 'Batal',
+                            confirmButtonColor: '#28a745'
+                        });
+
+                        if (!confirmResult.isConfirmed) {
+                            console.log('User cancelled second attendance');
+                            return false;
+                        }
+                    } else {
+                        const confirmed = confirm(`Karyawan ini sudah absen ${window.currentEmployeeRiwayat.length}x hari ini.\n\nAkan menambah absensi di: ${pembibitanName}\n\nLanjutkan?`);
+                        if (!confirmed) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
             console.log('✅ Form validation passed, submitting...');
             
             // Show loading state

@@ -1278,10 +1278,136 @@ class AbsensiController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Bulk delete absensi error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus absensi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get riwayat absensi karyawan untuk tanggal tertentu
+     * API endpoint untuk tampilkan history absensi hari ini
+     *
+     * @param Request $request
+     * @param string $employeeId - Format: employee_123, gudang_456, mandor_789
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRiwayatAbsensi(Request $request, $employeeId)
+    {
+        try {
+            $tanggal = $request->query('tanggal', now()->toDateString());
+
+            Log::info('Getting riwayat absensi', [
+                'employee_id' => $employeeId,
+                'tanggal' => $tanggal
+            ]);
+
+            // Parse employee ID (format: employee_123, gudang_456, mandor_789)
+            list($source, $id) = explode('_', $employeeId);
+
+            // Build query based on employee source
+            $query = Absensi::with(['pembibitan:id,judul', 'pembibitan.lokasi:id,nama_lokasi'])
+                ->where('tanggal', $tanggal);
+
+            // Filter by employee ID based on source
+            if ($source === 'employee') {
+                $query->where('employee_id', $id);
+            } elseif ($source === 'gudang') {
+                $query->where('employee_id', 'gudang_' . $id);
+            } elseif ($source === 'mandor') {
+                $query->where('employee_id', 'mandor_' . $id);
+            } else {
+                // Try both formats for backwards compatibility
+                $query->where(function($q) use ($employeeId, $id) {
+                    $q->where('employee_id', $employeeId)
+                      ->orWhere('employee_id', $id);
+                });
+            }
+
+            $absensis = $query->orderBy('created_at', 'asc')->get();
+
+            // Format riwayat data
+            $riwayat = $absensis->map(function($absensi) {
+                return [
+                    'id' => $absensi->id,
+                    'tanggal' => $absensi->tanggal,
+                    'status' => $absensi->status,
+                    'pembibitan' => $absensi->pembibitan ? $absensi->pembibitan->judul : '-',
+                    'pembibitan_id' => $absensi->pembibitan_id,
+                    'lokasi' => $absensi->pembibitan && $absensi->pembibitan->lokasi ?
+                                $absensi->pembibitan->lokasi->nama_lokasi : '-',
+                    'gaji_pokok' => $absensi->gaji_pokok_saat_itu,
+                    'gaji_hari_itu' => $absensi->gaji_hari_itu,
+                    'created_at' => $absensi->created_at->format('H:i:s')
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'employee_id' => $employeeId,
+                'tanggal' => $tanggal,
+                'count' => $riwayat->count(),
+                'riwayat' => $riwayat
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Get riwayat absensi error: ' . $e->getMessage(), [
+                'employee_id' => $employeeId,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat riwayat absensi',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Validate business logic: Tidak boleh absen 2x di pembibitan yang sama
+     * This validation is also done in frontend, but double-check in backend
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function validateAbsensi(Request $request)
+    {
+        try {
+            $employeeId = $request->input('employee_id');
+            $tanggal = $request->input('tanggal');
+            $pembibitanId = $request->input('pembibitan_id');
+
+            // Get existing absensis for this employee on this date
+            $existingAbsensis = Absensi::where('employee_id', $employeeId)
+                ->where('tanggal', $tanggal)
+                ->get();
+
+            // Check if already has absensi at the same pembibitan
+            $sudahAbsenDiPembibitanSama = $existingAbsensis->where('pembibitan_id', $pembibitanId)->count() > 0;
+
+            if ($sudahAbsenDiPembibitanSama) {
+                return response()->json([
+                    'valid' => false,
+                    'message' => 'Karyawan sudah absen di pembibitan yang sama hari ini',
+                    'rule_violated' => 'duplicate_pembibitan'
+                ], 422);
+            }
+
+            return response()->json([
+                'valid' => true,
+                'message' => 'Validasi berhasil',
+                'existing_count' => $existingAbsensis->count()
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Validate absensi error: ' . $e->getMessage());
+
+            return response()->json([
+                'valid' => false,
+                'message' => 'Gagal validasi: ' . $e->getMessage()
             ], 500);
         }
     }
