@@ -45,28 +45,28 @@ class AbsensiController extends Controller
      */
     public function index(Request $request)
     {
-        // Smart cache management
-        SmartCacheService::clearByPattern('absensis_*');
-        
-        // Force fresh data - disable query caching
-        $employees = Employee::where('jabatan', 'karyawan')
-            ->with(['lokasi', 'kandang'])
-            ->orderBy('nama')
-            ->get();
-
-        $lokasis = Lokasi::orderBy('nama_lokasi')->get();
-        $kandangs = Kandang::with('lokasi')->orderBy('nama_kandang')->get();
-        $pembibitans = Pembibitan::with(['lokasi', 'kandang'])->orderBy('judul')->get();
+        // Smart cache management - OPTIMIZED: Only clear when necessary
+        if ($request->filled('clear_cache')) {
+            SmartCacheService::clearByPattern('absensis_*');
+        }
 
         if ($request->ajax()) {
-            $query = Absensi::with(['employee']);
-        
-        // Admin can only see absensi for karyawan (not mandor)
-        if ($this->getCurrentUser()?->isAdmin()) {
-            $query->whereHas('employee', function($employeeQuery) {
-                $employeeQuery->whereIn('jabatan', ['karyawan', 'karyawan_gudang']);
-            });
-        }
+            // OPTIMIZED: Add eager loading to prevent N+1 queries
+            $query = Absensi::with([
+                'employee:id,nama,jabatan,gaji_pokok,kandang_id',
+                'employee.kandang:id,nama_kandang,lokasi_id',
+                'employee.kandang.lokasi:id,nama_lokasi',
+                'pembibitan:id,judul,lokasi_id,kandang_id',
+                'pembibitan.lokasi:id,nama_lokasi',
+                'pembibitan.kandang:id,nama_kandang'
+            ]);
+
+            // Admin can only see absensi for karyawan (not mandor)
+            if ($this->getCurrentUser()?->isAdmin()) {
+                $query->whereHas('employee', function($employeeQuery) {
+                    $employeeQuery->whereIn('jabatan', ['karyawan', 'karyawan_gudang']);
+                });
+            }
             
             // Apply filters - Hanya tampilkan data jika ada filter yang dipilih
             $hasFilter = false;
@@ -285,18 +285,32 @@ class AbsensiController extends Controller
                 ->make(true);
         }
         
-        // Force fresh data - clear all caches first
-        Cache::forget('lokasis_data');
-        Cache::forget('kandangs_data');
-        Cache::forget('pembibitans_data');
-        Cache::forget('gudangs_data');
-        
-        // Load master data for filters with fresh query
-        $lokasis = Lokasi::orderBy('nama_lokasi')->get();
-        $kandangs = Kandang::with('lokasi')->orderBy('nama_kandang')->get();
-        $pembibitans = Pembibitan::with(['lokasi', 'kandang'])->orderBy('judul')->get();
-        $gudangs = Gudang::orderBy('nama')->get();
-        
+        // OPTIMIZED: Only clear cache when explicitly requested
+        if ($request->filled('refresh_data')) {
+            Cache::forget('lokasis_data');
+            Cache::forget('kandangs_data');
+            Cache::forget('pembibitans_data');
+            Cache::forget('gudangs_data');
+        }
+
+        // OPTIMIZED: Load master data with selective eager loading
+        $lokasis = Lokasi::select('id', 'nama_lokasi')->orderBy('nama_lokasi')->get();
+        $kandangs = Kandang::select('id', 'nama_kandang', 'lokasi_id')
+            ->with('lokasi:id,nama_lokasi')
+            ->orderBy('nama_kandang')
+            ->get();
+        $pembibitans = Pembibitan::select('id', 'judul', 'lokasi_id', 'kandang_id')
+            ->with(['lokasi:id,nama_lokasi', 'kandang:id,nama_kandang'])
+            ->orderBy('judul')
+            ->get();
+        $gudangs = Gudang::select('id', 'nama', 'gaji')->orderBy('nama')->get();
+
+        // Get employees for dropdown - only needed for index view
+        $employees = Employee::select('id', 'nama', 'jabatan', 'gaji_pokok')
+            ->where('jabatan', 'karyawan')
+            ->orderBy('nama')
+            ->get();
+
         return view('absensis.index', compact('lokasis', 'kandangs', 'pembibitans', 'gudangs', 'employees'));
     }
 

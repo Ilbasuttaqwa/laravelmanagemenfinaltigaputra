@@ -151,10 +151,14 @@
 
 @push('scripts')
 <script>
-// Ensure jQuery is available
-$(document).ready(function() {
-    console.log('🚀 Absensi form script loaded - Version 2.0');
-    console.log('📅 Current date:', new Date().toISOString());
+// Production-ready auto-fill script with fallbacks
+(function() {
+    'use strict';
+
+    // Ensure jQuery is loaded
+    function initializeForm() {
+        console.log('🚀 Absensi form script loaded - Version 3.0 (Production Ready)');
+        console.log('📅 Current date:', new Date().toISOString());
 
     const employeeSelect = document.getElementById('employee_id');
     const gajiPokokDisplay = document.getElementById('gaji_pokok_saat_itu_display');
@@ -441,8 +445,16 @@ function checkAndRefreshEmployeeData() {
 
     // Employee dropdown is now loaded directly from server
     // No need for dynamic loading based on pembibitan
-    document.addEventListener('DOMContentLoaded', function() {
-        checkAndRefreshEmployeeData();
-    });
+    } // End initializeForm
+
+    // Initialize with jQuery if available, otherwise use vanilla JS
+    if (typeof jQuery !== 'undefined') {
+        jQuery(document).ready(initializeForm);
+    } else if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeForm);
+    } else {
+        initializeForm();
+    }
+})(); // End IIFE
 </script>
 @endpush

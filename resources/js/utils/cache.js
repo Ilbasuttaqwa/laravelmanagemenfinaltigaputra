@@ -80,6 +80,58 @@ class CacheManager {
             }
         });
     }
+
+    /**
+     * Clear cache by period (tahun/bulan)
+     * FIXED: Add ability to clear specific period cache for calendar
+     */
+    clearPeriod(tahun, bulan) {
+        const periodKey = `_${tahun}_${bulan}`;
+        console.log('🗑️ Clearing cache for period:', periodKey);
+
+        // Clear from memory cache
+        const keysToDelete = [];
+        this.cache.forEach((value, key) => {
+            if (key.includes(periodKey)) {
+                keysToDelete.push(key);
+            }
+        });
+        keysToDelete.forEach(key => this.cache.delete(key));
+
+        // Clear from localStorage
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('cache_') && key.includes(periodKey)) {
+                localStorage.removeItem(key);
+            }
+        });
+
+        console.log('✅ Cleared', keysToDelete.length, 'cache entries for period', periodKey);
+    }
+
+    /**
+     * Clear all absensi/calendar cache (all periods)
+     */
+    clearAbsensiCache() {
+        console.log('🗑️ Clearing ALL absensi/calendar cache...');
+
+        // Clear from memory cache
+        const keysToDelete = [];
+        this.cache.forEach((value, key) => {
+            if (key.includes('absensi') || key.includes('calendar')) {
+                keysToDelete.push(key);
+            }
+        });
+        keysToDelete.forEach(key => this.cache.delete(key));
+
+        // Clear from localStorage
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('cache_') && (key.includes('absensi') || key.includes('calendar'))) {
+                localStorage.removeItem(key);
+            }
+        });
+
+        console.log('✅ Cleared', keysToDelete.length, 'absensi/calendar cache entries');
+    }
 }
 
 /**
@@ -94,16 +146,34 @@ class NetworkManager {
 
     /**
      * Make optimized request with caching and retry
+     * FIXED: Added period awareness for calendar/absensi data
      */
     async request(url, options = {}) {
-        const cacheKey = `request_${url}_${JSON.stringify(options)}`;
+        // Extract period parameters from URL or options for period-aware caching
+        let periodKey = '';
+        if (options.period) {
+            periodKey = `_${options.period.tahun}_${options.period.bulan}`;
+        } else {
+            // Auto-detect period from URL params (e.g., ?tahun=2024&bulan=10)
+            const urlObj = new URL(url, window.location.origin);
+            const tahun = urlObj.searchParams.get('tahun');
+            const bulan = urlObj.searchParams.get('bulan');
+            if (tahun && bulan) {
+                periodKey = `_${tahun}_${bulan}`;
+            }
+        }
+
+        const cacheKey = `request_${url}_${JSON.stringify(options)}${periodKey}`;
         const cacheManager = new CacheManager();
-        
+
         // Check cache first
         const cached = cacheManager.get(cacheKey);
         if (cached && !options.forceRefresh) {
+            console.log('✅ Cache HIT:', cacheKey);
             return cached;
         }
+
+        console.log('⚠️ Cache MISS:', cacheKey);
 
         // Check if request is already pending
         if (this.pendingRequests.has(cacheKey)) {
@@ -115,7 +185,10 @@ class NetworkManager {
 
         try {
             const result = await requestPromise;
-            cacheManager.set(cacheKey, result);
+            // Reduced TTL for calendar data - 2 minutes instead of 5
+            const ttl = url.includes('absensi') || url.includes('calendar') ? 2 * 60 * 1000 : 5 * 60 * 1000;
+            cacheManager.set(cacheKey, result, ttl);
+            console.log('💾 Cache SAVED:', cacheKey, 'TTL:', ttl / 1000, 'seconds');
             return result;
         } finally {
             this.pendingRequests.delete(cacheKey);
