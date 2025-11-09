@@ -59,10 +59,19 @@
                     @error('employee_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                    
-                    @if(config('app.debug'))
-                        <small class="text-muted">
-                            Debug: Total karyawan: {{ isset($allEmployees) ? $allEmployees->count() : 0 }}
+
+                    @if(config('app.debug') || true)
+                        <small class="text-muted d-block mt-1">
+                            <strong>Info:</strong> Total karyawan tersedia: {{ isset($allEmployees) ? $allEmployees->count() : 0 }}
+                            @if(isset($allEmployees) && $allEmployees->count() > 0)
+                                | Tipe:
+                                @php
+                                    $sources = $allEmployees->groupBy('source');
+                                @endphp
+                                @foreach($sources as $source => $items)
+                                    {{ $source }}: {{ $items->count() }}{{ !$loop->last ? ', ' : '' }}
+                                @endforeach
+                            @endif
                         </small>
                     @endif
                 </div>
@@ -144,8 +153,9 @@
 <script>
 // Ensure jQuery is available
 $(document).ready(function() {
-    console.log('Absensi form script loaded');
-    
+    console.log('🚀 Absensi form script loaded - Version 2.0');
+    console.log('📅 Current date:', new Date().toISOString());
+
     const employeeSelect = document.getElementById('employee_id');
     const gajiPokokDisplay = document.getElementById('gaji_pokok_saat_itu_display');
     const gajiPokokInput = document.getElementById('gaji_pokok_saat_itu');
@@ -153,13 +163,25 @@ $(document).ready(function() {
     const gajiHariItuInput = document.getElementById('gaji_hari_itu');
     const statusRadios = document.querySelectorAll('input[name="status"]');
 
-    console.log('Elements found:', {
+    console.log('✅ Elements found:', {
         employeeSelect: !!employeeSelect,
         gajiPokokDisplay: !!gajiPokokDisplay,
         gajiPokokInput: !!gajiPokokInput,
         gajiHariItuDisplay: !!gajiHariItuDisplay,
-        gajiHariItuInput: !!gajiHariItuInput
+        gajiHariItuInput: !!gajiHariItuInput,
+        statusRadioCount: statusRadios.length
     });
+
+    // Log employee dropdown options
+    if (employeeSelect) {
+        console.log('👥 Total employees in dropdown:', employeeSelect.options.length - 1); // -1 for "Pilih Karyawan" option
+        console.log('📋 Employee options:', Array.from(employeeSelect.options).slice(1).map(opt => ({
+            id: opt.value,
+            nama: opt.textContent,
+            gaji: opt.getAttribute('data-gaji'),
+            source: opt.getAttribute('data-source')
+        })));
+    }
 
     // Trigger auto-fill on page load if employee is already selected
     if (employeeSelect && employeeSelect.value) {
