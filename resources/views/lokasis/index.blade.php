@@ -56,8 +56,10 @@
                                             </a>
                                             @if(auth()->user()->isManager())
                                                 <button type="button" class="btn btn-danger btn-sm"
-                                                        data-lokasi-id="{{ $lokasi->id }}"
-                                                        data-lokasi-name="{{ $lokasi->nama_lokasi }}"
+                                                        data-id="{{ $lokasi->id }}"
+                                                        data-name="{{ $lokasi->nama_lokasi }}"
+                                                        data-type="lokasi"
+                                                        data-url="{{ route(auth()->user()->isManager() ? 'manager.lokasis.destroy' : 'admin.lokasis.destroy', $lokasi->id) }}"
                                                         onclick="confirmDelete(this)" title="Hapus">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
@@ -81,42 +83,12 @@
         </div>
     </div>
 
-
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteConfirmModalLabel">Konfirmasi Hapus</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus lokasi <strong id="lokasiNameToDelete"></strong>?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form id="deleteForm" method="POST" action="">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function confirmDelete(button) {
-            const lokasiId = button.getAttribute('data-lokasi-id');
-            const lokasiName = button.getAttribute('data-lokasi-name');
-            const deleteForm = document.getElementById('deleteForm');
-            const lokasiNameToDelete = document.getElementById('lokasiNameToDelete');
-            const baseUrl = "{{ url('/') }}";
-            const rolePrefix = "{{ auth()->user()->isAdmin() ? 'admin' : 'manager' }}";
-            deleteForm.action = `${baseUrl}/${rolePrefix}/lokasis/${lokasiId}`;
-            lokasiNameToDelete.textContent = lokasiName;
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-            deleteModal.show();
-        }
-    </script>
 @endsection
+
+@push('scripts')
+<script>
+// Delete handler is now loaded globally via delete-handler.js
+// confirmDelete() function is available globally
+console.log('✅ Lokasi index page loaded - Delete handler ready');
+</script>
+@endpush

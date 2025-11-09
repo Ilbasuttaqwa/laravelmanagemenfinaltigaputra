@@ -7,7 +7,9 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/absensi-bulk.js'
+                'resources/js/absensi-bulk.js',
+                'resources/js/delete-handler.js',
+                'resources/js/utils/cache.js'
             ],
             refresh: true,
         }),
@@ -20,8 +22,9 @@ export default defineConfig({
         minify: 'terser',
         terserOptions: {
             compress: {
-                drop_console: true,
-                drop_debugger: true
+                // TEMPORARY: Keep console for debugging - Set to true for final production
+                drop_console: false,
+                drop_debugger: false
             }
         },
         rollupOptions: {

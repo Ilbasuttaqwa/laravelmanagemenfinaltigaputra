@@ -727,10 +727,13 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-    
+
+    <!-- SweetAlert2 for beautiful alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- App JavaScript -->
-    @vite(['resources/js/app.js'])
-    
+    @vite(['resources/js/app.js', 'resources/js/delete-handler.js'])
+
     @stack('scripts')
     </body>
     </html>
