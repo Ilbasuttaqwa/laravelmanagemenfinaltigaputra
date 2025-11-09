@@ -145,7 +145,10 @@
 // Ensure jQuery is available
 $(document).ready(function() {
     console.log('Absensi form script loaded');
-    
+
+    // Konstanta untuk jumlah hari kerja per bulan (sinkron dengan backend)
+    const WORKING_DAYS_PER_MONTH = 30;
+
     const employeeSelect = document.getElementById('employee_id');
     const gajiPokokDisplay = document.getElementById('gaji_pokok_saat_itu_display');
     const gajiPokokInput = document.getElementById('gaji_pokok_saat_itu');
@@ -233,10 +236,14 @@ $(document).ready(function() {
         
         if (selectedStatus && gajiHariItuDisplay && gajiHariItuInput) {
             let gajiHariItu = 0;
+            const gajiPerHari = gajiPokok / WORKING_DAYS_PER_MONTH;
+
             if (selectedStatus.value === 'full') {
-                gajiHariItu = gajiPokok / 30; // Gaji per hari
+                gajiHariItu = gajiPerHari;
             } else if (selectedStatus.value === 'setengah_hari') {
-                gajiHariItu = (gajiPokok / 30) / 2; // Setengah hari
+                gajiHariItu = gajiPerHari / 2;
+            } else if (selectedStatus.value === 'tidak_hadir') {
+                gajiHariItu = 0;
             }
             
             console.log('Calculated gaji hari itu:', gajiHariItu);

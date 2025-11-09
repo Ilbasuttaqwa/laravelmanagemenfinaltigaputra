@@ -56,10 +56,15 @@ class EmployeeController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'gaji' => 'required|numeric|min:0',
+            'gaji' => 'required|numeric|min:0|max:999999999',
             'jabatan' => 'nullable|string|in:karyawan,mandor',
             'kandang_id' => 'nullable|exists:kandangs,id',
             'lokasi_kerja' => 'nullable|string|max:255',
+        ], [
+            'gaji.min' => 'Gaji tidak boleh bernilai negatif.',
+            'gaji.max' => 'Gaji terlalu besar. Maksimal Rp 999.999.999.',
+            'gaji.required' => 'Gaji wajib diisi.',
+            'gaji.numeric' => 'Gaji harus berupa angka.',
         ]);
 
         // Rename gaji to gaji_pokok for database
@@ -117,10 +122,15 @@ class EmployeeController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'gaji' => 'required|numeric|min:0',
+            'gaji' => 'required|numeric|min:0|max:999999999',
             'jabatan' => 'nullable|string|in:karyawan,mandor',
             'kandang_id' => 'nullable|exists:kandangs,id',
             'lokasi_kerja' => 'nullable|string|max:255',
+        ], [
+            'gaji.min' => 'Gaji tidak boleh bernilai negatif.',
+            'gaji.max' => 'Gaji terlalu besar. Maksimal Rp 999.999.999.',
+            'gaji.required' => 'Gaji wajib diisi.',
+            'gaji.numeric' => 'Gaji harus berupa angka.',
         ]);
 
         // Rename gaji to gaji_pokok for database
