@@ -40,25 +40,25 @@
                     <!-- Filter Tabs untuk Karyawan -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Filter Karyawan Berdasarkan Jabatan</label>
-                        <ul class="nav nav-pills mb-3" id="employeeFilterTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab" data-filter="all">
+                        <ul class="nav nav-pills mb-3" id="employeeFilterTabs">
+                            <li class="nav-item">
+                                <button class="nav-link active" type="button" data-filter="all">
                                     <i class="bi bi-people-fill"></i> Semua
                                 </button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="kandang-tab" data-bs-toggle="pill" data-bs-target="#kandang" type="button" role="tab" data-filter="karyawan">
+                            <li class="nav-item">
+                                <button class="nav-link" type="button" data-filter="karyawan">
                                     <i class="bi bi-house"></i> Karyawan Kandang
                                 </button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="gudang-tab" data-bs-toggle="pill" data-bs-target="#gudang" type="button" role="tab" data-filter="karyawan_gudang">
+                            <li class="nav-item">
+                                <button class="nav-link" type="button" data-filter="karyawan_gudang">
                                     <i class="bi bi-building"></i> Karyawan Gudang
                                 </button>
                             </li>
                             @if(auth()->user()->isManager())
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="mandor-tab" data-bs-toggle="pill" data-bs-target="#mandor" type="button" role="tab" data-filter="mandor">
+                            <li class="nav-item">
+                                <button class="nav-link" type="button" data-filter="mandor">
                                     <i class="bi bi-person-badge"></i> Mandor
                                 </button>
                             </li>
@@ -287,6 +287,23 @@
             gaji: opt.getAttribute('data-gaji'),
             source: opt.getAttribute('data-source')
         })));
+
+        // CRITICAL: Detect employees with missing or invalid gaji
+        const invalidGajiEmployees = Array.from(employeeSelect.options).slice(1).filter(opt => {
+            const gaji = opt.getAttribute('data-gaji');
+            return !gaji || gaji === '' || gaji === '0' || isNaN(parseFloat(gaji)) || parseFloat(gaji) <= 0;
+        });
+
+        if (invalidGajiEmployees.length > 0) {
+            console.error('🚨 CRITICAL: Employees with missing/invalid gaji_pokok detected!');
+            console.error('⚠️ These employees will NOT be able to calculate salary:');
+            invalidGajiEmployees.forEach(opt => {
+                console.error(`   ❌ ${opt.textContent} - gaji: "${opt.getAttribute('data-gaji')}" (source: ${opt.getAttribute('data-source')})`);
+            });
+            console.error('🔧 FIX: Update gaji_pokok in database for these employees!');
+        } else {
+            console.log('✅ All employees have valid gaji_pokok');
+        }
     }
 
     // ===== FILTER TABS FUNCTIONALITY =====
@@ -469,29 +486,77 @@
     // Auto-fill gaji pokok saat pilih karyawan
     if (employeeSelect) {
         employeeSelect.addEventListener('change', function() {
-            console.log('Employee changed to:', this.value);
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('👤 Employee changed to:', this.value);
             const selectedOption = this.options[this.selectedIndex];
             if (selectedOption.value) {
                 // Ambil gaji dari data attribute (lebih cepat dan reliable)
-                const gaji = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
-                console.log('Gaji from data attribute:', gaji);
+                const gajiAttr = selectedOption.getAttribute('data-gaji');
+                const gaji = parseFloat(gajiAttr) || 0;
+                const employeeName = selectedOption.textContent;
+                const employeeSource = selectedOption.getAttribute('data-source');
 
+                console.log('📊 Employee Details:');
+                console.log('   Nama:', employeeName);
+                console.log('   Source:', employeeSource);
+                console.log('   Gaji raw attribute:', gajiAttr);
+                console.log('   Gaji parsed:', gaji);
+
+                // Validate gaji
+                if (!gajiAttr || gajiAttr === '' || gajiAttr === '0' || gaji <= 0) {
+                    console.error('❌ INVALID GAJI DETECTED for', employeeName);
+
+                    // Clear all gaji fields
+                    if (gajiPokokDisplay) gajiPokokDisplay.value = '';
+                    if (gajiPokokInput) gajiPokokInput.value = '';
+                    if (gajiPerhariMentahDisplay) gajiPerhariMentahDisplay.value = '';
+                    if (gajiHariItuDisplay) gajiHariItuDisplay.value = '';
+                    if (gajiHariItuInput) gajiHariItuInput.value = '';
+
+                    // Show warning to user
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian!',
+                            html: `
+                                <p><strong>${employeeName}</strong> belum memiliki gaji pokok yang valid.</p>
+                                <p class="small text-muted mt-2">
+                                    <i class="bi bi-info-circle"></i>
+                                    Silakan hubungi admin untuk mengatur gaji terlebih dahulu.
+                                </p>
+                            `,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#ffc107'
+                        });
+                    } else {
+                        alert(`⚠️ ${employeeName} belum memiliki gaji pokok yang valid.\n\nSilakan hubungi admin untuk mengatur gaji terlebih dahulu.`);
+                    }
+
+                    // Still load riwayat but don't calculate gaji
+                    loadRiwayatAbsensi(selectedOption.value);
+                    return;
+                }
+
+                // Gaji valid, proceed with auto-fill
                 if (gajiPokokDisplay && gajiPokokInput) {
                     gajiPokokDisplay.value = formatCurrency(gaji);
                     gajiPokokInput.value = gaji;
-                    console.log('Gaji pokok filled:', gaji);
+                    console.log('✅ Gaji pokok filled:', formatCurrency(gaji));
                 }
 
-                // Hitung gaji hari itu
+                // Hitung gaji hari itu (will check if status is selected)
                 calculateGajiHariItu();
 
                 // LOAD RIWAYAT ABSENSI
                 loadRiwayatAbsensi(selectedOption.value);
             } else {
+                console.log('Employee cleared');
+                // Clear all fields
                 if (gajiPokokDisplay && gajiPokokInput) {
                     gajiPokokDisplay.value = '';
                     gajiPokokInput.value = '';
                 }
+                if (gajiPerhariMentahDisplay) gajiPerhariMentahDisplay.value = '';
                 if (gajiHariItuDisplay && gajiHariItuInput) {
                     gajiHariItuDisplay.value = '';
                     gajiHariItuInput.value = '';
@@ -499,6 +564,7 @@
                 // Clear riwayat
                 clearRiwayatAbsensi();
             }
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         });
     }
 
@@ -527,23 +593,65 @@
             return;
         }
 
-        const gajiPokok = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
+        const gajiPokokAttr = selectedOption.getAttribute('data-gaji');
+        const gajiPokok = parseFloat(gajiPokokAttr) || 0;
         const selectedStatus = document.querySelector('input[name="status"]:checked');
 
-        console.log('💰 Gaji pokok:', formatCurrency(gajiPokok));
+        console.log('💰 Gaji pokok raw:', gajiPokokAttr);
+        console.log('💰 Gaji pokok parsed:', gajiPokok);
         console.log('📝 Selected status:', selectedStatus ? selectedStatus.value : 'none');
 
         if (!selectedStatus) {
             console.log('⚠️ No status selected yet - waiting for user to select status');
-            // Clear all gaji fields
+            // Clear calculation fields only (not gaji pokok)
             if (gajiPerhariMentahDisplay) gajiPerhariMentahDisplay.value = '';
             if (gajiHariItuDisplay) gajiHariItuDisplay.value = '';
             if (gajiHariItuInput) gajiHariItuInput.value = '';
             return;
         }
 
-        if (gajiPokok === 0) {
-            console.log('⚠️ Gaji pokok is 0 - cannot calculate');
+        // CRITICAL FIX: Proper validation with user feedback
+        if (!gajiPokokAttr || gajiPokokAttr === '' || gajiPokokAttr === '0' || isNaN(gajiPokok) || gajiPokok <= 0) {
+            const employeeName = selectedOption.textContent;
+            const employeeSource = selectedOption.getAttribute('data-source');
+
+            console.error('🚨 CRITICAL ERROR: Gaji pokok tidak valid!');
+            console.error(`   Employee: ${employeeName}`);
+            console.error(`   Source: ${employeeSource}`);
+            console.error(`   Gaji attribute: "${gajiPokokAttr}"`);
+            console.error(`   Parsed value: ${gajiPokok}`);
+
+            // Clear fields
+            if (gajiPerhariMentahDisplay) gajiPerhariMentahDisplay.value = '';
+            if (gajiHariItuDisplay) gajiHariItuDisplay.value = '';
+            if (gajiHariItuInput) gajiHariItuInput.value = '';
+
+            // Show user-friendly error message
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gaji Pokok Belum Diatur',
+                    html: `
+                        <p><strong>${employeeName}</strong> belum memiliki gaji pokok yang valid.</p>
+                        <hr>
+                        <p class="text-start mb-2"><strong>Detail:</strong></p>
+                        <ul class="text-start">
+                            <li>Source: ${employeeSource}</li>
+                            <li>Gaji: ${gajiPokokAttr || 'NULL/Kosong'}</li>
+                        </ul>
+                        <hr>
+                        <p class="small text-muted">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Silakan hubungi admin untuk mengatur gaji pokok karyawan ini terlebih dahulu.
+                        </p>
+                    `,
+                    confirmButtonText: 'OK, Saya Mengerti',
+                    confirmButtonColor: '#dc3545'
+                });
+            } else {
+                alert(`⚠️ GAJI POKOK BELUM DIATUR!\n\nKaryawan: ${employeeName}\nSource: ${employeeSource}\nGaji: ${gajiPokokAttr || 'NULL/Kosong'}\n\nSilakan hubungi admin untuk mengatur gaji pokok karyawan ini.`);
+            }
+
             return;
         }
 
