@@ -13,6 +13,12 @@ use Carbon\Carbon;
 class AutoSyncGajiService
 {
     /**
+     * Konstanta untuk jumlah hari kerja per bulan
+     * Bisa diubah sesuai dengan kebijakan perusahaan
+     */
+    const WORKING_DAYS_PER_MONTH = 30;
+
+    /**
      * Auto-sync gaji untuk semua absensi yang terkait dengan employee
      * Ketika gaji di master data diubah, otomatis update semua absensi
      */
@@ -202,13 +208,15 @@ class AutoSyncGajiService
      */
     private function calculateGajiHariItu($gajiPokok, $status)
     {
-        $gajiPerHari = $gajiPokok / 30; // Asumsi 30 hari per bulan
-        
+        $gajiPerHari = $gajiPokok / self::WORKING_DAYS_PER_MONTH;
+
         switch ($status) {
             case 'full':
                 return $gajiPerHari;
             case 'setengah_hari':
                 return $gajiPerHari * 0.5;
+            case 'tidak_hadir':  // Handle status tidak_hadir juga
+                return 0;
             default:
                 return 0;
         }

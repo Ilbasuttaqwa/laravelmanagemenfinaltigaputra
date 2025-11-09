@@ -93,22 +93,16 @@ class AutoSyncService
         $attendances = \App\Models\Absensi::where('employee_id', $employee->id)
             ->whereBetween('tanggal', [$startDate, $endDate])
             ->get();
-            
-        $jmlHariKerja = $attendances->where('status', 'full')->count() + 
+
+        $jmlHariKerja = $attendances->where('status', 'full')->count() +
                        ($attendances->where('status', 'setengah_hari')->count() * 0.5);
-        
-        $gajiPokokBulanan = $employee->gaji_pokok;
-        $gajiHarianFull = $gajiPokokBulanan / 30;
-        $gajiHarianSetengah = $gajiHarianFull / 2;
-        
-        $gajiSaatIni = 0;
-        foreach ($attendances as $attendance) {
-            if ($attendance->status === 'full') {
-                $gajiSaatIni += $gajiHarianFull;
-            } elseif ($attendance->status === 'setengah_hari') {
-                $gajiSaatIni += $gajiHarianSetengah;
-            }
-        }
+
+        // PERBAIKAN: Gunakan gaji_hari_itu yang tersimpan, bukan recalculate dari gaji sekarang
+        // Ini penting untuk akurasi saat ada perubahan gaji di pertengahan bulan
+        $totalGaji = $attendances->sum('gaji_hari_itu');
+
+        // Ambil gaji pokok dari attendance record terakhir (lebih akurat)
+        $gajiPokokBulanan = $attendances->first()?->gaji_pokok_saat_itu ?? $employee->gaji_pokok;
         
         // Get pembibitan from recent attendance
         $pembibitan = null;
@@ -138,10 +132,10 @@ class AutoSyncService
             'pembibitan_id' => $pembibitan?->id,
             'nama_karyawan' => $employee->nama,
             'tipe_karyawan' => $employee->jabatan,
-            'gaji_pokok' => $gajiSaatIni,
+            'gaji_pokok' => $totalGaji,
             'gaji_pokok_bulanan' => $gajiPokokBulanan,
             'jml_hari_kerja' => $jmlHariKerja,
-            'total_gaji' => $gajiSaatIni,
+            'total_gaji' => $totalGaji,
             'tanggal_mulai' => $startDate,
             'tanggal_selesai' => $endDate,
             'tahun' => $tahun,
@@ -158,24 +152,18 @@ class AutoSyncService
         $endDate = \Carbon\Carbon::create($tahun, $bulan)->endOfMonth();
         
         $attendances = \App\Models\Absensi::where('nama_karyawan', $gudang->nama)
+            ->where('jabatan', 'karyawan_gudang')  // Tambah filter jabatan untuk akurasi
             ->whereBetween('tanggal', [$startDate, $endDate])
             ->get();
-            
-        $jmlHariKerja = $attendances->where('status', 'full')->count() + 
+
+        $jmlHariKerja = $attendances->where('status', 'full')->count() +
                        ($attendances->where('status', 'setengah_hari')->count() * 0.5);
-        
-        $gajiPokokBulanan = $gudang->gaji;
-        $gajiHarianFull = $gajiPokokBulanan / 30;
-        $gajiHarianSetengah = $gajiHarianFull / 2;
-        
-        $gajiSaatIni = 0;
-        foreach ($attendances as $attendance) {
-            if ($attendance->status === 'full') {
-                $gajiSaatIni += $gajiHarianFull;
-            } elseif ($attendance->status === 'setengah_hari') {
-                $gajiSaatIni += $gajiHarianSetengah;
-            }
-        }
+
+        // PERBAIKAN: Gunakan gaji_hari_itu yang tersimpan, bukan recalculate dari gaji sekarang
+        $totalGaji = $attendances->sum('gaji_hari_itu');
+
+        // Ambil gaji pokok dari attendance record terakhir (lebih akurat)
+        $gajiPokokBulanan = $attendances->first()?->gaji_pokok_saat_itu ?? $gudang->gaji;
         
         // Get pembibitan from recent attendance
         $pembibitan = null;
@@ -198,10 +186,10 @@ class AutoSyncService
             'pembibitan_id' => $pembibitan?->id,
             'nama_karyawan' => $gudang->nama,
             'tipe_karyawan' => 'karyawan_gudang',
-            'gaji_pokok' => $gajiSaatIni,
+            'gaji_pokok' => $totalGaji,
             'gaji_pokok_bulanan' => $gajiPokokBulanan,
             'jml_hari_kerja' => $jmlHariKerja,
-            'total_gaji' => $gajiSaatIni,
+            'total_gaji' => $totalGaji,
             'tanggal_mulai' => $startDate,
             'tanggal_selesai' => $endDate,
             'tahun' => $tahun,
@@ -218,24 +206,18 @@ class AutoSyncService
         $endDate = \Carbon\Carbon::create($tahun, $bulan)->endOfMonth();
         
         $attendances = \App\Models\Absensi::where('nama_karyawan', $mandor->nama)
+            ->where('jabatan', 'mandor')  // Tambah filter jabatan untuk akurasi
             ->whereBetween('tanggal', [$startDate, $endDate])
             ->get();
-            
-        $jmlHariKerja = $attendances->where('status', 'full')->count() + 
+
+        $jmlHariKerja = $attendances->where('status', 'full')->count() +
                        ($attendances->where('status', 'setengah_hari')->count() * 0.5);
-        
-        $gajiPokokBulanan = $mandor->gaji;
-        $gajiHarianFull = $gajiPokokBulanan / 30;
-        $gajiHarianSetengah = $gajiHarianFull / 2;
-        
-        $gajiSaatIni = 0;
-        foreach ($attendances as $attendance) {
-            if ($attendance->status === 'full') {
-                $gajiSaatIni += $gajiHarianFull;
-            } elseif ($attendance->status === 'setengah_hari') {
-                $gajiSaatIni += $gajiHarianSetengah;
-            }
-        }
+
+        // PERBAIKAN: Gunakan gaji_hari_itu yang tersimpan, bukan recalculate dari gaji sekarang
+        $totalGaji = $attendances->sum('gaji_hari_itu');
+
+        // Ambil gaji pokok dari attendance record terakhir (lebih akurat)
+        $gajiPokokBulanan = $attendances->first()?->gaji_pokok_saat_itu ?? $mandor->gaji;
         
         // Get pembibitan from recent attendance
         $pembibitan = null;
@@ -258,10 +240,10 @@ class AutoSyncService
             'pembibitan_id' => $pembibitan?->id,
             'nama_karyawan' => $mandor->nama,
             'tipe_karyawan' => 'mandor',
-            'gaji_pokok' => $gajiSaatIni,
+            'gaji_pokok' => $totalGaji,
             'gaji_pokok_bulanan' => $gajiPokokBulanan,
             'jml_hari_kerja' => $jmlHariKerja,
-            'total_gaji' => $gajiSaatIni,
+            'total_gaji' => $totalGaji,
             'tanggal_mulai' => $startDate,
             'tanggal_selesai' => $endDate,
             'tahun' => $tahun,

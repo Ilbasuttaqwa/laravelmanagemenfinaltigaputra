@@ -518,11 +518,11 @@ class AbsensiController extends Controller
 
     public function create()
     {
-        // Clear ALL caches untuk memastikan data fresh
-        Cache::flush();
-        
-        // Force fresh database connection
-        DB::purge();
+        // Clear specific caches only - tidak perlu flush semua cache
+        Cache::forget('absensis_data');
+        Cache::forget('employees_data');
+        Cache::forget('gudangs_data');
+        Cache::forget('mandors_data');
         
         // Get employees from employees table with fresh query - NO CACHE
         // Force fresh query without any cache
@@ -552,19 +552,20 @@ class AbsensiController extends Controller
         
         // Get gudang employees (karyawan gudang) - ALWAYS FRESH DATA
         $gudangEmployees = collect();
-        if ($this->getCurrentUser()?->isManager()) {
+        // Admin dan Manager bisa melihat data gudang
+        if ($this->getCurrentUser()?->isManager() || $this->getCurrentUser()?->isAdmin()) {
             // Force fresh query without cache - DEBUG MODE
             DB::enableQueryLog();
             $gudangs = \App\Models\Gudang::orderBy('nama')->get();
             $queries = DB::getQueryLog();
-            
+
             // Log the query for debugging
             Log::info('Gudang query executed', [
                 'query' => $queries[0]['query'] ?? 'No query',
                 'bindings' => $queries[0]['bindings'] ?? [],
                 'result_count' => $gudangs->count()
             ]);
-            
+
             $gudangEmployees = $gudangs->map(function($gudang) {
                 return (object) [
                 'id' => 'gudang_' . $gudang->id,
@@ -574,7 +575,7 @@ class AbsensiController extends Controller
                 'source' => 'gudang'
                 ];
             });
-            
+
             // Log the result
             Log::info('Gudang employees created', [
                 'count' => $gudangEmployees->count(),
@@ -710,14 +711,15 @@ class AbsensiController extends Controller
 
         // Check for duplicate attendance on the same date
         $existingAbsensi = null;
-        
+
         if ($source === 'employee') {
             $existingAbsensi = Absensi::where('employee_id', $actualEmployeeId)
             ->whereDate('tanggal', $validated['tanggal'])
             ->first();
         } else {
-            // For gudang/mandor, check by name and date
+            // PERBAIKAN: For gudang/mandor, check by name, jabatan, AND date untuk mencegah duplikasi
             $existingAbsensi = Absensi::where('nama_karyawan', $employee->nama)
+                ->where('jabatan', $employee->jabatan)  // Tambah filter jabatan!
                 ->whereDate('tanggal', $validated['tanggal'])
                 ->first();
         }
@@ -1178,14 +1180,15 @@ class AbsensiController extends Controller
 
                     // Check for duplicate attendance on the same date
                     $existingAbsensi = null;
-                    
+
                     if ($source === 'employee') {
                         $existingAbsensi = Absensi::where('employee_id', $actualEmployeeId)
                             ->whereDate('tanggal', $tanggal)
                             ->first();
                     } else {
-                        // For gudang/mandor, check by name and date
+                        // PERBAIKAN: For gudang/mandor, check by name, jabatan, AND date untuk mencegah duplikasi
                         $existingAbsensi = Absensi::where('nama_karyawan', $employee->nama)
+                            ->where('jabatan', $employee->jabatan)  // Tambah filter jabatan!
                             ->whereDate('tanggal', $tanggal)
                             ->first();
                     }

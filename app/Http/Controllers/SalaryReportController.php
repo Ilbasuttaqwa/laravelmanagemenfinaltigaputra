@@ -81,11 +81,10 @@ class SalaryReportController extends Controller
         }
             
         $reports = $query->orderBy('nama_karyawan')->get();
-        
-        // Admin can only see salary reports for karyawan (not mandor)
-        if ($this->getCurrentUser()?->isAdmin()) {
-            $reports = $reports->where('tipe_karyawan', 'karyawan');
-        }
+
+        // PERBAIKAN: Filter admin sudah di-handle di query (line 55-57)
+        // Tidak perlu filter lagi di collection untuk menghindari inconsistency
+        // Admin bisa lihat: karyawan dan karyawan_gudang (tapi tidak mandor)
 
         // Get filter options - hanya yang memiliki data laporan gaji
         $lokasis = Lokasi::whereIn('id', function($query) use ($tahun, $bulan) {
