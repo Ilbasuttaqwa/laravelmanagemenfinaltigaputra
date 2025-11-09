@@ -2,10 +2,11 @@
 
 @section('title', 'Tambah Absensi')
 
-<!-- Force browser cache clear -->
+<!-- Force browser cache clear - Version 3.2.1 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<meta name="script-version" content="3.2.1-<?php echo time(); ?>">
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -253,9 +254,12 @@
 
     // Ensure jQuery is loaded
     function initializeForm() {
-        console.log('🚀 Absensi form script loaded - Version 3.2 (Consistent Currency Format)');
-        console.log('📅 Current date:', new Date().toISOString());
-        console.log('✨ NEW: Format Rp konsisten dengan suffix jt/rb');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('🚀 Absensi Form Script - Version 3.2.1 (CACHE BUSTED)');
+        console.log('📅 Loaded at:', new Date().toISOString());
+        console.log('✨ Currency Format: Rp 150 jt (suffix jt/rb)');
+        console.log('🔧 If you see "Rp 200.000.000" - CLEAR BROWSER CACHE!');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     // ===== FORMAT FUNCTIONS (DEFINED FIRST) =====
     function formatNumber(number) {
