@@ -123,15 +123,45 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="gaji_pokok_saat_itu_display" class="form-label">Gaji Pokok</label>
-                    <input type="text" class="form-control" id="gaji_pokok_saat_itu_display" readonly>
+                    <label for="gaji_pokok_saat_itu_display" class="form-label">Gaji Pokok / Bulan</label>
+                    <input type="text" class="form-control bg-light" id="gaji_pokok_saat_itu_display" readonly>
                     <input type="hidden" id="gaji_pokok_saat_itu" name="gaji_pokok_saat_itu">
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="gaji_hari_itu_display" class="form-label">Gaji Perhari</label>
-                    <input type="text" class="form-control" id="gaji_hari_itu_display" readonly>
+                    <label for="gaji_perhari_mentah_display" class="form-label">
+                        Gaji Perhari (Perhitungan)
+                        <small class="text-muted">(Gaji / 30 hari)</small>
+                    </label>
+                    <input type="text" class="form-control bg-light" id="gaji_perhari_mentah_display" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="pembulatan_option" class="form-label">
+                        Pembulatan Gaji
+                        <i class="bi bi-info-circle text-muted" title="Bulatkan gaji untuk memudahkan pembayaran"></i>
+                    </label>
+                    <select class="form-control" id="pembulatan_option">
+                        <option value="1000">Bulatkan ke Rp 1.000</option>
+                        <option value="5000">Bulatkan ke Rp 5.000</option>
+                        <option value="10000" selected>Bulatkan ke Rp 10.000</option>
+                        <option value="50000">Bulatkan ke Rp 50.000</option>
+                        <option value="100000">Bulatkan ke Rp 100.000</option>
+                        <option value="0">Tidak Dibulatkan</option>
+                    </select>
+                    <small class="text-muted">Pilih opsi pembulatan yang diinginkan</small>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="gaji_hari_itu_display" class="form-label">
+                        <strong>Gaji Yang Dibayarkan</strong>
+                        <span class="badge bg-success ms-1">Final</span>
+                    </label>
+                    <input type="text" class="form-control form-control-lg fw-bold text-success bg-light" id="gaji_hari_itu_display" readonly>
                     <input type="hidden" id="gaji_hari_itu" name="gaji_hari_itu">
+                    <small class="text-muted">Nilai ini yang akan disimpan dan dibayarkan</small>
                 </div>
             </div>
 
@@ -157,22 +187,27 @@
 
     // Ensure jQuery is loaded
     function initializeForm() {
-        console.log('🚀 Absensi form script loaded - Version 3.0 (Production Ready)');
+        console.log('🚀 Absensi form script loaded - Version 3.1 (With Smart Rounding)');
         console.log('📅 Current date:', new Date().toISOString());
+        console.log('✨ NEW: Gaji pembulatan otomatis untuk kemudahan pembayaran');
 
     const employeeSelect = document.getElementById('employee_id');
     const gajiPokokDisplay = document.getElementById('gaji_pokok_saat_itu_display');
     const gajiPokokInput = document.getElementById('gaji_pokok_saat_itu');
+    const gajiPerhariMentahDisplay = document.getElementById('gaji_perhari_mentah_display');
     const gajiHariItuDisplay = document.getElementById('gaji_hari_itu_display');
     const gajiHariItuInput = document.getElementById('gaji_hari_itu');
+    const pembulatanOption = document.getElementById('pembulatan_option');
     const statusRadios = document.querySelectorAll('input[name="status"]');
 
     console.log('✅ Elements found:', {
         employeeSelect: !!employeeSelect,
         gajiPokokDisplay: !!gajiPokokDisplay,
         gajiPokokInput: !!gajiPokokInput,
+        gajiPerhariMentahDisplay: !!gajiPerhariMentahDisplay,
         gajiHariItuDisplay: !!gajiHariItuDisplay,
         gajiHariItuInput: !!gajiHariItuInput,
+        pembulatanOption: !!pembulatanOption,
         statusRadioCount: statusRadios.length
     });
 
@@ -243,8 +278,13 @@
         radio.addEventListener('change', calculateGajiHariItu);
     });
 
+    // Hitung ulang saat opsi pembulatan berubah
+    if (pembulatanOption) {
+        pembulatanOption.addEventListener('change', calculateGajiHariItu);
+    }
+
     function calculateGajiHariItu() {
-        console.log('📊 Calculating gaji hari itu...');
+        console.log('📊 Calculating gaji hari itu dengan pembulatan...');
 
         if (!employeeSelect || !employeeSelect.value) {
             console.log('❌ No employee selected');
@@ -260,16 +300,15 @@
         const gajiPokok = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
         const selectedStatus = document.querySelector('input[name="status"]:checked');
 
-        console.log('💰 Gaji pokok:', gajiPokok);
+        console.log('💰 Gaji pokok:', formatCurrency(gajiPokok));
         console.log('📝 Selected status:', selectedStatus ? selectedStatus.value : 'none');
 
         if (!selectedStatus) {
             console.log('⚠️ No status selected yet - waiting for user to select status');
-            // Clear gaji hari itu jika status belum dipilih
-            if (gajiHariItuDisplay && gajiHariItuInput) {
-                gajiHariItuDisplay.value = '';
-                gajiHariItuInput.value = '';
-            }
+            // Clear all gaji fields
+            if (gajiPerhariMentahDisplay) gajiPerhariMentahDisplay.value = '';
+            if (gajiHariItuDisplay) gajiHariItuDisplay.value = '';
+            if (gajiHariItuInput) gajiHariItuInput.value = '';
             return;
         }
 
@@ -278,23 +317,53 @@
             return;
         }
 
-        if (gajiHariItuDisplay && gajiHariItuInput) {
-            let gajiHariItu = 0;
-            if (selectedStatus.value === 'full') {
-                gajiHariItu = gajiPokok / 30; // Gaji per hari
-                console.log('✅ Full day selected - calculating:', gajiPokok + ' / 30 = ' + gajiHariItu);
-            } else if (selectedStatus.value === 'setengah_hari') {
-                gajiHariItu = (gajiPokok / 30) / 2; // Setengah hari
-                console.log('✅ Half day selected - calculating:', '(' + gajiPokok + ' / 30) / 2 = ' + gajiHariItu);
-            }
-
-            console.log('💵 Calculated gaji hari itu:', gajiHariItu);
-            gajiHariItuDisplay.value = formatCurrency(gajiHariItu);
-            gajiHariItuInput.value = gajiHariItu.toFixed(2);
-            console.log('✅ Gaji hari itu fields updated successfully!');
-        } else {
-            console.log('❌ Gaji hari itu input fields not found');
+        // Hitung gaji perhari mentah (exact calculation)
+        let gajiPerhariMentah = 0;
+        if (selectedStatus.value === 'full') {
+            gajiPerhariMentah = gajiPokok / 30; // Gaji per hari
+            console.log('✅ Full day: Rp', formatNumber(gajiPokok), '/ 30 hari = Rp', formatNumber(gajiPerhariMentah));
+        } else if (selectedStatus.value === 'setengah_hari') {
+            gajiPerhariMentah = (gajiPokok / 30) / 2; // Setengah hari
+            console.log('✅ Half day: (Rp', formatNumber(gajiPokok), '/ 30 hari) / 2 = Rp', formatNumber(gajiPerhariMentah));
         }
+
+        // Tampilkan gaji mentah (belum dibulatkan)
+        if (gajiPerhariMentahDisplay) {
+            gajiPerhariMentahDisplay.value = formatCurrency(gajiPerhariMentah);
+        }
+
+        // Bulatkan gaji berdasarkan opsi yang dipilih
+        const pembulatanValue = pembulatanOption ? parseInt(pembulatanOption.value) : 10000;
+        let gajiFinal = gajiPerhariMentah;
+
+        if (pembulatanValue > 0) {
+            // Bulatkan ke atas (ceiling) ke kelipatan terdekat
+            gajiFinal = Math.ceil(gajiPerhariMentah / pembulatanValue) * pembulatanValue;
+            console.log('🔢 Pembulatan ke Rp', formatNumber(pembulatanValue), ': Rp', formatNumber(gajiPerhariMentah), '→ Rp', formatNumber(gajiFinal));
+        } else {
+            console.log('🔢 Tidak dibulatkan, menggunakan nilai exact: Rp', formatNumber(gajiFinal));
+        }
+
+        // Tampilkan gaji final (yang akan dibayarkan)
+        if (gajiHariItuDisplay && gajiHariItuInput) {
+            gajiHariItuDisplay.value = formatCurrency(gajiFinal);
+            gajiHariItuInput.value = gajiFinal.toFixed(2);
+            console.log('✅ Gaji yang dibayarkan (final): Rp', formatNumber(gajiFinal));
+        }
+
+        // Show summary in console
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('📊 RINGKASAN PERHITUNGAN:');
+        console.log('   Gaji Pokok/Bulan : Rp', formatNumber(gajiPokok));
+        console.log('   Status           :', selectedStatus.value === 'full' ? 'Full Day' : 'Setengah Hari');
+        console.log('   Gaji Perhitungan : Rp', formatNumber(gajiPerhariMentah));
+        console.log('   Pembulatan       : Rp', formatNumber(pembulatanValue));
+        console.log('   💰 GAJI DIBAYAR  : Rp', formatNumber(gajiFinal));
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    }
+
+    function formatNumber(number) {
+        return new Intl.NumberFormat('id-ID').format(number);
     }
 
     function formatCurrency(amount) {
@@ -319,17 +388,20 @@
             const gajiPokok = document.getElementById('gaji_pokok_saat_itu').value;
             const gajiHariItu = document.getElementById('gaji_hari_itu').value;
             
+            const pembulatanOpt = document.getElementById('pembulatan_option');
+
             console.log('📊 Form Data:', {
                 employeeId,
                 tanggal,
                 status: status ? status.value : 'none',
                 gajiPokok,
-                gajiHariItu
+                gajiHariItu,
+                pembulatan: pembulatanOpt ? pembulatanOpt.value : '10000'
             });
-            
+
             if (!employeeId || !tanggal || !status || !gajiPokok || !gajiHariItu) {
                 console.error('❌ Missing required fields');
-                alert('Mohon lengkapi semua field yang diperlukan');
+                alert('Mohon lengkapi semua field yang diperlukan:\n- Pilih Karyawan\n- Pilih Tanggal\n- Pilih Status (Full Day / Setengah Hari)\n- Gaji otomatis akan terisi');
                 return false;
             }
             
