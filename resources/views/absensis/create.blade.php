@@ -218,31 +218,56 @@ $(document).ready(function() {
     });
 
     function calculateGajiHariItu() {
-        console.log('Calculating gaji hari itu...');
+        console.log('📊 Calculating gaji hari itu...');
+
+        if (!employeeSelect || !employeeSelect.value) {
+            console.log('❌ No employee selected');
+            return;
+        }
+
         const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
-        if (!selectedOption.value) {
-            console.log('No employee selected');
+        if (!selectedOption || !selectedOption.value) {
+            console.log('❌ No valid employee option selected');
             return;
         }
 
         const gajiPokok = parseFloat(selectedOption.getAttribute('data-gaji')) || 0;
         const selectedStatus = document.querySelector('input[name="status"]:checked');
-        
-        console.log('Gaji pokok:', gajiPokok);
-        console.log('Selected status:', selectedStatus ? selectedStatus.value : 'none');
-        
-        if (selectedStatus && gajiHariItuDisplay && gajiHariItuInput) {
+
+        console.log('💰 Gaji pokok:', gajiPokok);
+        console.log('📝 Selected status:', selectedStatus ? selectedStatus.value : 'none');
+
+        if (!selectedStatus) {
+            console.log('⚠️ No status selected yet - waiting for user to select status');
+            // Clear gaji hari itu jika status belum dipilih
+            if (gajiHariItuDisplay && gajiHariItuInput) {
+                gajiHariItuDisplay.value = '';
+                gajiHariItuInput.value = '';
+            }
+            return;
+        }
+
+        if (gajiPokok === 0) {
+            console.log('⚠️ Gaji pokok is 0 - cannot calculate');
+            return;
+        }
+
+        if (gajiHariItuDisplay && gajiHariItuInput) {
             let gajiHariItu = 0;
             if (selectedStatus.value === 'full') {
                 gajiHariItu = gajiPokok / 30; // Gaji per hari
+                console.log('✅ Full day selected - calculating:', gajiPokok + ' / 30 = ' + gajiHariItu);
             } else if (selectedStatus.value === 'setengah_hari') {
                 gajiHariItu = (gajiPokok / 30) / 2; // Setengah hari
+                console.log('✅ Half day selected - calculating:', '(' + gajiPokok + ' / 30) / 2 = ' + gajiHariItu);
             }
-            
-            console.log('Calculated gaji hari itu:', gajiHariItu);
+
+            console.log('💵 Calculated gaji hari itu:', gajiHariItu);
             gajiHariItuDisplay.value = formatCurrency(gajiHariItu);
-            gajiHariItuInput.value = gajiHariItu.toFixed(2); // Simpan nilai numerik dengan 2 desimal
-            console.log('Gaji hari itu input filled:', gajiHariItuInput.value);
+            gajiHariItuInput.value = gajiHariItu.toFixed(2);
+            console.log('✅ Gaji hari itu fields updated successfully!');
+        } else {
+            console.log('❌ Gaji hari itu input fields not found');
         }
     }
 

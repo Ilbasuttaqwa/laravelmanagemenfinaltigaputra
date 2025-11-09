@@ -527,12 +527,12 @@ class AbsensiController extends Controller
         // Get employees from employees table with fresh query - NO CACHE
         // Force fresh query without any cache
         $query = Employee::orderBy('nama');
-        
-        // Admin can only see karyawan (not mandor)
+
+        // Admin can see karyawan and karyawan_gudang (not mandor)
         if ($this->getCurrentUser()?->isAdmin()) {
-            $query->where('jabatan', 'karyawan');
+            $query->whereIn('jabatan', ['karyawan', 'karyawan_gudang']);
         }
-        
+
         // Force fresh query execution
         $employees = $query->get();
         
@@ -552,19 +552,20 @@ class AbsensiController extends Controller
         
         // Get gudang employees (karyawan gudang) - ALWAYS FRESH DATA
         $gudangEmployees = collect();
-        if ($this->getCurrentUser()?->isManager()) {
+        // Admin dan Manager bisa melihat data gudang
+        if ($this->getCurrentUser()?->isManager() || $this->getCurrentUser()?->isAdmin()) {
             // Force fresh query without cache - DEBUG MODE
             DB::enableQueryLog();
             $gudangs = \App\Models\Gudang::orderBy('nama')->get();
             $queries = DB::getQueryLog();
-            
+
             // Log the query for debugging
             Log::info('Gudang query executed', [
                 'query' => $queries[0]['query'] ?? 'No query',
                 'bindings' => $queries[0]['bindings'] ?? [],
                 'result_count' => $gudangs->count()
             ]);
-            
+
             $gudangEmployees = $gudangs->map(function($gudang) {
                 return (object) [
                 'id' => 'gudang_' . $gudang->id,
@@ -574,7 +575,7 @@ class AbsensiController extends Controller
                 'source' => 'gudang'
                 ];
             });
-            
+
             // Log the result
             Log::info('Gudang employees created', [
                 'count' => $gudangEmployees->count(),
