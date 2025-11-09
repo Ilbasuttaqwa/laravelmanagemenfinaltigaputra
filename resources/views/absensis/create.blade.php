@@ -363,15 +363,22 @@
     }
 
     function formatNumber(number) {
-        return new Intl.NumberFormat('id-ID').format(number);
+        // Format angka dengan pemisah ribuan yang lebih sederhana
+        // Contoh: 1500000 → 1.500.000 (bukan 150.000.000)
+        return Math.round(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     function formatCurrency(amount) {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0
-        }).format(amount);
+        // Format currency yang lebih sederhana dan mudah dibaca
+        // Rp 1.500.000 bukan Rp 150.000.000
+        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return `Rp ${formatted}`;
+    }
+
+    function formatCurrencyCompact(amount) {
+        // Format super compact untuk display yang sangat simple
+        // 1500000 (tanpa Rp, tanpa titik)
+        return Math.round(amount).toString();
     }
 
     // Simple form submission with validation
