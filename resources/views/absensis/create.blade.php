@@ -701,16 +701,36 @@
     }
 
     function formatNumber(number) {
-        // Format angka dengan pemisah ribuan yang lebih sederhana
-        // Contoh: 1500000 → 1.500.000 (bukan 150.000.000)
-        return Math.round(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        // Format angka dengan suffix untuk kemudahan membaca
+        // Contoh: 150000000 → 150 jt (bukan 150.000.000)
+        const num = Math.round(number);
+
+        if (num >= 1000000) {
+            // Format dalam jutaan
+            const juta = num / 1000000;
+            // Jika angka bulat juta, tanpa decimal
+            if (juta === Math.floor(juta)) {
+                return `${juta} jt`;
+            }
+            // Jika ada decimal, tampilkan 1-2 digit
+            return `${juta.toFixed(juta < 10 ? 2 : 1)} jt`;
+        } else if (num >= 1000) {
+            // Format dalam ribuan
+            const ribu = num / 1000;
+            if (ribu === Math.floor(ribu)) {
+                return `${ribu} rb`;
+            }
+            return `${ribu.toFixed(1)} rb`;
+        } else {
+            // Di bawah 1000, tampilkan biasa
+            return num.toString();
+        }
     }
 
     function formatCurrency(amount) {
-        // Format currency yang lebih sederhana dan mudah dibaca
-        // Rp 1.500.000 bukan Rp 150.000.000
-        const formatted = Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        return `Rp ${formatted}`;
+        // Format currency dengan suffix yang mudah dibaca
+        // Rp 150 jt (bukan Rp 150.000.000)
+        return `Rp ${formatNumber(amount)}`;
     }
 
     function formatCurrencyCompact(amount) {
