@@ -2,11 +2,11 @@
 
 @section('title', 'Tambah Absensi')
 
-<!-- Force browser cache clear - Version 3.2.1 -->
+<!-- Force browser cache clear - Version 3.3 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="script-version" content="3.2.1-<?php echo time(); ?>">
+<meta name="script-version" content="3.3-<?php echo time(); ?>">
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -255,43 +255,24 @@
     // Ensure jQuery is loaded
     function initializeForm() {
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('🚀 Absensi Form Script - Version 3.2.1 (CACHE BUSTED)');
+        console.log('🚀 Absensi Form Script - Version 3.3 (SPACE SEPARATOR)');
         console.log('📅 Loaded at:', new Date().toISOString());
-        console.log('✨ Currency Format: Rp 150 jt (suffix jt/rb)');
-        console.log('🔧 If you see "Rp 200.000.000" - CLEAR BROWSER CACHE!');
+        console.log('✨ Currency Format: Rp 150 000 000 (SPASI, NO TITIK!)');
+        console.log('🔧 Format Baru: SPASI sebagai separator, BUKAN TITIK');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     // ===== FORMAT FUNCTIONS (DEFINED FIRST) =====
     function formatNumber(number) {
-        // Format angka dengan suffix untuk kemudahan membaca
-        // Contoh: 150000000 → 150 jt (bukan 150.000.000)
+        // Format angka dengan SPASI sebagai pemisah ribuan
+        // Contoh: 150000000 → 150 000 000 (MUDAH DIBACA, NO TITIK!)
         const num = Math.round(number);
-
-        if (num >= 1000000) {
-            // Format dalam jutaan
-            const juta = num / 1000000;
-            // Jika angka bulat juta, tanpa decimal
-            if (juta === Math.floor(juta)) {
-                return `${juta} jt`;
-            }
-            // Jika ada decimal, tampilkan 1-2 digit
-            return `${juta.toFixed(juta < 10 ? 2 : 1)} jt`;
-        } else if (num >= 1000) {
-            // Format dalam ribuan
-            const ribu = num / 1000;
-            if (ribu === Math.floor(ribu)) {
-                return `${ribu} rb`;
-            }
-            return `${ribu.toFixed(1)} rb`;
-        } else {
-            // Di bawah 1000, tampilkan biasa
-            return num.toString();
-        }
+        // Convert to string and add space every 3 digits from the right
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
 
     function formatCurrency(amount) {
-        // Format currency dengan suffix yang mudah dibaca
-        // Rp 150 jt (bukan Rp 150.000.000)
+        // Format currency dengan spasi sebagai separator
+        // Rp 150 000 000 (bukan Rp 150.000.000)
         return `Rp ${formatNumber(amount)}`;
     }
 
