@@ -253,10 +253,51 @@
 
     // Ensure jQuery is loaded
     function initializeForm() {
-        console.log('🚀 Absensi form script loaded - Version 3.1 (With Smart Rounding)');
+        console.log('🚀 Absensi form script loaded - Version 3.2 (Consistent Currency Format)');
         console.log('📅 Current date:', new Date().toISOString());
-        console.log('✨ NEW: Gaji pembulatan otomatis untuk kemudahan pembayaran');
+        console.log('✨ NEW: Format Rp konsisten dengan suffix jt/rb');
 
+    // ===== FORMAT FUNCTIONS (DEFINED FIRST) =====
+    function formatNumber(number) {
+        // Format angka dengan suffix untuk kemudahan membaca
+        // Contoh: 150000000 → 150 jt (bukan 150.000.000)
+        const num = Math.round(number);
+
+        if (num >= 1000000) {
+            // Format dalam jutaan
+            const juta = num / 1000000;
+            // Jika angka bulat juta, tanpa decimal
+            if (juta === Math.floor(juta)) {
+                return `${juta} jt`;
+            }
+            // Jika ada decimal, tampilkan 1-2 digit
+            return `${juta.toFixed(juta < 10 ? 2 : 1)} jt`;
+        } else if (num >= 1000) {
+            // Format dalam ribuan
+            const ribu = num / 1000;
+            if (ribu === Math.floor(ribu)) {
+                return `${ribu} rb`;
+            }
+            return `${ribu.toFixed(1)} rb`;
+        } else {
+            // Di bawah 1000, tampilkan biasa
+            return num.toString();
+        }
+    }
+
+    function formatCurrency(amount) {
+        // Format currency dengan suffix yang mudah dibaca
+        // Rp 150 jt (bukan Rp 150.000.000)
+        return `Rp ${formatNumber(amount)}`;
+    }
+
+    function formatCurrencyCompact(amount) {
+        // Format super compact untuk display yang sangat simple
+        // 1500000 (tanpa Rp, tanpa titik)
+        return Math.round(amount).toString();
+    }
+
+    // ===== DOM ELEMENTS =====
     const employeeSelect = document.getElementById('employee_id');
     const gajiPokokDisplay = document.getElementById('gaji_pokok_saat_itu_display');
     const gajiPokokInput = document.getElementById('gaji_pokok_saat_itu');
@@ -700,44 +741,7 @@
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     }
 
-    function formatNumber(number) {
-        // Format angka dengan suffix untuk kemudahan membaca
-        // Contoh: 150000000 → 150 jt (bukan 150.000.000)
-        const num = Math.round(number);
-
-        if (num >= 1000000) {
-            // Format dalam jutaan
-            const juta = num / 1000000;
-            // Jika angka bulat juta, tanpa decimal
-            if (juta === Math.floor(juta)) {
-                return `${juta} jt`;
-            }
-            // Jika ada decimal, tampilkan 1-2 digit
-            return `${juta.toFixed(juta < 10 ? 2 : 1)} jt`;
-        } else if (num >= 1000) {
-            // Format dalam ribuan
-            const ribu = num / 1000;
-            if (ribu === Math.floor(ribu)) {
-                return `${ribu} rb`;
-            }
-            return `${ribu.toFixed(1)} rb`;
-        } else {
-            // Di bawah 1000, tampilkan biasa
-            return num.toString();
-        }
-    }
-
-    function formatCurrency(amount) {
-        // Format currency dengan suffix yang mudah dibaca
-        // Rp 150 jt (bukan Rp 150.000.000)
-        return `Rp ${formatNumber(amount)}`;
-    }
-
-    function formatCurrencyCompact(amount) {
-        // Format super compact untuk display yang sangat simple
-        // 1500000 (tanpa Rp, tanpa titik)
-        return Math.round(amount).toString();
-    }
+    // Format functions already defined at the top of initializeForm()
 
     // Simple form submission with validation
     const form = document.querySelector('form[action*="absensis"]');
